@@ -1,8 +1,11 @@
 import py_cui
 from numpy.core.defchararray import lower
+import pygame
+import subprocess
+import os
 
 from screens.menu import dialouges
-from screens.menu.dialouges import PROFESSOR_BALD_DIALOGUE_6
+
 
 
 def initial_load_start_game(root):
@@ -21,6 +24,9 @@ def control_flow_game(root,game):
         text=text+"\n"
         final_text=final_text+text
     final_text=final_text+"\n"+art_data
+    pygame.mixer.init()
+    pygame.mixer.music.load("opening_theme_song.mp3")
+    pygame.mixer.music.play(loops=0)
     game.set_text(final_text)
     root.move_focus(game)
 
@@ -29,6 +35,8 @@ def control_flow_game(root,game):
 
     def get_name_callback(user_name):
         # Clear the current screen or transition to the next part of the game
+        pygame.mixer.music.stop()
+        pygame.mixer.music.unload()
         text=dialouges.PROFESSOR_BALD_DIALOGUE_6.replace("{user_name}",user_name)+"\n"+dialouges.PROFESSOR_BALD_DIALOGUE_7
         game.set_text(text)
         root.move_focus(game)
@@ -38,6 +46,13 @@ def control_flow_game(root,game):
         confirmation_text=lower(confirmation_text)
         final_text=""
         if confirmation_text=="yes":
+            current_working_directory=os.getcwd()
+            subprocess.Popen(
+                ["sh", f"{current_working_directory}/script.sh"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
             for i in range(8,14):
                 text=getattr(dialouges,f"PROFESSOR_BALD_DIALOGUE_{i}")
                 text=text+"\n"
@@ -45,6 +60,9 @@ def control_flow_game(root,game):
         with open("ascii_arts/ascii_art_electromon.txt","r") as f:
             art_data=f.read()
         final_text=final_text+"\n"+art_data
+        pygame.mixer.init()
+        pygame.mixer.music.load("pikachu.mp3")
+        pygame.mixer.music.play(loops=0)
         game.set_text(final_text)
 
     def ask_user_confirmation():
