@@ -1,0 +1,101 @@
+/* --- GLOBAL THEME & LAYOUT --- */
+
+Screen {
+    background: $background;
+    color: $text;
+}
+
+/* The main horizontal split */
+Horizontal {
+    height: 100%;
+}
+
+/* --- SIDEBAR (THE POD-DEX MENU) --- */
+
+#menu-option {
+    width: 30%;
+    background: #1a1a1a;        /* Dark grey background for the lab area */
+    border-right: solid $primary;
+    padding: 1;                 /* Space so buttons don't touch the edges */
+}
+
+/* The Header inside the menu */
+#menu-title {
+    text-style: bold underline;
+    width: 100%;
+    content-align: center middle;
+    margin-bottom: 1;
+    color: $accent;
+}
+
+/* --- THE BUTTON SLOTS --- */
+
+#menu-option Button {
+    /* 1. Reset everything to make a clean slate */
+    background: transparent;
+    border: none;
+    outline: none;
+
+    /* 2. Create the "Pokemon Slot" look */
+    /* 'double' is the classic RPG choice. Use 'solid' if your terminal looks weird. */
+    border: double #888888;
+
+    /* 3. Positioning & Size */
+    width: 100%;
+    height: 3;                 /* Minimum height for borders to render correctly */
+    margin-bottom: 1;          /* Gap between buttons */
+    padding: 0 1;              /* Keeps text away from the border lines */
+
+    /* 4. Text Alignment */
+    content-align: center middle;
+    color: #DDDDDD;
+    text-style: bold;
+
+    /* 5. Animation */
+    transition: background 150ms, border 150ms;
+}
+
+/* --- INTERACTIVITY --- */
+
+/* Hover state: The "Selection Cursor" effect */
+#menu-option Button:hover {
+    background: #333333;
+    border: double #FF0000;    /* Pokedex Red Border */
+    color: #FFDE00;            /* Pokemon Yellow Text */
+    tint: white 5%;
+}
+
+/* Focus state: When selected via Keyboard/Tab */
+#menu-option Button:focus {
+    background: #222222;
+    border: double $accent;    /* Highlight color (usually Cyan/Blue) */
+    color: $text;
+    text-style: reverse;       /* Inverts colors for high visibility */
+}
+
+/* --- THE MAIN GAME AREA (RIGHT SIDE) --- */
+
+#game-area {
+    width: 70%;
+    background: #0c0c0c;
+    border: inner #333333;     /* Makes the game screen look "recessed" */
+}
+
+#body-text {
+    text-align: center;
+    width: 100%;
+}
+
+#default-text{
+    content-align: center middle;
+    padding-bottom: 2;
+
+}
+
+#menu-text{
+    text-align: center;
+}
+
+#game-flow{
+    padding-left: 4;
+}
