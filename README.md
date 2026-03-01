@@ -114,5 +114,14 @@ These are the quick commands that will help you navigate in the game
 
 `psyquack hint` - PsyQuack calls upon Professor Bald Uncle, who nudges you in the right direction - without revealing the full answer.
 
-### What's in store currently?
+### Project Yellow Olive in Action
+
+To set the stage, here’s what the opening screen of Project Yellow Olive looks like.
+
+<img width="1465" height="921" alt="image" src="https://github.com/user-attachments/assets/f752fbca-da89-4227-bf44-b4659bf63969" />
+
+
+***A complete gameplay walkthrough is available on [Youtube](https://youtu.be/vAu4aaM1oOw).***
+
+### What's next in store currently?
 *This is a Work In Progress. Stay tuned for exciting updates.*
