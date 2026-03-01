@@ -1,11 +1,10 @@
+from screens.name_input_screen import NameInputScreen
+from utils import general_utils
+from media import background_music_utility
+import global_constants
 import asyncio
 from textual.widgets import RichLog,Input
 from textual import events
-from screens import name_input_screen
-from screens.name_input_screen import NameInputScreen
-from utils import general_utils
-import pygame
-
 
 class ProfessorBaldIntro(RichLog):
     can_focus = True
@@ -19,29 +18,23 @@ class ProfessorBaldIntro(RichLog):
         self.focus()
 
     async def render_professor_bald_intro(self, dialogues, color):
-        pygame.mixer.init()
-        pygame.mixer.music.load("opening_theme_song.mp3")
-        pygame.mixer.music.play(loops=0)
+        background_music_utility.start_background_music(f"{global_constants.MUSIC_MEDIA_PATH}/opening_theme_song.mp3")
         all_lines = dialogues.split("\n")
         for line in all_lines:
             styled_line = f"[bold {color}]{line}[/]"
             self.write(styled_line+"\n")  # RichLog adds newlines automatically with .write()
             await asyncio.sleep(1.5)
-        output_ascii=general_utils.convert_to_ascii("Professor Bald.png")
+        output_ascii = general_utils.convert_to_ascii(f"{global_constants.IMAGE_MEDIA_PATH}/Professor Bald.png")
         self.write(output_ascii)
-        self.write("\n[reverse] Press Enter to Continue [/]")
+        self.write(f"{global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT}")
 
     async def on_key(self, event: events.Key) -> None:
         if event.key == "enter":
             # Clear the log and move to the next game state
-            pygame.mixer.music.stop()
-            pygame.mixer.music.unload()
+            background_music_utility.stop_background_music()
             container = self.parent
-
             # 2. Remove this log widget
             self.remove()
-
             # 3. Mount the new input screen to that same container
-
             await container.mount(NameInputScreen())
 
