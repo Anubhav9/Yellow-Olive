@@ -9,9 +9,10 @@ from textual.widgets import Static, RichLog, Input, Label
 
 class PsyQuackFailureScreen(Static):
     can_focus = True
-    def __init__(self,challenge_id,**kwargs):
+    def __init__(self,meow_coins,challenge_id,**kwargs):
         super().__init__(**kwargs)
         self.challenge_id=challenge_id
+        self.meow_coins=meow_coins
     def compose(self):
         yield RichLog(markup=True, highlight=True, id="failure-log")
         yield Label("", id="failure-prompt")
