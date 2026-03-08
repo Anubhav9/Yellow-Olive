@@ -1,6 +1,7 @@
 from challenge_files import challenge_1_text
 import global_constants
 from core_logic.challenge_validation import ChallengeValidation
+from global_constants import meow_coins
 from media import background_music_utility
 from screen_prompts.screen_challenge_1.screen_prompts import ChallengeScreenPrompts
 from challenge_files import challenge_constants
@@ -9,8 +10,9 @@ from rich.text import Text
 from textual.app import ComposeResult
 from textual.widgets import RichLog, Input, Static, Label
 from textual import on, events
-
+import global_constants
 challenge_id="1"
+
 
 challenge_screen_prompts=ChallengeScreenPrompts(challenge_id)
 
@@ -57,6 +59,7 @@ class Challenge1(Static):
             if(result_challenge):
                 self.correct_solution=True
                 log.write(challenge_screen_prompts.correct_answer_text())
+                global_constants.meow_coins=global_constants.meow_coins+int(challenge_id)
             else:
                 self.correct_solution=False
                 log.write(challenge_screen_prompts.incorrect_answer_text())

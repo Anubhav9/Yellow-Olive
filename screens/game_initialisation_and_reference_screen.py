@@ -11,7 +11,6 @@ from textual.widgets import RichLog, Input, Static,Label
 from rich.text import Text
 from textual import on
 from textual import events
-
 class GameInitialisationScreen(Static):
     can_focus = True
     def compose(self) -> ComposeResult:

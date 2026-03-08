@@ -30,6 +30,7 @@ class PsyQuackSuccessScreen(RichLog):
 
         output_ascii=general_utils.convert_to_ascii(f"{global_constants.IMAGE_MEDIA_PATH}/psyquack_happy.png")
         self.write(output_ascii)
+        self.write(f"Congratulations! You have also earned {global_constants.meow_coins} Meow Meow Coins. Meow Boi is also happy:)")
         self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
 
     async def on_key(self, event: events.Key) -> None:
@@ -38,4 +39,5 @@ class PsyQuackSuccessScreen(RichLog):
             background_music_utility.stop_background_music()
             container = self.parent
             # 2. Remove this log widget
-            self.remo
+            self.remove()
+            # 3. Mount the new input screen to that same container
