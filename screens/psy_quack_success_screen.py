@@ -10,10 +10,9 @@ from textual import events
 class PsyQuackSuccessScreen(RichLog):
     can_focus = True
 
-    def __init__(self,meow_coins, **kwargs):
+    def __init__(self, **kwargs):
         # We pass markup=True here so you don't have to remember it later
         super().__init__(markup=True, highlight=True, **kwargs)
-        self.meow_coins=meow_coins
 
     def on_mount(self) -> None:
         """Automatically grab focus when this widget appears."""
@@ -31,7 +30,7 @@ class PsyQuackSuccessScreen(RichLog):
 
         output_ascii=general_utils.convert_to_ascii(f"{global_constants.IMAGE_MEDIA_PATH}/psyquack_happy.png")
         self.write(output_ascii)
-        self.write(f"Congratulations! You have also earned {self.meow_coins} Meow Meow Coins. Meow Boi is also happy:)")
+        self.write(f"Congratulations! You have also earned {global_constants.meow_coins} Meow Meow Coins. Meow Boi is also happy:)")
         self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
 
     async def on_key(self, event: events.Key) -> None:
