@@ -83,7 +83,7 @@ class Challenge1(Static):
                 await container.mount(screen)
             else:
                 from screens.psy_quack_failure_screen import PsyQuackFailureScreen
-                screenFailure=PsyQuackFailureScreen(self.challenge_id,meow_coins)
+                screenFailure=PsyQuackFailureScreen(meow_coins,self.challenge_id)
                 await container.mount(screenFailure)
 
 
