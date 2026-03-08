@@ -6,6 +6,7 @@ from screens import professor_bald_intro
 from dialouges import professor_bald_dialogue
 from screens.author_info import AuthorInfo
 from screens.professor_bald_intro import ProfessorBaldIntro
+from screens.help_screen import HelpScreen
 
 
 class ProjectOlive(App):
@@ -28,13 +29,22 @@ class ProjectOlive(App):
     @on(Button.Pressed, "#start-game")
     async def button_press_start_game(self,event=Button.Pressed):
         game_area=self.query_one("#game-flow")
+        for child in list(game_area.children):
+            await child.remove()
         professor_bald_intro=ProfessorBaldIntro()
         await game_area.mount(professor_bald_intro)
         self.run_worker(professor_bald_intro.render_professor_bald_intro(professor_bald_dialogue.PROFESSOR_BALD_DIALOGUES,"#D4AF37"))
+
+    @on(Button.Pressed, "#help")
+    async def button_press_help(self, event=Button.Pressed):
+        game_area = self.query_one("#game-flow")
+        for child in list(game_area.children):
+            await child.remove()
+        help_screen = HelpScreen()
+        await game_area.mount(help_screen)
 
 
 
 if __name__ == "__main__":
     app=ProjectOlive()
     app.run()
-
