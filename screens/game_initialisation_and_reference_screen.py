@@ -11,7 +11,6 @@ from textual.widgets import RichLog, Input, Static,Label
 from rich.text import Text
 from textual import on
 from textual import events
-meow_coins=0
 class GameInitialisationScreen(Static):
     can_focus = True
     def compose(self) -> ComposeResult:
@@ -66,4 +65,4 @@ class GameInitialisationScreen(Static):
             background_music_utility.stop_background_music()
             container = self.parent
             self.remove()
-            await container.mount(Challenge1(meow_coins))
+            await container.mount(Challenge1())
