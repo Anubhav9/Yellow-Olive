@@ -10,12 +10,18 @@ from textual.app import ComposeResult
 from textual.widgets import RichLog, Input, Static, Label
 from textual import on, events
 
+from screens.game_initialisation_and_reference_screen import meow_coins
+
 challenge_id="1"
+
 
 challenge_screen_prompts=ChallengeScreenPrompts(challenge_id)
 
 class Challenge1(Static):
     can_focus = True
+
+    def __init__(self,meow_coins):
+        self.meow_coins=meow_coins
 
     def compose(self) -> ComposeResult:
         # Initialize Music
@@ -57,9 +63,11 @@ class Challenge1(Static):
             if(result_challenge):
                 self.correct_solution=True
                 log.write(challenge_screen_prompts.correct_answer_text())
+                meow_coins=self.meow_coins+int(challenge_id)
             else:
                 self.correct_solution=False
                 log.write(challenge_screen_prompts.incorrect_answer_text())
+                meow_coins=self.meow_coins
             log.write(challenge_screen_prompts.move_to_next_challenge_text())
             self.move_to_next_screen=True
 
@@ -71,11 +79,11 @@ class Challenge1(Static):
             self.remove()
             if self.correct_solution:
                 from screens.psy_quack_success_screen import PsyQuackSuccessScreen
-                screen=PsyQuackSuccessScreen()
+                screen=PsyQuackSuccessScreen(meow_coins)
                 await container.mount(screen)
             else:
                 from screens.psy_quack_failure_screen import PsyQuackFailureScreen
-                screenFailure=PsyQuackFailureScreen(self.challenge_id)
+                screenFailure=PsyQuackFailureScreen(self.challenge_id,meow_coins)
                 await container.mount(screenFailure)
 
 
