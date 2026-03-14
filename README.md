@@ -9,6 +9,21 @@ A terminal-native retro adventure designed to make infrastructure learning feel 
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![Made with ❤️ in Bengaluru 🇮🇳](https://img.shields.io/badge/Made%20with%20❤️%20in-Bengaluru%20🇮🇳-%23D4AF37?style=flat)](https://github.com/Anubhav9/Yellow-Olive)
 
+<img src="https://github.com/user-attachments/assets/f752fbca-da89-4227-bf44-b4659bf63969" width="80%" alt="Opening screen with Professor Bald">
+
+---
+## Index
+
+- [The Motivation](#the-motivation)
+- [An Honest Take](#an-honest-take)
+- [Setup and Run (Local)](#setup-and-run-local)
+- [Meet the Characters](#meet-the-characters)
+- [From Yellow Olive to Kubernetes](#from-yellow-olive-to-kubernetes)
+- [Gameplay Commands](#gameplay-commands)
+- [Project Yellow Olive in Action](#project-yellow-olive-in-action)
+- [Contributing](#contributing)
+- [What's next in the roadmap?](#whats-next-in-the-roadmap)
+
 ---
 
 ## The Motivation
@@ -27,6 +42,8 @@ Nostalgia has a strange power - it lowers resistance, sparks curiosity, and make
 
 Yellow Olive is built on that belief: combine nostalgia with motivation, and even something as complex as Kubernetes can become approachable.
 
+---
+
 ## An Honest Take
 
 I’ve attempted the CKAD and CKA certifications - and I didn’t clear them.
@@ -40,6 +57,46 @@ It’s a practice ground - a way to build confidence, stay engaged, and keep the
 Not every day is productive. Not every day is high-energy.
 
 This is just my attempt to make the hard days a little easier to push through.
+
+---
+
+## Setup and Run (Local)
+
+Project Yellow Olive is not published on PyPI yet.  
+For now, clone the repository and run locally.
+
+### Prerequisites
+
+- Python 3.10+
+- `minikube` (required)
+- `kubectl` (required)
+
+### Clone and Install
+
+```bash
+git clone https://github.com/Anubhav9/Yellow-Olive.git
+cd Yellow-Olive
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Start the Game
+
+```bash
+python app.py
+```
+
+When you start the game and proceed through initialization, Yellow Olive will start a Minikube profile and switch kubectl context automatically.
+
+### Helpful Tip for Gameplay
+
+Keep two terminal tabs open:
+
+1. **Game terminal** -> run `python app.py`
+2. **Command Chamber terminal** -> run your `kubectl` commands for challenge fixes
+
+---
 
 ## Meet the Characters
 
@@ -79,7 +136,7 @@ You’re confident the Service works? He verifies.
 If something’s still off, PsyQuack will let you know - in his own slightly unhinged way.  
 He doesn’t reward effort. He rewards correctness.
 ```
-
+---
 ## From Yellow Olive to Kubernetes
 
 Every character, keyword, and challenge maps directly to a real Kubernetes concept.
@@ -91,6 +148,7 @@ Every character, keyword, and challenge maps directly to a real Kubernetes conce
 
 (And many more coming — every mechanic is built to teach something real.)
 
+---
 ## Gameplay Commands
 
 Quick in-game commands you’ll use often:
@@ -99,16 +157,36 @@ Quick in-game commands you’ll use often:
 - `psyquack hint` → PsyQuack calls Professor Bald Uncle for a nudge (without spoiling the answer).
 - `psyquack back` → Returns to the previous challenge screen.
 
+---
+
 ## Project Yellow Olive in Action
-
-Here’s a glimpse of the opening screen:
-
-<img src="https://github.com/user-attachments/assets/f752fbca-da89-4227-bf44-b4659bf63969" width="80%" alt="Opening screen with Professor Bald">
-
 
 ***Full gameplay walkthrough (2 min):
 [Watch on YouTube](https://youtu.be/vAu4aaM1oOw)***
 
-## What's next in the roadmap ?
+---
 
-This is currently a work in progress. New features coming soon.
+## Contributing
+
+Contributions are welcome, especially for adding new challenges.
+
+If you'd like to contribute:
+
+1. Open an issue with the challenge idea and learning objective.
+2. Add/update challenge text in `challenge_files/`.
+3. Add/update corresponding manifest files in `challenge_files/{type}-q*.yaml`.
+4. Add/update challenge validation rules in `core_logic/challenge_validation.py`.
+5. Submit a pull request with a short demo of the challenge flow.
+
+---
+
+## What's next in the roadmap?
+
+This is currently a work in progress. Planned milestones:
+
+| Roadmap Stage | Planned Feature | Why It Matters |
+|---------------|------------------|----------------|
+| Phase 1 | Save/load game progress and jump directly to a specific challenge | Lets players resume quickly and practice targeted scenarios |
+| Phase 2 | Add more challenges focused on Kubernetes Services | Expands learning beyond Pods into core networking concepts |
+| Phase 3 | Package and publish Project Yellow Olive on PyPI | Makes installation easier for the community |
+
