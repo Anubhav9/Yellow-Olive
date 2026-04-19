@@ -1,8 +1,5 @@
 import asyncio
-from textual.widgets import RichLog,Input
-from textual import events
-from screens import name_input_screen
-from screens.name_input_screen import NameInputScreen
+from textual.widgets import RichLog
 from dialouges import author_info
 
 
@@ -10,7 +7,6 @@ class AuthorInfo(RichLog):
     can_focus = True
 
     def __init__(self, **kwargs):
-        # We pass markup=True here so you don't have to remember it later
         super().__init__(markup=True, highlight=True, **kwargs)
 
     def on_mount(self) -> None:
@@ -22,7 +18,10 @@ class AuthorInfo(RichLog):
         all_details=all_details.split("\n")
         for i in range(0,len(all_details)):
             line=all_details[i]
-            styled_line = f"[bold {color}]{line}[/]"
-            self.write(styled_line+"\n")
-            await asyncio.sleep(1.5)
+            if not line.strip():
+                self.write("")
+                await asyncio.sleep(0.3)
+                continue
+            self.write(line + "\n")
+            await asyncio.sleep(0.9)
 

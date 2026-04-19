@@ -1,4 +1,3 @@
-import os
 import subprocess
 
 import global_constants
@@ -11,6 +10,7 @@ from screen_prompts.screen_challenge_1.screen_prompts import ChallengeScreenProm
 from textual import events, on
 from textual.app import ComposeResult
 from textual.widgets import Input, Label, RichLog, Static
+from utils import general_utils
 
 
 class BaseChallengeScreen(Static):
@@ -26,12 +26,15 @@ class BaseChallengeScreen(Static):
 
     def compose(self) -> ComposeResult:
         background_music_utility.start_background_music(
-            f"{global_constants.MUSIC_MEDIA_PATH}/battle_music.mp3"
+            f"{global_constants.MUSIC_MEDIA_PATH}/battle_music.ogg"
         )
         challenge_screen_prompts = ChallengeScreenPrompts(self.challenge_id)
-        styled_line = challenge_screen_prompts.challenge_text()
-        yield Label(styled_line)
-        yield Input(placeholder="Ready to move ahead...", id="player-response")
+        yield Label(challenge_screen_prompts.challenge_text())
+        yield Label(challenge_screen_prompts.challenge_status_text())
+        yield Input(
+            placeholder="Type psyquack validate when you are ready...",
+            id="player-response",
+        )
         yield RichLog(markup=True, id=self.challenge_log_id)
 
     def on_mount(self) -> None:
@@ -56,16 +59,18 @@ class BaseChallengeScreen(Static):
 
     def apply_challenge_pod(self) -> None:
         try:
-            current_working_directory = os.getcwd()
+            manifest_path = general_utils.get_lab_challenge_file(self.challenge_id)
             subprocess.Popen(
                 [
                     "sh",
-                    f"{current_working_directory}/scripts/generic-script-pods.sh",
+                    str(global_constants.PROJECT_ROOT / "scripts" / "generic-script-pods.sh"),
                     str(self.challenge_id),
+                    str(manifest_path),
                 ],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 start_new_session=True,
+                cwd=str(global_constants.PROJECT_ROOT),
             )
         except Exception as error:
             log = self.query_one(f"#{self.challenge_log_id}", RichLog)
@@ -74,12 +79,14 @@ class BaseChallengeScreen(Static):
 
     @on(Input.Submitted)
     async def handle_validation(self, event: Input.Submitted):
-        player_response = (event.value or "").lower()
+        player_response = (event.value or "").strip().lower()
+        log = self.query_one(f"#{self.challenge_log_id}", RichLog)
         if player_response != "psyquack validate":
+            general_utils.show_invalid_command(self)
+            log.write(general_utils.invalid_command_text("psyquack validate"))
             return
 
         challenge_screen_prompts = ChallengeScreenPrompts(self.challenge_id)
-        log = self.query_one(f"#{self.challenge_log_id}", RichLog)
         challenge_validation = ChallengeValidation(self.challenge_id)
         log.write(challenge_screen_prompts.building_connection_text())
 
@@ -102,11 +109,11 @@ class BaseChallengeScreen(Static):
             self.correct_solution = True
             log.write(challenge_screen_prompts.correct_answer_text())
             global_constants.meow_coins = global_constants.meow_coins + int(self.challenge_id)
+            log.write(challenge_screen_prompts.move_to_next_challenge_text())
         else:
             self.correct_solution = False
             log.write(challenge_screen_prompts.incorrect_answer_text())
-
-        log.write(challenge_screen_prompts.move_to_next_challenge_text())
+            log.write(challenge_screen_prompts.review_failed_attempt_text())
         self.move_to_next_screen = True
 
     async def on_key(self, event: events.Key) -> None:
@@ -117,7 +124,7 @@ class BaseChallengeScreen(Static):
             if self.correct_solution:
                 from screens.psy_quack_success_screen import PsyQuackSuccessScreen
 
-                screen = PsyQuackSuccessScreen()
+                screen = PsyQuackSuccessScreen(self.challenge_id)
                 await container.mount(screen)
             else:
                 from screens.psy_quack_failure_screen import PsyQuackFailureScreen

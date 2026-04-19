@@ -18,7 +18,7 @@ class ProfessorBaldIntro(RichLog):
         self.focus()
 
     async def render_professor_bald_intro(self, dialogues, color):
-        background_music_utility.start_background_music(f"{global_constants.MUSIC_MEDIA_PATH}/opening_theme_song.mp3")
+        background_music_utility.start_background_music(f"{global_constants.MUSIC_MEDIA_PATH}/screen_1_opening_song.mp3")
         all_lines = dialogues.split("\n")
         for line in all_lines:
             styled_line = f"[bold {color}]{line}[/]"

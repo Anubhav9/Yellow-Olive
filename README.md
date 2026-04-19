@@ -60,18 +60,48 @@ This is just my attempt to make the hard days a little easier to push through.
 
 ---
 
-## Setup and Run (Local)
-
-Project Yellow Olive is not published on PyPI yet.  
-For now, clone the repository and run locally.
+## Setup and Run
 
 ### Prerequisites
 
 - Python 3.10+
+- Docker Desktop or Docker Engine (required)
 - `minikube` (required)
 - `kubectl` (required)
 
-### Clone and Install
+Project Yellow Olive uses Minikube to create and manage the local Kubernetes cluster used during gameplay, so Docker and Minikube must be installed before starting the game.
+
+### Install Minikube and Kubernetes Tooling
+
+1. Install Docker and make sure it is running.
+2. Install Minikube by following the official guide: [Install Minikube](https://minikube.sigs.k8s.io/docs/start/)
+3. Install `kubectl` by following the official guide: [Install kubectl](https://kubernetes.io/docs/tasks/tools/)
+
+You can verify the setup with:
+
+```bash
+docker --version
+minikube version
+kubectl version --client
+```
+
+### Install from PyPI
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install yellow-olive
+```
+
+### Start the Game from PyPI
+
+```bash
+yellow-olive start
+```
+
+When the game starts, Project Yellow Olive creates a `yellow-olive-lab/` folder in your current working directory and places the editable challenge manifests there.
+
+### Install from Source
 
 ```bash
 git clone https://github.com/Anubhav9/Yellow-Olive.git
@@ -81,7 +111,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Start the Game
+### Start the Game from Source
 
 ```bash
 python app.py
@@ -93,7 +123,7 @@ When you start the game and proceed through initialization, Yellow Olive will st
 
 Keep two terminal tabs open:
 
-1. **Game terminal** -> run `python app.py`
+1. **Game terminal** -> run `yellow-olive start` or `python app.py`
 2. **Command Chamber terminal** -> run your `kubectl` commands for challenge fixes
 
 ---
@@ -163,6 +193,21 @@ Quick in-game commands you’ll use often:
 
 ***Full gameplay walkthrough (2 min):
 [Watch on YouTube](https://youtu.be/vAu4aaM1oOw)***
+
+---
+
+## Music Credits
+
+All music files used in Project Yellow Olive are sourced from OpenGameArt, shared under the `CC0` license, and the relevant creators are credited below.
+
+| Music File | Music Name | Author Name | License | Source |
+|------------|------------|-------------|---------|--------|
+| `screen_1_opening_song.mp3` | JRPG Piano | [Joth](https://opengameart.org/users/joth) | CC0 | OpenGameArt |
+| `screen_2_music.mp3` | Town Theme RPG | [CynicMusic](https://opengameart.org/users/joth) | CC0 | OpenGameArt |
+| `battle_music.ogg` | 8 bit RPG Battle Encounter Theme | [Ted Kerr](https://opengameart.org/users/wolfgang) | CC0 | OpenGameArt |
+| `battle_music_2.mp3` | 8 bit Chiptune Encounter Theme | [Shiru8Bit](https://opengameart.org/users/shiru8bit) | CC0 | OpenGameArt |
+| `win_music.ogg` | Win Jingle | [Fupi](https://opengameart.org/users/fupi) | CC0 | OpenGameArt |
+| `loose_music.ogg` | Lost Game Short Music Clip | [Robin Lamb](https://opengameart.org/users/robin-lamb) | CC0 | OpenGameArt |
 
 ---
 
