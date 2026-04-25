@@ -28,7 +28,11 @@ class NameInputScreen(Static):
     @on(Input.Submitted)
     async def handle_name(self, event: Input.Submitted):
         if self.ready_to_continue==False:
-            name = event.value
+            name = (event.value or "").strip() or "Trainer"
+            general_utils.update_progress(
+                player_name=name,
+                active_challenge_id="1",
+            )
             log=self.query_one("#after-name-selection")
             all_dialouges=professor_bald_dialogue_name_input_screen.PROFESSOR_BALD_DIALOGUE_NAME_INPUT_SCREEN
             all_dialouges=all_dialouges.split("\n")
