@@ -227,11 +227,12 @@ If you'd like to contribute:
 
 ## What's next in the roadmap?
 
-This is currently a work in progress. Planned milestones:
+This is currently a work in progress. Planned milestones for the following months - April , May and June 2026:
 
-| Roadmap Stage | Planned Feature | Why It Matters |
-|---------------|------------------|----------------|
-| Phase 1 | Save/load game progress and jump directly to a specific challenge | Lets players resume quickly and practice targeted scenarios |
-| Phase 2 | Add more challenges focused on Kubernetes Services | Expands learning beyond Pods into core networking concepts |
-| Phase 3 | Package and publish Project Yellow Olive on PyPI | Makes installation easier for the community |
+| Roadmap Stage | Planned Feature | Why It Matters | Status |
+|---------------|------------------|----------------|--------|
+| Phase 1 | Save/load game progress and jump directly to a specific challenge | Lets players resume quickly and practice targeted scenarios | Released on April 25, 2026 |
+| Phase 2 | Add more challenges focused on Kubernetes Services | Expands learning beyond Pods into core networking concepts | In Progress. Expected by May 10, 2026 |
+| Phase 3 | Package and publish Project Yellow Olive on PyPI | Makes installation easier for the community | Released on April 19, 2026 |
+
 
