@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: electromon-pod
+  labels:
+    type: pod
+spec:
+  containers:
+    - name: elctromon-container
+      image: nginx
+      command:
+        - "/bin/sh"
+        - "-c"
+        - "sleeeep 10"

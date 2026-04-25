@@ -42,6 +42,10 @@ class BaseChallengeScreen(Static):
         self.move_to_next_screen = False
         self.correct_solution = False
         self.proxy_process = None
+        general_utils.update_progress(
+            active_challenge_id=self.challenge_id,
+        )
+        global_constants.meow_coins = general_utils.calculate_meow_coins(self.challenge_id)
         self.render_challenge_panel()
         if self.auto_apply_challenge_pod:
             self.apply_challenge_pod()
@@ -108,7 +112,12 @@ class BaseChallengeScreen(Static):
         if is_correct:
             self.correct_solution = True
             log.write(challenge_screen_prompts.correct_answer_text())
-            global_constants.meow_coins = global_constants.meow_coins + int(self.challenge_id)
+            next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
+            progress_challenge_id = next_challenge_id or str(int(self.challenge_id) + 1)
+            general_utils.update_progress(
+                active_challenge_id=progress_challenge_id,
+            )
+            global_constants.meow_coins = general_utils.calculate_meow_coins(progress_challenge_id)
             log.write(challenge_screen_prompts.move_to_next_challenge_text())
         else:
             self.correct_solution = False

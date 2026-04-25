@@ -10,6 +10,7 @@ from dialouges import professor_bald_dialogue
 from screens.author_info import AuthorInfo
 from screens.professor_bald_intro import ProfessorBaldIntro
 from screens.help_screen import HelpScreen
+from screens.resume_game_screen import ResumeGameScreen
 from utils import general_utils
 
 
@@ -35,6 +36,9 @@ class ProjectOlive(App):
         game_area=self.query_one("#game-flow")
         for child in list(game_area.children):
             await child.remove()
+        if general_utils.has_saved_progress():
+            await game_area.mount(ResumeGameScreen())
+            return
         professor_bald_intro=ProfessorBaldIntro()
         await game_area.mount(professor_bald_intro)
         self.run_worker(professor_bald_intro.render_professor_bald_intro(professor_bald_dialogue.PROFESSOR_BALD_DIALOGUES,"#D4AF37"))
@@ -58,6 +62,7 @@ class ProjectOlive(App):
 
     @on(Button.Pressed, "#quit")
     async def button_press_quit(self, event=Button.Pressed):
+        general_utils.stop_core_infra()
         self.exit()
 
 

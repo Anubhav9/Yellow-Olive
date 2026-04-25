@@ -3,7 +3,6 @@ from screens.challenge_1 import Challenge1
 from media import background_music_utility
 import global_constants
 from screen_prompts.screen_game_initialisation_and_reference import screen_prompts
-import subprocess
 from rich.panel import Panel
 from textual.app import App,ComposeResult
 from textual.widgets import RichLog, Input, Static,Label
@@ -30,13 +29,7 @@ class GameInitialisationScreen(Static):
         player_response = (event.value or "").strip().lower()
         log=self.query_one("#game-reference")
         if(player_response=="yes"):
-            subprocess.Popen(
-                ["sh", str(global_constants.PROJECT_ROOT / "scripts" / "script.sh")],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                start_new_session=True,
-                cwd=str(global_constants.PROJECT_ROOT),
-            )
+            general_utils.start_core_infra()
             text = Text()
             all_dialouges=game_reference_dialogue.GAME_REFERENCE_DIALOGUE.split("\n")
             for i in range(0,len(all_dialouges)):
