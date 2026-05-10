@@ -1,11 +1,12 @@
 from dialouges import game_reference_dialogue
 from screens.challenge_1 import Challenge1
+from screens.challenge_music_preference_screen import ChallengeMusicPreferenceScreen
 from media import background_music_utility
 import global_constants
 from screen_prompts.screen_game_initialisation_and_reference import screen_prompts
 from rich.panel import Panel
 from textual.app import App,ComposeResult
-from textual.widgets import RichLog, Input, Static,Label
+from textual.widgets import RichLog, Input, Static, Label
 from rich.text import Text
 from textual import on
 from textual import events
@@ -48,16 +49,23 @@ class GameInitialisationScreen(Static):
             advice_line=screen_prompts.ACTION_OPEN_SEPARATE_TERMINAL
             log.write("\n")
             log.write(advice_line)
-            self.move_to_next_screen=True
+            self.move_to_next_screen = True
             log.write(screen_prompts.PROCEED_TO_CHALLENGE_1)
+            player_input = self.query_one("#player-response", Input)
+            player_input.disabled = True
+            self.focus()
             return
         general_utils.show_invalid_command(self)
         log.write(general_utils.invalid_command_text("yes"))
 
     async def on_key(self, event: events.Key) -> None:
         if event.key == "enter" and self.move_to_next_screen == True:
-            # Clear the log and move to the next game state
             background_music_utility.stop_background_music()
             container = self.parent
-            self.remove()
-            await container.mount(Challenge1())
+            await self.remove()
+            if general_utils.needs_challenge_music_preference(
+                general_utils.load_progress()
+            ):
+                await container.mount(ChallengeMusicPreferenceScreen(Challenge1))
+            else:
+                await container.mount(Challenge1())
