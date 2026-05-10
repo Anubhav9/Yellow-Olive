@@ -92,6 +92,7 @@ def default_progress():
         "version": 1,
         "player_name": "",
         "active_challenge_id": "1",
+        "challenge_background_music": None,
     }
 
 
@@ -113,7 +114,15 @@ def load_progress():
     saved_progress = default_progress()
     saved_progress.update(progress)
     saved_progress["active_challenge_id"] = str(saved_progress["active_challenge_id"])
+    music = saved_progress.get("challenge_background_music")
+    if not isinstance(music, bool):
+        saved_progress["challenge_background_music"] = None
     return saved_progress
+
+
+def needs_challenge_music_preference(progress):
+    """True until the player has chosen yes/no (stored as bool in progress.json)."""
+    return not isinstance(progress.get("challenge_background_music"), bool)
 
 
 def save_progress(progress):
