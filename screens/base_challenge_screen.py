@@ -25,9 +25,10 @@ class BaseChallengeScreen(Static):
         return f"challenge-{self.challenge_id}"
 
     def compose(self) -> ComposeResult:
-        background_music_utility.start_background_music(
-            f"{global_constants.MUSIC_MEDIA_PATH}/battle_music.ogg"
-        )
+        if general_utils.load_progress().get("challenge_background_music") is True:
+            background_music_utility.start_background_music(
+                f"{global_constants.MUSIC_MEDIA_PATH}/battle_music.ogg"
+            )
         challenge_screen_prompts = ChallengeScreenPrompts(self.challenge_id)
         yield Label(challenge_screen_prompts.challenge_text())
         yield Label(challenge_screen_prompts.challenge_status_text())
