@@ -6,6 +6,7 @@ from textual.widgets import Input, Label, RichLog, Static
 
 import global_constants
 from dialouges import professor_bald_dialogue
+from screens.challenge_music_preference_screen import ChallengeMusicPreferenceScreen
 from screens.professor_bald_intro import ProfessorBaldIntro
 from utils import general_utils
 
@@ -65,7 +66,12 @@ class ResumeGameScreen(Static):
             challenge_screen = general_utils.load_challenge(progress["active_challenge_id"])
             log.write("[yellow]Professor Bald is reinitializing the lab cluster...[/]")
             await asyncio.to_thread(general_utils.start_core_infra, True)
-            await self._replace_self_with(challenge_screen())
+            if general_utils.needs_challenge_music_preference(progress):
+                await self._replace_self_with(
+                    ChallengeMusicPreferenceScreen(challenge_screen)
+                )
+            else:
+                await self._replace_self_with(challenge_screen())
             return
 
         if command == "start fresh":
