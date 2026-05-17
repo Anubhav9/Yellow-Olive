@@ -8,6 +8,7 @@ import global_constants
 from dialouges import signal_town_intro_dialogue
 from media import background_music_utility
 from utils import general_utils
+from time import sleep
 
 
 class SignalTownIntroScreen(RichLog):
@@ -33,8 +34,12 @@ class SignalTownIntroScreen(RichLog):
         )
 
         for line in dialogues.split("\n"):
-            if line == "You step through the town gate.":
+            if line == "The streets are empty.":
                 background_music_utility.stop_background_music()
+                sleep(2)
+                background_music_utility.start_background_music(
+                    f"{global_constants.MUSIC_MEDIA_PATH}/signal_town_intro_music.mp3"
+                )
             styled_line = f"[bold {color}]{line}[/]"
             self.write(styled_line + "\n")
             await asyncio.sleep(1.2)
