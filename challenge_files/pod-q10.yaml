@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: trainer-relay-pod
+  namespace: default
+  labels:
+    app: trainer-relay
+spec:
+  containers:
+    - name: relay
+      image: curlimages/curl:8.5.0
+      command:
+        - "/bin/sh"
+        - "-c"
+      args:
+        - |
+          while true; do
+            curl -sf http://bulba-baby-service/ >/dev/null || true
+            sleep 30
+          done
