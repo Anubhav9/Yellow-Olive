@@ -34,7 +34,13 @@ class PsyQuackSuccessScreen(RichLog):
             f"You now have [bold]{global_constants.meow_coins}[/] Meow Coins."
         )
         next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
-        if next_challenge_id is None:
+        if self.challenge_id == "7" and general_utils.is_story_intro_pending():
+            self.write(
+                "[bold #D4AF37]Electromon's pod training is complete.[/]"
+            )
+            self.write("The road beyond the laboratory leads to Signal Town.")
+            self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
+        elif next_challenge_id is None:
             self.write("[bold #D4AF37]Every mission in the lab is complete. Professor Bald would be proud.[/]")
             self.write("\n[reverse] Press Enter to Return to the Lab [/]")
         else:
@@ -50,6 +56,11 @@ class PsyQuackSuccessScreen(RichLog):
             container = self.parent
             await self.remove()
             next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
+            if self.challenge_id == "7" and general_utils.is_story_intro_pending():
+                from screens.signal_town_intro_screen import SignalTownIntroScreen
+
+                await container.mount(SignalTownIntroScreen())
+                return
             if next_challenge_id is None:
                 return
             next_challenge = general_utils.load_challenge(next_challenge_id)
