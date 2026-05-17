@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bulba-baby-stall-two
+  namespace: signal-town
+  labels:
+    app: bulba-baby
+    posemon: bulba-baby
+spec:
+  containers:
+    - name: bulba-baby
+      image: nginx
+      ports:
+        - containerPort: 80
