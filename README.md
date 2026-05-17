@@ -208,6 +208,9 @@ All music files used in Project Yellow Olive are sourced from OpenGameArt, share
 | `battle_music_2.mp3` | 8 bit Chiptune Encounter Theme | [Shiru8Bit](https://opengameart.org/users/shiru8bit) | CC0 | OpenGameArt |
 | `win_music.ogg` | Win Jingle | [Fupi](https://opengameart.org/users/fupi) | CC0 | OpenGameArt |
 | `loose_music.ogg` | Lost Game Short Music Clip | [Robin Lamb](https://opengameart.org/users/robin-lamb) | CC0 | OpenGameArt |
+| `signal_town_intro.mp3` | Abandoned | [Preston Peak](http://opengameart.org/users/ppeak) | CC0 | OpenGameArt |
+| `cool_turtle_intro.mp3` | Fated Encounter | [Preston Peak](http://opengameart.org/users/ppeak) | CC0 | OpenGameArt |
+| `team_evil_intro.mp3` | Boneyard | [Preston Peak](http://opengameart.org/users/ppeak) | CC0 | OpenGameArt |
 
 ---
 
@@ -232,7 +235,7 @@ This is currently a work in progress. Planned milestones for the following month
 | Roadmap Stage | Planned Feature | Why It Matters | Status |
 |---------------|------------------|----------------|--------|
 | Phase 1 | Save/load game progress and jump directly to a specific challenge | Lets players resume quickly and practice targeted scenarios | Released on April 25, 2026 |
-| Phase 2 | Add more challenges focused on Kubernetes Services | Expands learning beyond Pods into core networking concepts | In Progress. Expected by May 10, 2026 |
+| Phase 2 | Add more challenges focused on Kubernetes Services | Expands learning beyond Pods into core networking concepts | In Progress. Expected by May 31, 2026 |
 | Phase 3 | Package and publish Project Yellow Olive on PyPI | Makes installation easier for the community | Released on April 19, 2026 |
 
 
