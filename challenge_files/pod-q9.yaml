@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cool-turtle-relay-pod
+  namespace: signal-town
+  labels:
+    app: cool-turtle-relay
+spec:
+  containers:
+    - name: relay
+      image: curlimages/curl:8.5.0
+      command:
+        - "/bin/sh"
+        - "-c"
+      args:
+        - |
+          while true; do
+            curl -sf http://bulba-baby-wrong/ >/dev/null || true
+            sleep 30
+          done
