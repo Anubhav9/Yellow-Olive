@@ -19,11 +19,18 @@ class ResumeGameScreen(Static):
         player_name = progress.get("player_name") or "Trainer"
         challenge_id = progress.get("active_challenge_id", "1")
         meow_coins = general_utils.calculate_meow_coins(challenge_id)
-        mission_text = (
-            "All missions complete"
-            if general_utils.is_campaign_complete(challenge_id)
-            else f"Challenge {challenge_id}"
-        )
+        story_act = progress.get("story_intro_act")
+        if general_utils.is_story_intro_pending(progress):
+            story_labels = {
+                global_constants.STORY_ACT_SIGNAL_TOWN: "Arrival at Signal Town",
+                global_constants.STORY_ACT_COOL_TURTLE: "Cool Turtle at the tower",
+                global_constants.STORY_ACT_TEAM_EVIL: "Team Evil's trail",
+            }
+            mission_text = story_labels.get(story_act, "Signal Town journey")
+        elif general_utils.is_campaign_complete(challenge_id):
+            mission_text = "All missions complete"
+        else:
+            mission_text = f"Challenge {challenge_id}"
         continue_text = (
             "Type `start fresh` to begin again from the laboratory."
             if general_utils.is_campaign_complete(challenge_id)
@@ -63,9 +70,15 @@ class ResumeGameScreen(Static):
             if general_utils.is_campaign_complete(progress["active_challenge_id"]):
                 log.write("[yellow]Every mission is already complete. Type `start fresh` to begin again.[/]")
                 return
-            challenge_screen = general_utils.load_challenge(progress["active_challenge_id"])
             log.write("[yellow]Professor Bald is reinitializing the lab cluster...[/]")
             await asyncio.to_thread(general_utils.start_core_infra, True)
+            if general_utils.is_story_intro_pending(progress):
+                story_screen = general_utils.load_story_intro_screen(
+                    progress["story_intro_act"]
+                )
+                await self._replace_self_with(story_screen())
+                return
+            challenge_screen = general_utils.load_challenge(progress["active_challenge_id"])
             if general_utils.needs_challenge_music_preference(progress):
                 await self._replace_self_with(
                     ChallengeMusicPreferenceScreen(challenge_screen)
