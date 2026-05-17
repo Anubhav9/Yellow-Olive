@@ -70,10 +70,11 @@ def ensure_lab_workspace():
 
     lab_challenge_dir.mkdir(parents=True, exist_ok=True)
 
-    for manifest in source_challenge_dir.glob("pod-*.yaml"):
-        target_manifest = lab_challenge_dir / manifest.name
-        if not target_manifest.exists():
-            shutil.copy2(manifest, target_manifest)
+    for pattern in ("pod-*.yaml", "svc-*.yaml", "namespace-*.yaml", "ingress-*.yaml"):
+        for manifest in source_challenge_dir.glob(pattern):
+            target_manifest = lab_challenge_dir / manifest.name
+            if not target_manifest.exists():
+                shutil.copy2(manifest, target_manifest)
 
     return lab_root
 
@@ -81,6 +82,26 @@ def ensure_lab_workspace():
 def get_lab_challenge_file(challenge_id):
     lab_root = ensure_lab_workspace()
     return lab_root / "challenge_files" / f"pod-q{challenge_id}.yaml"
+
+
+def get_lab_service_file(challenge_id):
+    lab_root = ensure_lab_workspace()
+    return lab_root / "challenge_files" / f"svc-q{challenge_id}.yaml"
+
+
+def get_lab_namespace_file():
+    lab_root = ensure_lab_workspace()
+    return lab_root / "challenge_files" / "namespace-signal-town.yaml"
+
+
+def get_lab_ingress_file(challenge_id):
+    lab_root = ensure_lab_workspace()
+    return lab_root / "challenge_files" / f"ingress-q{challenge_id}.yaml"
+
+
+def get_lab_manifest_file(filename):
+    lab_root = ensure_lab_workspace()
+    return lab_root / "challenge_files" / filename
 
 
 def get_progress_file():
@@ -93,6 +114,7 @@ def default_progress():
         "player_name": "",
         "active_challenge_id": "1",
         "challenge_background_music": None,
+        "story_intro_act": None,
     }
 
 
@@ -117,7 +139,44 @@ def load_progress():
     music = saved_progress.get("challenge_background_music")
     if not isinstance(music, bool):
         saved_progress["challenge_background_music"] = None
-    return saved_progress
+    return normalize_story_progress(saved_progress)
+
+
+def normalize_story_progress(progress):
+    """Treat legacy saves on challenge 8+ as having finished the story intro."""
+    if (
+        int(progress["active_challenge_id"]) >= 8
+        and progress.get("story_intro_act") is None
+    ):
+        progress = dict(progress)
+        progress["story_intro_act"] = global_constants.STORY_ACT_DONE
+        save_progress(progress)
+    return progress
+
+
+def is_story_intro_pending(progress=None):
+    progress = progress or load_progress()
+    return progress.get("story_intro_act") in (
+        global_constants.STORY_ACT_SIGNAL_TOWN,
+        global_constants.STORY_ACT_COOL_TURTLE,
+        global_constants.STORY_ACT_TEAM_EVIL,
+    )
+
+
+def load_story_intro_screen(story_intro_act):
+    if story_intro_act == global_constants.STORY_ACT_SIGNAL_TOWN:
+        from screens.signal_town_intro_screen import SignalTownIntroScreen
+
+        return SignalTownIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_COOL_TURTLE:
+        from screens.cool_turtle_intro_screen import CoolTurtleIntroScreen
+
+        return CoolTurtleIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_TEAM_EVIL:
+        from screens.team_evil_intro_screen import TeamEvilIntroScreen
+
+        return TeamEvilIntroScreen
+    raise ValueError(f"Unknown story intro act: {story_intro_act}")
 
 
 def needs_challenge_music_preference(progress):
@@ -162,6 +221,8 @@ def calculate_meow_coins(active_challenge_id):
 
 
 def is_campaign_complete(active_challenge_id):
+    if is_story_intro_pending():
+        return False
     return int(active_challenge_id) > global_constants.TOTAL_CHALLENGES
 
 
@@ -211,6 +272,12 @@ def load_challenge(challenge_id):
         "5": "Challenge5",
         "6": "Challenge6",
         "7": "Challenge7",
+        "8": "Challenge8",
+        "9": "Challenge9",
+        "10": "Challenge10",
+        "11": "Challenge11",
+        "12": "Challenge12",
+        "13": "Challenge13",
     }
     challenge_name = challenge_map.get(str(challenge_id))
     if challenge_name is None:
