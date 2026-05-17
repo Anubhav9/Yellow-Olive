@@ -102,6 +102,27 @@ class BaseChallengeScreen(Static):
             )
             log.write(str(result))
             is_correct = result is True
+        elif self.challenge_id in ("8", "11", "12", "13"):
+            is_correct, validation_message = challenge_validation.validate_challenge(
+                self.challenge_id,
+                challenge_constants.CHALLENGE_8_SERVICE_NAME,
+                challenge_constants.NAMESPACE_SIGNAL_TOWN,
+            )
+            log.write(validation_message)
+        elif self.challenge_id == "9":
+            is_correct, validation_message = challenge_validation.validate_challenge(
+                self.challenge_id,
+                challenge_constants.CHALLENGE_9_RELAY_POD_NAME,
+                challenge_constants.NAMESPACE_SIGNAL_TOWN,
+            )
+            log.write(validation_message)
+        elif self.challenge_id == "10":
+            is_correct, validation_message = challenge_validation.validate_challenge(
+                self.challenge_id,
+                challenge_constants.CHALLENGE_10_RELAY_POD_NAME,
+                challenge_constants.CHALLENGE_10_RELAY_NAMESPACE,
+            )
+            log.write(validation_message)
         else:
             is_correct, validation_message = challenge_validation.validate_challenge(
                 self.challenge_id,
@@ -115,11 +136,23 @@ class BaseChallengeScreen(Static):
             log.write(challenge_screen_prompts.correct_answer_text())
             next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
             progress_challenge_id = next_challenge_id or str(int(self.challenge_id) + 1)
-            general_utils.update_progress(
-                active_challenge_id=progress_challenge_id,
-            )
-            global_constants.meow_coins = general_utils.calculate_meow_coins(progress_challenge_id)
-            log.write(challenge_screen_prompts.move_to_next_challenge_text())
+            if self.challenge_id == "7":
+                general_utils.update_progress(
+                    active_challenge_id=progress_challenge_id,
+                    story_intro_act=global_constants.STORY_ACT_SIGNAL_TOWN,
+                )
+                global_constants.meow_coins = general_utils.calculate_meow_coins(
+                    progress_challenge_id
+                )
+                log.write("\n[reverse] Press Enter to journey to Signal Town [/]")
+            else:
+                general_utils.update_progress(
+                    active_challenge_id=progress_challenge_id,
+                )
+                global_constants.meow_coins = general_utils.calculate_meow_coins(
+                    progress_challenge_id
+                )
+                log.write(challenge_screen_prompts.move_to_next_challenge_text())
         else:
             self.correct_solution = False
             log.write(challenge_screen_prompts.incorrect_answer_text())
