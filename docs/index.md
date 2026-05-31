@@ -1,6 +1,6 @@
-# Yellow Olive Technical Documentation
+# Hi, from Project Yellow Olive
 
-Project Yellow Olive is a terminal-native game built with [Textual](https://textual.textualize.io/). Players fix real Kubernetes problems in a local Minikube cluster while progressing through a Pokémon-inspired story.
+Project Yellow Olive is a terminal-native (TUI) game built in Python with [Textual](https://textual.textualize.io/) and [PyGame](https://www.pygame.org/news). Players fix real Kubernetes problems in a local Minikube cluster while progressing through a Pokémon-inspired story.
 
 This site is for contributors, maintainers, and anyone who wants to understand how the game works under the hood. For the player-facing pitch, characters, and quick start, see the [GitHub README](https://github.com/Anubhav9/Yellow-Olive).
 
