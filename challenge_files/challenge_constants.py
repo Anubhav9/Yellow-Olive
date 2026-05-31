@@ -1,5 +1,6 @@
 CHALLENGE_1_POD_NAME="electromon-pod"
 NAMESPACE_DEFAULT="default"
+NAMESPACE_OAKWOOD_MEADOWS="oakwood-meadows"
 NAMESPACE_SIGNAL_TOWN="signal-town"
 CHALLENGE_8_POD_NAME="bulba-baby-pod"
 CHALLENGE_8_SERVICE_NAME="bulba-baby-service"

@@ -1,12 +1,31 @@
 import asyncio
+import importlib
 import json
 import shutil
 import subprocess
 from pathlib import Path
 import ascii_magic
 from PIL import Image, ImageOps, ImageEnhance
+from PIL.DdsImagePlugin import module
 from rich.text import Text
 import global_constants
+
+
+CHALLENGE_SCENARIO_MAP = {
+    "1": "oakwood_meadows",
+    "2": "oakwood_meadows",
+    "3": "oakwood_meadows",
+    "4": "oakwood_meadows",
+    "5": "oakwood_meadows",
+    "6": "oakwood_meadows",
+    "7": "oakwood_meadows",
+    "8": "signal_town",
+    "9": "signal_town",
+    "10": "signal_town",
+    "11": "signal_town",
+    "12": "signal_town",
+    "13": "signal_town",
+}
 
 async def simulate_dialogue(dialogue, color):
     all_lines = dialogue.split("\n")
@@ -55,8 +74,22 @@ def convert_to_ascii(image_path):
     return t
 
 
+CLUSTER_STARTUP_FAILURE_MESSAGE = (
+    "Something went wrong starting the lab cluster. "
+    "Please contact the developer for now."
+)
+
+
 def show_invalid_command(widget, message="PsyQuack tilts its head... please check that command."):
     widget.app.notify(message, title="Invalid command", severity="warning")
+
+
+def notify_cluster_startup_failure(widget):
+    widget.app.notify(
+        CLUSTER_STARTUP_FAILURE_MESSAGE,
+        title="Lab cluster failed",
+        severity="error",
+    )
 
 
 def get_lab_root():
@@ -64,44 +97,68 @@ def get_lab_root():
 
 
 def ensure_lab_workspace():
+    """Materialise the player's lab workspace under ``yellow-olive-lab/``.
+
+    Copies *source* manifests into the lab on first run so the player can edit
+    those copies without touching the repo. Subsequent runs preserve existing
+    lab files (we only copy when the target is missing), so player edits are
+    never overwritten."""
     lab_root = get_lab_root()
+    project_root = Path(global_constants.PROJECT_ROOT)
+
+    # Legacy challenge_files mirror (kept for residual references).
     lab_challenge_dir = lab_root / "challenge_files"
-    source_challenge_dir = Path(global_constants.PROJECT_ROOT) / "challenge_files"
-
+    source_challenge_dir = project_root / "challenge_files"
     lab_challenge_dir.mkdir(parents=True, exist_ok=True)
-
     for pattern in ("pod-*.yaml", "svc-*.yaml", "namespace-*.yaml", "ingress-*.yaml"):
         for manifest in source_challenge_dir.glob(pattern):
             target_manifest = lab_challenge_dir / manifest.name
             if not target_manifest.exists():
                 shutil.copy2(manifest, target_manifest)
 
+    # Scenario challenge manifests mirror: scenarios/<scenario>/challenge_<id>/k8s_resources/*.
+    # Prologue resources are intentionally NOT mirrored - they are infrastructure
+    # the game manages, not files the player edits.
+    source_scenarios_dir = project_root / "scenarios"
+    if source_scenarios_dir.exists():
+        for pattern in (
+            "*/challenge_*/k8s_resources/*.yaml",
+            "*/challenge_*/k8s_resources/*.yml",
+        ):
+            for manifest in source_scenarios_dir.glob(pattern):
+                target_manifest = lab_root / manifest.relative_to(project_root)
+                if not target_manifest.exists():
+                    target_manifest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(manifest, target_manifest)
+
     return lab_root
 
 
-def get_lab_challenge_file(challenge_id):
+def get_lab_challenge_file(challenge_scenario, challenge_id):
     lab_root = ensure_lab_workspace()
-    return lab_root / "challenge_files" / f"pod-q{challenge_id}.yaml"
+    return (
+        lab_root
+        / "scenarios"
+        / f"{challenge_scenario}"
+        / f"challenge_{challenge_id}"
+        / "k8s_resources"
+        / f"pod-q{challenge_id}.yaml"
+    )
 
 
-def get_lab_service_file(challenge_id):
+def get_lab_service_file(challenge_scenario, challenge_id):
     lab_root = ensure_lab_workspace()
-    return lab_root / "challenge_files" / f"svc-q{challenge_id}.yaml"
+    return (
+        lab_root
+        / "scenarios"
+        / f"{challenge_scenario}"
+        / f"challenge_{challenge_id}"
+        / "k8s_resources"
+        / f"svc-q{challenge_id}.yaml"
+    )
 
 
-def get_lab_namespace_file():
-    lab_root = ensure_lab_workspace()
-    return lab_root / "challenge_files" / "namespace-signal-town.yaml"
 
-
-def get_lab_ingress_file(challenge_id):
-    lab_root = ensure_lab_workspace()
-    return lab_root / "challenge_files" / f"ingress-q{challenge_id}.yaml"
-
-
-def get_lab_manifest_file(filename):
-    lab_root = ensure_lab_workspace()
-    return lab_root / "challenge_files" / filename
 
 
 def get_progress_file():
@@ -165,15 +222,15 @@ def is_story_intro_pending(progress=None):
 
 def load_story_intro_screen(story_intro_act):
     if story_intro_act == global_constants.STORY_ACT_SIGNAL_TOWN:
-        from screens.signal_town_intro_screen import SignalTownIntroScreen
+        from scenarios.signal_town.prologue.screens.signal_town_intro_screen import SignalTownIntroScreen
 
         return SignalTownIntroScreen
     if story_intro_act == global_constants.STORY_ACT_COOL_TURTLE:
-        from screens.cool_turtle_intro_screen import CoolTurtleIntroScreen
+        from scenarios.signal_town.prologue.screens.cool_turtle_intro_screen import CoolTurtleIntroScreen
 
         return CoolTurtleIntroScreen
     if story_intro_act == global_constants.STORY_ACT_TEAM_EVIL:
-        from screens.team_evil_intro_screen import TeamEvilIntroScreen
+        from scenarios.signal_town.prologue.screens.team_evil_intro_screen import TeamEvilIntroScreen
 
         return TeamEvilIntroScreen
     raise ValueError(f"Unknown story intro act: {story_intro_act}")
@@ -229,13 +286,17 @@ def is_campaign_complete(active_challenge_id):
 def start_core_infra(wait=False):
     command = ["sh", str(global_constants.PROJECT_ROOT / "scripts" / "script.sh")]
     if wait:
-        subprocess.run(
+        result = subprocess.run(
             command,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             cwd=str(global_constants.PROJECT_ROOT),
             check=False,
+            text=True,
         )
+        if result.returncode != 0:
+            detail = (result.stderr or result.stdout or "").strip()
+            raise RuntimeError(detail or CLUSTER_STARTUP_FAILURE_MESSAGE)
         return
 
     subprocess.Popen(
@@ -247,13 +308,19 @@ def start_core_infra(wait=False):
     )
 
 
-def stop_core_infra():
-    subprocess.Popen(
-        ["minikube", "stop", "-p", "project-yellow-olive"],
+def teardown_core_infra():
+    """Delete the lab minikube profile and its docker container."""
+    subprocess.run(
+        ["minikube", "delete", "-p", "project-yellow-olive", "--purge"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        start_new_session=True,
+        check=False,
+        timeout=120,
     )
+
+
+def stop_core_infra():
+    teardown_core_infra()
 
 
 def invalid_command_text(expected_command=None):
@@ -264,30 +331,15 @@ def invalid_command_text(expected_command=None):
 
 
 def load_challenge(challenge_id):
-    challenge_map = {
-        "1": "Challenge1",
-        "2": "Challenge2",
-        "3": "Challenge3",
-        "4": "Challenge4",
-        "5": "Challenge5",
-        "6": "Challenge6",
-        "7": "Challenge7",
-        "8": "Challenge8",
-        "9": "Challenge9",
-        "10": "Challenge10",
-        "11": "Challenge11",
-        "12": "Challenge12",
-        "13": "Challenge13",
-    }
-    challenge_name = challenge_map.get(str(challenge_id))
-    if challenge_name is None:
+    challenge_id_str = str(challenge_id)
+    scenario = CHALLENGE_SCENARIO_MAP.get(challenge_id_str)
+    if scenario is None:
         raise ValueError(f"Unknown challenge id: {challenge_id}")
 
-    module = __import__(
-        f"screens.challenge_{challenge_id}",
-        fromlist=[challenge_name],
+    module = importlib.import_module(
+        f"scenarios.{scenario}.challenge_{challenge_id_str}.screen"
     )
-    return getattr(module, challenge_name)
+    return getattr(module, f"Challenge{challenge_id_str}")
 
 
 def get_next_challenge_id(challenge_id):
