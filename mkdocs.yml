@@ -1,0 +1,40 @@
+site_name: Yellow Olive Technical Documentation
+site_url: https://anubhav9.github.io/Yellow-Olive/
+repo_url: https://github.com/Anubhav9/Yellow-Olive
+repo_name: Anubhav9/Yellow-Olive
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: amber
+      accent: amber
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - Scenarios: scenarios.md
+  - Lab Workspace: lab-workspace.md
+  - Validation: validation.md
+  - Cluster Lifecycle: cluster-lifecycle.md
+  - Contributing:
+    - Adding a Challenge: contributing/adding-a-challenge.md
+    - Adding a Scenario: contributing/adding-a-scenario.md
+  - Roadmap: roadmap.md
+  - Troubleshooting: troubleshooting.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
