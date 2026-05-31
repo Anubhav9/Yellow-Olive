@@ -7,7 +7,11 @@ A terminal-native retro adventure designed to make infrastructure learning feel 
 [![GitHub stars](https://img.shields.io/github/stars/Anubhav9/Yellow-Olive?style=social)](https://github.com/Anubhav9/Yellow-Olive)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
+[![PyPI downloads](https://static.pepy.tech/badge/yellow-olive)](https://pepy.tech/project/yellow-olive)
+[![Status: Active Development](https://img.shields.io/badge/status-active%20development%20in%20progress-brightgreen?style=flat)](https://github.com/Anubhav9/Yellow-Olive)
 [![Made with ❤️ in Bengaluru 🇮🇳](https://img.shields.io/badge/Made%20with%20❤️%20in-Bengaluru%20🇮🇳-%23D4AF37?style=flat)](https://github.com/Anubhav9/Yellow-Olive)
+
+If Yellow Olive helps you learn or stay motivated, a [star on GitHub](https://github.com/Anubhav9/Yellow-Olive) goes a long way - it helps more people find the project.
 
 <img src="https://github.com/user-attachments/assets/f752fbca-da89-4227-bf44-b4659bf63969" width="80%" alt="Opening screen with Professor Bald">
 
