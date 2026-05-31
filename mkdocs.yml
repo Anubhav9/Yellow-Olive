@@ -19,6 +19,7 @@ theme:
 
 nav:
   - Home: index.md
+  - What is Project Yellow Olive: what-is-project-yellow-olive.md
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Scenarios: scenarios.md
