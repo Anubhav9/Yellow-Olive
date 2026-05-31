@@ -1,4 +1,4 @@
-# Project Yellow Olive 
+# Project Yellow Olive
 
 **Pokémon Yellow, but you tame Kubernetes clusters instead of Pokémon.**
 
@@ -11,32 +11,39 @@ A terminal-native retro adventure designed to make infrastructure learning feel 
 
 <img src="https://github.com/user-attachments/assets/f752fbca-da89-4227-bf44-b4659bf63969" width="80%" alt="Opening screen with Professor Bald">
 
----
-## Index
+📖 Interested in the technicalities - architecture, contributing, troubleshooting, and local development? Find your way here → [Technical Documentation](https://anubhav9.github.io/Yellow-Olive/)
 
-- [The Motivation](#the-motivation)
-- [An Honest Take](#an-honest-take)
-- [Setup and Run (Local)](#setup-and-run-local)
-- [Meet the Characters](#meet-the-characters)
-- [From Yellow Olive to Kubernetes](#from-yellow-olive-to-kubernetes)
-- [Gameplay Commands](#gameplay-commands)
-- [Project Yellow Olive in Action](#project-yellow-olive-in-action)
-- [Contributing](#contributing)
-- [What's next in the roadmap?](#whats-next-in-the-roadmap)
+---
+
+## Try it
+
+**Prerequisites:** Python 3.10+, Docker, [Minikube](https://minikube.sigs.k8s.io/docs/start/), and [kubectl](https://kubernetes.io/docs/tasks/tools/).
+
+```bash
+pip install yellow-olive
+yellow-olive start
+```
+
+The first time you begin a mission, the game spins up a local Minikube cluster - this can take up to a minute.
+
+**Tip:** keep two terminal tabs open - one for the game, one as your **Command Chamber** for `kubectl` commands.
+
+Running from source or need setup help? See the [documentation](https://anubhav9.github.io/Yellow-Olive/).
 
 ---
 
 ## The Motivation
 
-```Kubernetes is powerful...  
-Kubernetes is everywhere...  
-Kubernetes runs the modern world...  
+```
+Kubernetes is powerful...
+Kubernetes is everywhere...
+Kubernetes runs the modern world...
 And yet, for many of us, learning it feels confusing, overwhelming, and sometimes just plain boring :(
 ```
 
 Project Yellow Olive is my personal, experimental attempt at changing that.
 
-I grew up on a GameBoy, lost in the world of Pokémon. Even today, a single chiptune note takes me straight back to those golden childhood days. I know I’m not alone in that feeling.
+I grew up on a GameBoy, lost in the world of Pokémon. Even today, a single chiptune note takes me straight back to those golden childhood days. I know I'm not alone in that feeling.
 
 Nostalgia has a strange power - it lowers resistance, sparks curiosity, and makes difficult things feel lighter.
 
@@ -46,13 +53,13 @@ Yellow Olive is built on that belief: combine nostalgia with motivation, and eve
 
 ## An Honest Take
 
-I’ve attempted the CKAD and CKA certifications - and I didn’t clear them.
+I've attempted the CKAD and CKA certifications - and I didn't clear them.
 
-Not because I didn’t understand the concepts, but because I didn’t practice enough. Platforms like Killer.sh demand consistency and repetition - and like many of us, I underestimated that discipline.
+Not because I didn't understand the concepts, but because I didn't practice enough. Platforms like Killer.sh demand consistency and repetition - and like many of us, I underestimated that discipline.
 
-This project isn’t a replacement for serious exam prep.
+This project isn't a replacement for serious exam prep.
 
-It’s a practice ground - a way to build confidence, stay engaged, and keep the adrenaline slightly elevated while solving real problems.
+It's a practice ground - a way to build confidence, stay engaged, and keep the adrenaline slightly elevated while solving real problems.
 
 Not every day is productive. Not every day is high-energy.
 
@@ -60,77 +67,10 @@ This is just my attempt to make the hard days a little easier to push through.
 
 ---
 
-## Setup and Run
-
-### Prerequisites
-
-- Python 3.10+
-- Docker Desktop or Docker Engine (required)
-- `minikube` (required)
-- `kubectl` (required)
-
-Project Yellow Olive uses Minikube to create and manage the local Kubernetes cluster used during gameplay, so Docker and Minikube must be installed before starting the game.
-
-### Install Minikube and Kubernetes Tooling
-
-1. Install Docker and make sure it is running.
-2. Install Minikube by following the official guide: [Install Minikube](https://minikube.sigs.k8s.io/docs/start/)
-3. Install `kubectl` by following the official guide: [Install kubectl](https://kubernetes.io/docs/tasks/tools/)
-
-You can verify the setup with:
-
-```bash
-docker --version
-minikube version
-kubectl version --client
-```
-
-### Install from PyPI
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install yellow-olive
-```
-
-### Start the Game from PyPI
-
-```bash
-yellow-olive start
-```
-
-When the game starts, Project Yellow Olive creates a `yellow-olive-lab/` folder in your current working directory and places the editable challenge manifests there.
-
-### Install from Source
-
-```bash
-git clone https://github.com/Anubhav9/Yellow-Olive.git
-cd Yellow-Olive
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### Start the Game from Source
-
-```bash
-python app.py
-```
-
-When you start the game and proceed through initialization, Yellow Olive will start a Minikube profile and switch kubectl context automatically.
-
-### Helpful Tip for Gameplay
-
-Keep two terminal tabs open:
-
-1. **Game terminal** -> run `yellow-olive start` or `python app.py`
-2. **Command Chamber terminal** -> run your `kubectl` commands for challenge fixes
-
----
-
 ## Meet the Characters
 
 ### Professor Bald Uncle
+
 <p align="center">
   <img width="120" src="https://github.com/user-attachments/assets/0b975f11-f319-45fe-96f1-6d73b557f17a" alt="Professor Bald Uncle" />
 </p>
@@ -138,104 +78,132 @@ Keep two terminal tabs open:
 ```
 The classic mentor archetype. Calm, experienced, slightly intimidating at first glance.
 
-He steps in when you’re stuck, nudges you in the right direction, and reminds you that debugging is part of the journey.
+He steps in when you're stuck, nudges you in the right direction, and reminds you that debugging is part of the journey.
 
 Strict on the outside, generous at heart.
 ```
 
 ### Electromon
+
 <p align="center">
   <img width="120" src="https://github.com/user-attachments/assets/dad3be2b-216f-44ec-9a12-c79c763dfd32" alt="Electromon" />
 </p>
 
 ```
-Your closest companion. Quiet by nature, but restless at heart — he doesn’t like being confined for long.
- 
-When something feels off in the cluster, he’s usually at the center of it. Shy, but loyal through every broken deployment.
+Your closest companion. Quiet by nature, but restless at heart - he doesn't like being confined for long.
+
+When something feels off in the cluster, he's usually at the center of it. Shy, but loyal through every broken deployment.
 ```
 
 ### PsyQuack
+
 <p align="center">
   <img width="120" src="https://github.com/user-attachments/assets/bfc93cfc-f4c5-4b58-ac6a-4c430eb8b879" alt="PsyQuack" />
 </p>
 
 ```
-He doesn’t talk much. He watches.  
-You think you fixed the Deployment? He checks.  
-You’re confident the Service works? He verifies.  
-If something’s still off, PsyQuack will let you know - in his own slightly unhinged way.  
-He doesn’t reward effort. He rewards correctness.
+He doesn't talk much. He watches.
+You think you fixed the Deployment? He checks.
+You're confident the Service works? He verifies.
+If something's still off, PsyQuack will let you know - in his own slightly unhinged way.
+He doesn't reward effort. He rewards correctness.
 ```
+
+### Cool Turtle
+
+<p align="center">
+  <img width="120" src="media/resources/image_files/cool_turtle.png" alt="Cool Turtle" />
+</p>
+
+```
+A wandering engineer who shows up wherever the cluster needs steady hands.
+
+Calm under pressure, stubborn about uptime, and always trying to keep the signal alive
+long enough for someone else to finish the fix.
+
+You'll meet him again - different towns, same problem: something critical stopped reaching
+where it was supposed to go.
+```
+
+### Team Evil
+
+<p align="center">
+  <img width="120" src="media/resources/image_files/team_evil.png" alt="Team Evil" />
+</p>
+
+```
+The recurring troublemakers of the Yellow Olive world.
+
+They rarely smash workloads directly - they break the paths between them: routing, naming,
+visibility, the quiet plumbing that makes a cluster feel like one system.
+
+Wherever infrastructure should connect, Team Evil has probably been there first.
+```
+
 ---
+
 ## From Yellow Olive to Kubernetes
 
 Every character, keyword, and challenge maps directly to a real Kubernetes concept.
 
 | Yellow Olive Concept | Kubernetes Equivalent | What It Means in Practice                          |
-|----------------------|-----------------------|----------------------------------------------------|
+| -------------------- | --------------------- | -------------------------------------------------- |
 | Posemon              | Container             | A single runnable unit inside a workload           |
 | Pokepod              | Pod                   | The smallest deployable unit - houses Posemons     |
+| Region / Town        | Namespace             | A bounded district in the cluster - separate scope for resources |
 
-(And many more coming — every mechanic is built to teach something real.)
+(And many more - every mechanic is built to teach something real.)
 
 ---
+
 ## Gameplay Commands
 
-Quick in-game commands you’ll use often:
-
-- `psyquack validate` → Invokes PsyQuack to evaluate your solution for the current challenge.
-- `psyquack hint` → PsyQuack calls Professor Bald Uncle for a nudge (without spoiling the answer).
-- `psyquack back` → Returns to the previous challenge screen.
+- `psyquack validate` - PsyQuack checks your cluster fix for the current challenge.
+- `psyquack hint` - A nudge from Professor Bald (without spoiling the answer).
+- `psyquack back` - Return to the previous screen.
 
 ---
 
-## Project Yellow Olive in Action
+## See it in Action
 
-***Full gameplay walkthrough (2 min):
-[Watch on YouTube](https://youtu.be/vAu4aaM1oOw)***
-
----
-
-## Music Credits
-
-All music files used in Project Yellow Olive are sourced from OpenGameArt, shared under the `CC0` license, and the relevant creators are credited below.
-
-| Music File | Music Name | Author Name | License | Source |
-|------------|------------|-------------|---------|--------|
-| `screen_1_opening_song.mp3` | JRPG Piano | [Joth](https://opengameart.org/users/joth) | CC0 | OpenGameArt |
-| `screen_2_music.mp3` | Town Theme RPG | [CynicMusic](https://opengameart.org/users/joth) | CC0 | OpenGameArt |
-| `battle_music.ogg` | 8 bit RPG Battle Encounter Theme | [Ted Kerr](https://opengameart.org/users/wolfgang) | CC0 | OpenGameArt |
-| `battle_music_2.mp3` | 8 bit Chiptune Encounter Theme | [Shiru8Bit](https://opengameart.org/users/shiru8bit) | CC0 | OpenGameArt |
-| `win_music.ogg` | Win Jingle | [Fupi](https://opengameart.org/users/fupi) | CC0 | OpenGameArt |
-| `loose_music.ogg` | Lost Game Short Music Clip | [Robin Lamb](https://opengameart.org/users/robin-lamb) | CC0 | OpenGameArt |
-| `signal_town_intro.mp3` | Abandoned | [Preston Peak](http://opengameart.org/users/ppeak) | CC0 | OpenGameArt |
-| `cool_turtle_intro.mp3` | Fated Encounter | [Preston Peak](http://opengameart.org/users/ppeak) | CC0 | OpenGameArt |
-| `team_evil_intro.mp3` | Boneyard | [Preston Peak](http://opengameart.org/users/ppeak) | CC0 | OpenGameArt |
+**Full gameplay walkthrough (2 min):** [Watch on YouTube](https://youtu.be/vAu4aaM1oOw)
 
 ---
 
 ## Contributing
 
-Contributions are welcome, especially for adding new challenges.
+Contributions are welcome - especially new challenges and scenarios.
 
-If you'd like to contribute:
-
-1. Open an issue with the challenge idea and learning objective.
-2. Add/update challenge text in `challenge_files/`.
-3. Add/update corresponding manifest files in `challenge_files/{type}-q*.yaml`.
-4. Add/update challenge validation rules in `core_logic/challenge_validation.py`.
-5. Submit a pull request with a short demo of the challenge flow.
+Open an issue with your idea, then follow the [contributing guide](https://anubhav9.github.io/Yellow-Olive/contributing/) in the documentation.
 
 ---
 
-## What's next in the roadmap?
+## Roadmap
 
-This is currently a work in progress. Planned milestones for the following months - April , May and June 2026:
+Save/load progress and PyPI packaging are live. The Signal Town arc (Services, DNS, Ingress) is in active development.
 
-| Roadmap Stage | Planned Feature | Why It Matters | Status |
-|---------------|------------------|----------------|--------|
-| Phase 1 | Save/load game progress and jump directly to a specific challenge | Lets players resume quickly and practice targeted scenarios | Released on April 25, 2026 |
-| Phase 2 | Add more challenges focused on Kubernetes Services | Expands learning beyond Pods into core networking concepts | In Progress. Expected by May 31, 2026 |
-| Phase 3 | Package and publish Project Yellow Olive on PyPI | Makes installation easier for the community | Released on April 19, 2026 |
+Full roadmap → [documentation](https://anubhav9.github.io/Yellow-Olive/roadmap/)
 
+---
 
+## Music Credits
+
+All music is sourced from [OpenGameArt](https://opengameart.org/) under the CC0 license.
+
+| Music File               | Music Name                         | Author        |
+| ------------------------ | ---------------------------------- | ------------- |
+| `screen_1_opening_song.mp3` | JRPG Piano                      | [Joth](https://opengameart.org/users/joth) |
+| `screen_2_music.mp3`        | Town Theme RPG                  | [CynicMusic](https://opengameart.org/users/joth) |
+| `battle_music.ogg`          | 8 bit RPG Battle Encounter Theme | [Ted Kerr](https://opengameart.org/users/wolfgang) |
+| `battle_music_2.mp3`        | 8 bit Chiptune Encounter Theme  | [Shiru8Bit](https://opengameart.org/users/shiru8bit) |
+| `win_music.ogg`             | Win Jingle                      | [Fupi](https://opengameart.org/users/fupi) |
+| `loose_music.ogg`           | Lost Game Short Music Clip      | [Robin Lamb](https://opengameart.org/users/robin-lamb) |
+| `signal_town_intro.mp3`     | Abandoned                       | [Preston Peak](http://opengameart.org/users/ppeak) |
+| `cool_turtle_intro.mp3`     | Fated Encounter                 | [Preston Peak](http://opengameart.org/users/ppeak) |
+| `team_evil_intro.mp3`       | Boneyard                        | [Preston Peak](http://opengameart.org/users/ppeak) |
+
+---
+
+## License
+
+MIT - see [LICENSE](LICENSE) for details.
