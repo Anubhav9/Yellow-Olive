@@ -51,11 +51,10 @@ py-modules = ["app", "global_constants"]
 where = ["."]
 include = [
   "challenge_files*",
-  "core_logic*",
-  "dialouges*",
   "media*",
-  "screen_prompts*",
+  "scenarios*",
   "screens*",
+  "services*",
   "utils*",
 ]
 namespaces = true

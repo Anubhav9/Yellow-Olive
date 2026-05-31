@@ -1,16 +1,16 @@
 from pathlib import Path
 import argparse
+import asyncio
 
 from textual.app import App,ComposeResult
-from textual.widgets import Static, Button, Header,RichLog
+from textual.widgets import Static, Button, Header
 from textual.containers import Horizontal,Vertical
 from textual import on
-from screens import professor_bald_intro
-from dialouges import professor_bald_dialogue
-from screens.author_info import AuthorInfo
-from screens.professor_bald_intro import ProfessorBaldIntro
-from screens.help_screen import HelpScreen
-from screens.resume_game_screen import ResumeGameScreen
+from scenarios.oakwood_meadows.prologue.dialogues import professor_bald_dialogue
+from scenarios.oakwood_meadows.prologue.screens.professor_bald_intro import ProfessorBaldIntro
+from screens.common.author_info import AuthorInfo
+from screens.common.help_screen import HelpScreen
+from screens.common.resume_game_screen import ResumeGameScreen
 from utils import general_utils
 
 
@@ -62,8 +62,10 @@ class ProjectOlive(App):
 
     @on(Button.Pressed, "#quit")
     async def button_press_quit(self, event=Button.Pressed):
-        general_utils.stop_core_infra()
         self.exit()
+
+    async def on_exit(self) -> None:
+        await asyncio.to_thread(general_utils.teardown_core_infra)
 
 
 

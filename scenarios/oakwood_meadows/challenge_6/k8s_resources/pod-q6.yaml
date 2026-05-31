@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: electromon-pod
+  labels:
+    type: pod
+  namespace: oakwood-meadows
+spec:
+  containers:
+    - name: elctromon-container
+      image: nginx
+      resources:
+        limits:
+          cpu: "200m"
+          memory: "128Mi"
