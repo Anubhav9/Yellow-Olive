@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claim-inspector-notice-reader
+  namespace: gold-rush-city
+subjects:
+  - kind: ServiceAccount
+    name: unknown-prospector-sa
+    namespace: gold-rush-city
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: claim-notice-reader

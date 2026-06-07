@@ -28,6 +28,10 @@ class ResumeGameScreen(Static):
                 global_constants.STORY_ACT_SIGNAL_TOWN: "Arrival at Signal Town",
                 global_constants.STORY_ACT_COOL_TURTLE: "Cool Turtle at the tower",
                 global_constants.STORY_ACT_TEAM_EVIL: "Team Evil's trail",
+                global_constants.STORY_ACT_GOLD_RUSH_CITY: "Arrival at Gold Rush City",
+                global_constants.STORY_ACT_GOLD_RUSH_VAULT: "The city Vault",
+                global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL: "Team Evil's licence",
+                global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE: "Gold Rush City victory",
             }
             mission_text = story_labels.get(story_act, "Signal Town journey")
         elif general_utils.is_campaign_complete(challenge_id):

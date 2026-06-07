@@ -27,6 +27,12 @@ CHALLENGE_SCENARIO_MAP = {
     "11": "signal_town",
     "12": "signal_town",
     "13": "signal_town",
+    "14": "gold_rush_city",
+    "15": "gold_rush_city",
+    "16": "gold_rush_city",
+    "17": "gold_rush_city",
+    "18": "gold_rush_city",
+    "19": "gold_rush_city",
 }
 
 async def simulate_dialogue(dialogue, color):
@@ -223,6 +229,10 @@ def is_story_intro_pending(progress=None):
         global_constants.STORY_ACT_SIGNAL_TOWN,
         global_constants.STORY_ACT_COOL_TURTLE,
         global_constants.STORY_ACT_TEAM_EVIL,
+        global_constants.STORY_ACT_GOLD_RUSH_CITY,
+        global_constants.STORY_ACT_GOLD_RUSH_VAULT,
+        global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL,
+        global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE,
     )
 
 
@@ -239,6 +249,22 @@ def load_story_intro_screen(story_intro_act):
         from scenarios.signal_town.prologue.screens.team_evil_intro_screen import TeamEvilIntroScreen
 
         return TeamEvilIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_CITY:
+        from scenarios.gold_rush_city.prologue.screens.gold_rush_city_intro_screen import GoldRushCityIntroScreen
+
+        return GoldRushCityIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_VAULT:
+        from scenarios.gold_rush_city.prologue.screens.mayor_vault_intro_screen import MayorVaultIntroScreen
+
+        return MayorVaultIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL:
+        from scenarios.gold_rush_city.prologue.screens.team_evil_license_intro_screen import TeamEvilLicenseIntroScreen
+
+        return TeamEvilLicenseIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE:
+        from scenarios.gold_rush_city.epilogue.screens.arc_complete_screen import GoldRushCityArcCompleteScreen
+
+        return GoldRushCityArcCompleteScreen
     raise ValueError(f"Unknown story intro act: {story_intro_act}")
 
 

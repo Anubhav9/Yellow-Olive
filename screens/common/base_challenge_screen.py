@@ -122,7 +122,25 @@ class BaseChallengeScreen(Static):
                 global_constants.meow_coins = general_utils.calculate_meow_coins(
                     progress_challenge_id
                 )
-                log.write("\n[reverse] Press Enter to journey to Signal Town [/]")
+                log.write("\n[reverse] Press Enter to Continue [/]")
+            elif self.challenge_id == "13":
+                general_utils.update_progress(
+                    active_challenge_id=progress_challenge_id,
+                    story_intro_act=global_constants.STORY_ACT_GOLD_RUSH_CITY,
+                )
+                global_constants.meow_coins = general_utils.calculate_meow_coins(
+                    progress_challenge_id
+                )
+                log.write("\n[reverse] Press Enter to Continue [/]")
+            elif self.challenge_id == "19":
+                general_utils.update_progress(
+                    active_challenge_id=progress_challenge_id,
+                    story_intro_act=global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE,
+                )
+                global_constants.meow_coins = general_utils.calculate_meow_coins(
+                    progress_challenge_id
+                )
+                log.write("\n[reverse] Press Enter to Continue [/]")
             else:
                 general_utils.update_progress(
                     active_challenge_id=progress_challenge_id,
