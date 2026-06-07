@@ -192,19 +192,21 @@ Full roadmap → [documentation](https://anubhav9.github.io/Yellow-Olive/roadmap
 
 ## Music Credits
 
-All music is sourced from [OpenGameArt](https://opengameart.org/) under the CC0 license.
+Music is sourced from [OpenGameArt](https://opengameart.org/). Licenses vary by track - see the table below. Attribution is required for CC-BY tracks.
 
-| Music File               | Music Name                         | Author        |
-| ------------------------ | ---------------------------------- | ------------- |
-| `screen_1_opening_song.mp3` | JRPG Piano                      | [Joth](https://opengameart.org/users/joth) |
-| `screen_2_music.mp3`        | Town Theme RPG                  | [CynicMusic](https://opengameart.org/users/joth) |
-| `battle_music.ogg`          | 8 bit RPG Battle Encounter Theme | [Ted Kerr](https://opengameart.org/users/wolfgang) |
-| `battle_music_2.mp3`        | 8 bit Chiptune Encounter Theme  | [Shiru8Bit](https://opengameart.org/users/shiru8bit) |
-| `win_music.ogg`             | Win Jingle                      | [Fupi](https://opengameart.org/users/fupi) |
-| `loose_music.ogg`           | Lost Game Short Music Clip      | [Robin Lamb](https://opengameart.org/users/robin-lamb) |
-| `signal_town_intro.mp3`     | Abandoned                       | [Preston Peak](http://opengameart.org/users/ppeak) |
-| `cool_turtle_intro.mp3`     | Fated Encounter                 | [Preston Peak](http://opengameart.org/users/ppeak) |
-| `team_evil_intro.mp3`       | Boneyard                        | [Preston Peak](http://opengameart.org/users/ppeak) |
+| Music File | Track Name | Author | License |
+| ---------- | ---------- | ------ | ------- |
+| `screen_1_opening_song.mp3` | JRPG Piano | [Joth](https://opengameart.org/users/joth) | CC0 |
+| `screen_2_music.mp3` | Town Theme RPG | [Joth](https://opengameart.org/users/joth) | CC0 |
+| `battle_music.ogg` | 8 bit RPG Battle Encounter Theme | [Ted Kerr](https://opengameart.org/users/wolfgang) | CC0 |
+| `battle_music_2.mp3` | 8 bit Chiptune Encounter Theme | [Shiru8Bit](https://opengameart.org/users/shiru8bit) | CC0 |
+| `win_music.ogg` | Win Jingle | [Fupi](https://opengameart.org/users/fupi) | CC0 |
+| `loose_music.ogg` | Lost Game Short Music Clip | [Robin Lamb](https://opengameart.org/users/robin-lamb) | CC0 |
+| `signal_town_intro_music.mp3` | Abandoned | [Preston Peak](https://opengameart.org/users/ppeak) | CC0 |
+| `cool_turtle_intro_music.mp3` | Fated Encounter | [Preston Peak](https://opengameart.org/users/ppeak) | CC0 |
+| `team_evil_intro_music.mp3` | Boneyard | [Preston Peak](https://opengameart.org/users/ppeak) | CC0 |
+| `gold_rush_city_intro_music.ogg` | Dacoit ~ Desert Theme | [Spring](https://opengameart.org/users/spring) | CC-BY 3.0 |
+| `walk_to_vault.ogg` | Lasso Lady | [congusbongus](https://opengameart.org/users/congusbongus) | CC0 |
 
 ---
 
