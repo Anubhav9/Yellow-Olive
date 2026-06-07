@@ -1,6 +1,7 @@
 # Project Yellow Olive
 
 **Pokémon Yellow, but you tame Kubernetes clusters instead of Pokémon.**
+![Repository Banner](./media/resources/image_files/yellow_olive_banner.png)
 
 A terminal-native retro adventure designed to make infrastructure learning feel fun, nostalgic, and a little less overwhelming.
 
