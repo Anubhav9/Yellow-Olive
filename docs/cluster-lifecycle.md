@@ -65,7 +65,7 @@ If the player resumes mid-campaign:
 
 ## Teardown
 
-When the player quits from the main menu, `app.on_exit()` runs:
+When the player quits from the main menu, `app.on_unmount()` runs:
 
 ```python
 minikube delete -p project-yellow-olive --purge

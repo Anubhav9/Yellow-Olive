@@ -64,7 +64,7 @@ class ProjectOlive(App):
     async def button_press_quit(self, event=Button.Pressed):
         self.exit()
 
-    async def on_exit(self) -> None:
+    async def on_unmount(self) -> None:
         await asyncio.to_thread(general_utils.teardown_core_infra)
 
 
