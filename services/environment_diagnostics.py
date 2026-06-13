@@ -234,7 +234,11 @@ def run_environment_checks() -> EnvironmentReport:
     )
 
 
-def format_report_for_display(report: EnvironmentReport) -> str:
+def format_report_for_display(
+    report: EnvironmentReport,
+    *,
+    include_quit_footer: bool = True,
+) -> str:
     lines = [
         "[bold]Lab equipment check[/]",
         report.system_info,
@@ -270,7 +274,8 @@ def format_report_for_display(report: EnvironmentReport) -> str:
         lines.append(check.fix_hint)
         lines.append("")
 
-    lines.append(
-        "[yellow]Use Quit from the menu, fix the issues above, and come back when ready.[/]"
-    )
+    if include_quit_footer:
+        lines.append(
+            "[yellow]Use Quit from the menu, fix the issues above, and come back when ready.[/]"
+        )
     return "\n".join(lines)
