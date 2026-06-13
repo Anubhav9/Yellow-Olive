@@ -313,7 +313,7 @@ def start_core_infra_v1() -> None:
             timeout=remaining,
         )
     except subprocess.TimeoutExpired as exc:
-        _raise_cluster_startup_timeout() from exc
+        raise _cluster_startup_timeout_error() from exc
 
     if start_result.returncode != 0:
         detail = (start_result.stderr or start_result.stdout or "").strip()
@@ -341,13 +341,17 @@ def _remaining_cluster_startup_seconds(deadline: float) -> float:
     return deadline - time.monotonic()
 
 
-def _raise_cluster_startup_timeout() -> None:
-    raise RuntimeError(
+def _cluster_startup_timeout_error() -> RuntimeError:
+    return RuntimeError(
         f"The lab cluster did not become ready within "
         f"{LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS} seconds. "
         "First run can take several minutes while images download. "
         "Check Docker and your network, then try again."
     )
+
+
+def _raise_cluster_startup_timeout() -> None:
+    raise _cluster_startup_timeout_error()
 
 
 async def wait_for_cluster_bootstrap(log) -> None:
