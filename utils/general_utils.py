@@ -81,8 +81,9 @@ CLUSTER_STARTUP_FAILURE_MESSAGE = (
     "Please contact the developer for now."
 )
 LAB_MINIKUBE_PROFILE = "project-yellow-olive"
-LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS = 60
+LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS = 300
 LAB_CLUSTER_READY_POLL_SECONDS = 2
+LAB_CLUSTER_BOOTSTRAP_REMINDER_SECONDS = 60
 
 
 def show_invalid_command(widget, message="PsyQuack tilts its head... please check that command."):
@@ -297,35 +298,72 @@ def start_core_infra_v1() -> None:
         raise RuntimeError("Minikube not found.")
 
     profile = LAB_MINIKUBE_PROFILE
-    start_result = subprocess.run(
-        ["minikube", "start", "--nodes", "1", "-p", profile],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    deadline = time.monotonic() + LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS
+
+    remaining = _remaining_cluster_startup_seconds(deadline)
+    if remaining <= 0:
+        _raise_cluster_startup_timeout()
+
+    try:
+        start_result = subprocess.run(
+            ["minikube", "start", "--nodes", "1", "-p", profile],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=remaining,
+        )
+    except subprocess.TimeoutExpired as exc:
+        _raise_cluster_startup_timeout() from exc
+
     if start_result.returncode != 0:
         detail = (start_result.stderr or start_result.stdout or "").strip()
         raise RuntimeError(detail or CLUSTER_STARTUP_FAILURE_MESSAGE)
 
-    elapsed = 0
     while not _minikube_cluster_is_ready(profile):
-        if elapsed >= LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS:
-            raise RuntimeError(
-                f"Cluster failed to become ready within "
-                f"{LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS}s."
-            )
+        if _remaining_cluster_startup_seconds(deadline) <= 0:
+            _raise_cluster_startup_timeout()
         time.sleep(LAB_CLUSTER_READY_POLL_SECONDS)
-        elapsed += LAB_CLUSTER_READY_POLL_SECONDS
 
+    remaining = _remaining_cluster_startup_seconds(deadline)
     context_result = subprocess.run(
         ["kubectl", "config", "use-context", profile],
         capture_output=True,
         text=True,
         check=False,
+        timeout=max(remaining, 1),
     )
     if context_result.returncode != 0:
         detail = (context_result.stderr or context_result.stdout or "").strip()
         raise RuntimeError(detail or CLUSTER_STARTUP_FAILURE_MESSAGE)
+
+
+def _remaining_cluster_startup_seconds(deadline: float) -> float:
+    return deadline - time.monotonic()
+
+
+def _raise_cluster_startup_timeout() -> None:
+    raise RuntimeError(
+        f"The lab cluster did not become ready within "
+        f"{LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS} seconds. "
+        "First run can take several minutes while images download. "
+        "Check Docker and your network, then try again."
+    )
+
+
+async def wait_for_cluster_bootstrap(log) -> None:
+    """Start the lab cluster and surface progress hints in the game log."""
+    from screens.common.screen_prompts import game_initialisation as screen_prompts
+
+    log.write(screen_prompts.CLUSTER_BOOTSTRAP_MESSAGE)
+    bootstrap_task = asyncio.create_task(asyncio.to_thread(start_core_infra, True))
+    try:
+        await asyncio.wait_for(
+            asyncio.shield(bootstrap_task),
+            timeout=LAB_CLUSTER_BOOTSTRAP_REMINDER_SECONDS,
+        )
+    except asyncio.TimeoutError:
+        log.write(screen_prompts.CLUSTER_BOOTSTRAP_STILL_WORKING_MESSAGE)
+    await bootstrap_task
 
 
 def _minikube_cluster_is_ready(profile: str) -> bool:

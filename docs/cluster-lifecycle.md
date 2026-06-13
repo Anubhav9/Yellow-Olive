@@ -14,19 +14,19 @@ The profile is isolated from other Minikube profiles you may use for work or stu
 
 ## Startup sequence
 
-### 1. scripts/script.sh
+### 1. start_core_infra_v1()
 
-Called by `general_utils.start_core_infra(wait=True)` from the game initialisation screen.
+Called by `general_utils.start_core_infra(wait=True)` from the game initialisation and resume screens.
 
 Steps:
 
 1. Verify `minikube` is on PATH
-2. `minikube start --nodes 1 -p project-yellow-olive`
+2. `minikube start --nodes 1 -p project-yellow-olive` (bounded by the overall startup budget)
 3. Poll `minikube status -p project-yellow-olive` every 2 seconds until healthy
-4. **Timeout:** 60 seconds - exits non-zero if cluster never becomes ready
+4. **Timeout:** 300 seconds total for start, readiness polling, and context switch
 5. `kubectl config use-context project-yellow-olive`
 
-When `wait=False`, the script is fired in the background (legacy path - prologue bootstrap uses `wait=True`).
+Legacy reference: `scripts/script.sh` mirrors the same flow but is no longer invoked by the game.
 
 ### 2. Oakwood Meadows namespace
 
@@ -56,7 +56,7 @@ The cluster is already running at this point - only the namespace is applied.
 
 If the player resumes mid-campaign:
 
-- **Cluster:** started again when they continue from the resume screen (same 60s bootstrap message)
+- **Cluster:** started again when they continue from the resume screen (same bootstrap messaging)
 - **Oakwood namespace:** applied during init if they go through a fresh start path
 - **Signal Town namespace:** applied when the Signal Town intro screen mounts if they are in that arc
 
@@ -75,7 +75,7 @@ This removes the profile and its Docker resources. The lab workspace on disk (`y
 
 ## UI messaging
 
-The game initialisation screen shows `CLUSTER_BOOTSTRAP_MESSAGE` while waiting - it mentions the cluster can take up to 60 seconds.
+The game initialisation screen shows `CLUSTER_BOOTSTRAP_MESSAGE` while waiting - it mentions the cluster can take a few minutes. After about 60 seconds, `CLUSTER_BOOTSTRAP_STILL_WORKING_MESSAGE` may appear if startup is still in progress.
 
 If startup fails, the player sees a notification with `CLUSTER_STARTUP_FAILURE_MESSAGE` and can retry by typing `yes` again.
 

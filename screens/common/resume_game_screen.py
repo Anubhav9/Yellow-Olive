@@ -119,9 +119,8 @@ class ResumeGameScreen(Static):
             if general_utils.is_campaign_complete(progress["active_challenge_id"]):
                 log.write("[yellow]Every mission is already complete. Type `start fresh` to begin again.[/]")
                 return
-            log.write(screen_prompts.CLUSTER_BOOTSTRAP_MESSAGE)
             try:
-                await asyncio.to_thread(general_utils.start_core_infra, True)
+                await general_utils.wait_for_cluster_bootstrap(log)
             except Exception:
                 general_utils.notify_cluster_startup_failure(self)
                 log.write(f"[red]{general_utils.CLUSTER_STARTUP_FAILURE_MESSAGE}[/]")

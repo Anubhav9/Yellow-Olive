@@ -6,7 +6,7 @@ if ! which minikube &> /dev/null; then
 fi
 
 PROFILE="project-yellow-olive"
-TIMEOUT_SECONDS=60
+TIMEOUT_SECONDS=300
 ELAPSED=0
 
 minikube start --nodes 1 -p "$PROFILE"

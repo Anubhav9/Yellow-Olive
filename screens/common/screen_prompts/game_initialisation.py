@@ -45,5 +45,9 @@ PROCEED_TO_CHALLENGE_1 = (
 )
 CLUSTER_BOOTSTRAP_MESSAGE = (
     "[yellow]Professor Bald is preparing the lab cluster... "
-    "This may take up to 60 seconds.[/]"
+    "This may take a few minutes, especially on first run.[/]"
+)
+CLUSTER_BOOTSTRAP_STILL_WORKING_MESSAGE = (
+    "[yellow]Still preparing the lab cluster... "
+    "First run can take several minutes while images download.[/]"
 )
