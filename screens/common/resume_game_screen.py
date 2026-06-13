@@ -9,6 +9,7 @@ from scenarios.oakwood_meadows.prologue.dialogues import professor_bald_dialogue
 from scenarios.oakwood_meadows.prologue.screens.professor_bald_intro import ProfessorBaldIntro
 from screens.common.challenge_music_preference_screen import ChallengeMusicPreferenceScreen
 from screens.common.screen_prompts import game_initialisation as screen_prompts
+from media import background_music_utility
 from services import environment_diagnostics
 from utils import general_utils
 
@@ -61,6 +62,16 @@ class ResumeGameScreen(Static):
         log.write("")
         self.run_worker(self._run_environment_checks, exclusive=True)
 
+    async def _run_optional_audio_check(self, log: RichLog) -> None:
+        log.write(screen_prompts.AUDIO_CHECK_PLAYING_MESSAGE)
+        playback_ok = await asyncio.to_thread(background_music_utility.run_lab_audio_check)
+        log.write("")
+        if playback_ok:
+            log.write(screen_prompts.AUDIO_CHECK_PLAYED_MESSAGE)
+        else:
+            log.write(screen_prompts.AUDIO_CHECK_UNAVAILABLE_MESSAGE)
+        log.write("")
+
     async def _run_environment_checks(self) -> None:
         log = self.query_one("#resume-log", RichLog)
         prompt = self.query_one("#resume-prompt", Label)
@@ -74,6 +85,7 @@ class ResumeGameScreen(Static):
         log.write("")
 
         if report.all_passed:
+            await self._run_optional_audio_check(log)
             self.environment_ready = True
             await self.mount(
                 Label(

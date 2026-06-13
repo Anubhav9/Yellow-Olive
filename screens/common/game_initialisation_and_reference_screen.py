@@ -19,7 +19,6 @@ class GameInitialisationScreen(Static):
     can_focus = True
 
     def compose(self) -> ComposeResult:
-        background_music_utility.start_background_music(f"{global_constants.MUSIC_MEDIA_PATH}/battle_music_2.mp3")
         yield Label(screen_prompts.CHECKING_REQUIREMENTS_PROMPT, id="init-prompt")
         yield RichLog(markup=True, id="game-reference")
 
@@ -29,6 +28,16 @@ class GameInitialisationScreen(Static):
         self.move_to_next_screen = False
         self.environment_ready = False
         self.run_worker(self._run_environment_checks, exclusive=True)
+
+    async def _run_optional_audio_check(self, log: RichLog) -> None:
+        log.write(screen_prompts.AUDIO_CHECK_PLAYING_MESSAGE)
+        playback_ok = await asyncio.to_thread(background_music_utility.run_lab_audio_check)
+        log.write("")
+        if playback_ok:
+            log.write(screen_prompts.AUDIO_CHECK_PLAYED_MESSAGE)
+        else:
+            log.write(screen_prompts.AUDIO_CHECK_UNAVAILABLE_MESSAGE)
+        log.write("")
 
     async def _run_environment_checks(self) -> None:
         log = self.query_one("#game-reference", RichLog)
@@ -52,6 +61,10 @@ class GameInitialisationScreen(Static):
         log.write("")
 
         if report.all_passed:
+            await self._run_optional_audio_check(log)
+            background_music_utility.start_background_music(
+                f"{global_constants.MUSIC_MEDIA_PATH}/battle_music_2.mp3"
+            )
             self.environment_ready = True
             prompt.display = False
             await self.mount(Label(screen_prompts.READY_PROMPT, id="ready-prompt"))
