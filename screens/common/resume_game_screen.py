@@ -33,7 +33,7 @@ class ResumeGameScreen(Static):
             mission_text = "All missions complete"
         else:
             mission_text = f"Challenge {challenge_id}"
-        continue_text = (
+        self.resume_action_text = (
             "Type `start fresh` to begin again from the laboratory."
             if general_utils.is_campaign_complete(challenge_id)
             else "Type `continue` to resume your journey.\n"
@@ -42,19 +42,15 @@ class ResumeGameScreen(Static):
 
         yield Label(
             f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]"
-            "Professor Bald found your old trainer log.[/]"
+            "Professor Bald found your old trainer log.[/]",
+            id="resume-prompt",
         )
         yield RichLog(markup=True, highlight=True, id="resume-log")
-        yield Input(
-            placeholder="Type continue or start fresh...",
-            id="resume-input",
-        )
 
         self.resume_summary = (
             f"[bold]Trainer:[/] {player_name}\n"
             f"[bold]Current Mission:[/] {mission_text}\n"
-            f"[bold]Meow Coins:[/] {meow_coins}\n\n"
-            f"{continue_text}"
+            f"[bold]Meow Coins:[/] {meow_coins}"
         )
 
     def on_mount(self) -> None:
@@ -63,34 +59,50 @@ class ResumeGameScreen(Static):
         log = self.query_one("#resume-log", RichLog)
         log.write(self.resume_summary)
         log.write("")
-        self.query_one("#resume-input", Input).focus()
         self.run_worker(self._run_environment_checks, exclusive=True)
 
     async def _run_environment_checks(self) -> None:
         log = self.query_one("#resume-log", RichLog)
+        prompt = self.query_one("#resume-prompt", Label)
         report = await asyncio.to_thread(environment_diagnostics.run_environment_checks)
-        log.write(environment_diagnostics.format_report_for_display(report))
-        log.write("")
-        self.environment_ready = report.all_passed
-        if not self.environment_ready:
-            log.write(
-                "[yellow]You can still type `start fresh`, but `continue` is blocked "
-                "until the lab requirements above are fixed.[/]"
+        log.write(
+            environment_diagnostics.format_report_for_display(
+                report,
+                include_quit_footer=False,
             )
+        )
+        log.write("")
+
+        if report.all_passed:
+            self.environment_ready = True
+            await self.mount(
+                Label(
+                    f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]"
+                    f"{self.resume_action_text}[/]",
+                    id="resume-action-prompt",
+                )
+            )
+            await self.mount(
+                Input(
+                    placeholder="Type continue or start fresh...",
+                    id="resume-input",
+                )
+            )
+            self.query_one("#resume-input", Input).focus()
+            return
+
+        prompt.update(screen_prompts.REQUIREMENTS_FAILED_PROMPT)
+        await self.mount(Label(screen_prompts.QUIT_AND_COME_BACK_PROMPT, id="quit-prompt"))
 
     @on(Input.Submitted, selector="#resume-input")
     async def handle_resume_input(self, event: Input.Submitted) -> None:
+        if not self.environment_ready:
+            return
+
         command = (event.value or "").strip().lower()
         log = self.query_one("#resume-log", RichLog)
 
         if command == "continue":
-            if not self.environment_ready:
-                log.write(
-                    "[red]Lab requirements are not met yet. Fix the issues above, "
-                    "quit, and start the game again before continuing.[/]"
-                )
-                return
-
             progress = general_utils.restore_progress_to_runtime()
             if general_utils.is_campaign_complete(progress["active_challenge_id"]):
                 log.write("[yellow]Every mission is already complete. Type `start fresh` to begin again.[/]")

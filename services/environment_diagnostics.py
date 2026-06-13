@@ -13,10 +13,6 @@ import sys
 MIN_PYTHON_VERSION = (3, 10)
 COMMAND_TIMEOUT_SECONDS = 10
 
-DOCKER_INSTALL_HINT = (
-    "Install Docker and make sure the Docker daemon is running.\n"
-    "See: https://docs.docker.com/get-docker/"
-)
 MINIKUBE_INSTALL_HINT = (
     "Install Minikube before starting Yellow Olive.\n"
     "See: https://minikube.sigs.k8s.io/docs/start/"
@@ -26,13 +22,14 @@ KUBECTL_INSTALL_HINT = (
     "See: https://kubernetes.io/docs/tasks/tools/"
 )
 LINUX_DOCKER_GROUP_HINT = (
+    "Your user cannot access Docker yet.\n"
     "Run in your terminal:\n"
     "  sudo usermod -aG docker $USER\n"
     "Then log out and log back in (or reboot).\n"
     "Verify with: docker ps"
 )
 LINUX_DOCKER_STALE_SESSION_HINT = (
-    "You are in the docker group, but this session has not picked it up yet.\n"
+    "Your user is in the docker group, but this terminal session has not picked it up yet.\n"
     "Log out and log back in (or reboot), then verify with: docker ps"
 )
 
@@ -78,17 +75,72 @@ def get_system_info() -> str:
     return f"Python {python_version} · {os_label}"
 
 
-def _run_command(command: list[str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        command,
-        capture_output=True,
-        text=True,
-        timeout=COMMAND_TIMEOUT_SECONDS,
-        check=False,
+def _docker_install_hint() -> str:
+    return (
+        "Install Docker before starting Yellow Olive.\n"
+        "See: https://docs.docker.com/get-docker/"
     )
 
 
+def _docker_daemon_not_running_hint() -> str:
+    system = platform.system()
+    if system == "Linux":
+        return (
+            "Docker is installed, but the daemon is not running.\n"
+            "Start the Docker service, then verify with: docker info\n"
+            "Example: sudo systemctl start docker"
+        )
+    if system in {"Darwin", "Windows"}:
+        return (
+            "Docker is installed, but the daemon is not running.\n"
+            "Open Docker Desktop, wait until it finishes starting, then verify with: docker info"
+        )
+    return (
+        "Docker is installed, but the daemon is not running.\n"
+        "Start Docker, then verify with: docker info"
+    )
+
+
+def _docker_permission_denied_hint() -> str:
+    if platform.system() == "Linux":
+        if _user_in_docker_group():
+            return LINUX_DOCKER_STALE_SESSION_HINT
+        return LINUX_DOCKER_GROUP_HINT
+
+    return (
+        "Docker is installed, but this user cannot access the Docker socket.\n"
+        "Open Docker Desktop, wait until it finishes starting, then verify with: docker info"
+    )
+
+
+def _docker_unreachable_hint(detail: str | None = None) -> str:
+    lines = [
+        "Docker is installed, but Yellow Olive could not reach the daemon.",
+        "Run `docker info` in your terminal for details.",
+    ]
+    if detail:
+        lines.append(f"Docker reported: {detail}")
+    lines.append("See: https://docs.docker.com/get-docker/")
+    return "\n".join(lines)
+
+
+def _run_command(command: list[str]) -> subprocess.CompletedProcess[str] | None:
+    try:
+        return subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=COMMAND_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return None
+
+
 def _user_in_docker_group() -> bool:
+    if platform.system() != "Linux":
+        return False
+
     try:
         docker_group = grp.getgrnam("docker")
     except KeyError:
@@ -105,6 +157,16 @@ def _user_in_docker_group() -> bool:
         return False
 
     return username in docker_group.gr_mem
+
+
+def _command_output_snippet(result: subprocess.CompletedProcess[str]) -> str | None:
+    for stream in (result.stderr, result.stdout):
+        if not stream:
+            continue
+        line = stream.strip().splitlines()[0].strip()
+        if line:
+            return line
+    return None
 
 
 def _check_python_version() -> CheckResult:
@@ -135,10 +197,21 @@ def _check_docker() -> CheckResult:
             name="Docker",
             passed=False,
             status_line="not installed",
-            fix_hint=DOCKER_INSTALL_HINT,
+            fix_hint=_docker_install_hint(),
         )
 
     result = _run_command(["docker", "info"])
+    if result is None:
+        return CheckResult(
+            name="Docker",
+            passed=False,
+            status_line="daemon check timed out",
+            fix_hint=(
+                "Docker did not respond within 10 seconds.\n"
+                "Make sure the Docker daemon is running, then verify with: docker info"
+            ),
+        )
+
     if result.returncode == 0:
         return CheckResult(
             name="Docker",
@@ -147,46 +220,40 @@ def _check_docker() -> CheckResult:
         )
 
     combined_output = f"{result.stderr or ''}\n{result.stdout or ''}".lower()
+    detail = _command_output_snippet(result)
 
     if "permission denied" in combined_output:
         if platform.system() == "Linux":
             if _user_in_docker_group():
-                fix_hint = LINUX_DOCKER_STALE_SESSION_HINT
                 status_line = "permission denied (docker group not active in this session)"
             else:
-                fix_hint = LINUX_DOCKER_GROUP_HINT
                 status_line = "permission denied (user not in docker group)"
         else:
-            fix_hint = (
-                "Your user cannot access Docker yet.\n"
-                "Ensure Docker Desktop is running and your account has permission to use it."
-            )
             status_line = "permission denied"
         return CheckResult(
             name="Docker",
             passed=False,
             status_line=status_line,
-            fix_hint=fix_hint,
+            fix_hint=_docker_permission_denied_hint(),
         )
 
     if (
         "cannot connect to the docker daemon" in combined_output
         or "is the docker daemon running" in combined_output
+        or "error during connect" in combined_output
     ):
         return CheckResult(
             name="Docker",
             passed=False,
             status_line="installed but not running",
-            fix_hint=(
-                "Start Docker Desktop or the Docker service, then verify with: docker info"
-            ),
+            fix_hint=_docker_daemon_not_running_hint(),
         )
 
     return CheckResult(
         name="Docker",
         passed=False,
         status_line="installed but not reachable",
-        fix_hint=DOCKER_INSTALL_HINT,
+        fix_hint=_docker_unreachable_hint(detail),
     )
 
 
@@ -262,7 +329,7 @@ def format_report_for_display(
         [
             "",
             "[bold red]Basic requirements for Yellow Olive are not met.[/]",
-            "Install or fix the missing items below, then quit and start the game again.",
+            "Fix the failed checks below, then quit and start the game again.",
             "",
         ]
     )
@@ -270,7 +337,7 @@ def format_report_for_display(
     for check in report.checks:
         if check.passed or not check.fix_hint:
             continue
-        lines.append(f"[bold]{check.name} — how to fix[/]")
+        lines.append(f"[bold]{check.name} - how to fix[/]")
         lines.append(check.fix_hint)
         lines.append("")
 
