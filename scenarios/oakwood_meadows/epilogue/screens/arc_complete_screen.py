@@ -51,6 +51,7 @@ class OakwoodMeadowsArcCompleteScreen(RichLog):
     async def on_key(self, event: events.Key) -> None:
         if event.key == "enter":
             background_music_utility.stop_background_music()
+            general_utils.update_progress(pending_epilogue=None)
             container = self.parent
             await self.remove()
             from scenarios.signal_town.prologue.screens.signal_town_intro_screen import (

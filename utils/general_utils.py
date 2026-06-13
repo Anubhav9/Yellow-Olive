@@ -177,6 +177,17 @@ def get_progress_file():
     return ensure_lab_workspace() / "progress.json"
 
 
+PENDING_EPILOGUE_ARCS = frozenset(
+    {"oakwood_meadows", "signal_town", "gold_rush_city"}
+)
+
+PENDING_EPILOGUE_LABELS = {
+    "oakwood_meadows": "Oakwood Meadows victory",
+    "signal_town": "Signal Town victory",
+    "gold_rush_city": "Gold Rush City victory",
+}
+
+
 def default_progress():
     return {
         "version": 1,
@@ -184,6 +195,7 @@ def default_progress():
         "active_challenge_id": "1",
         "challenge_background_music": None,
         "story_intro_act": None,
+        "pending_epilogue": None,
     }
 
 
@@ -208,6 +220,9 @@ def load_progress():
     music = saved_progress.get("challenge_background_music")
     if not isinstance(music, bool):
         saved_progress["challenge_background_music"] = None
+    epilogue = saved_progress.get("pending_epilogue")
+    if epilogue not in PENDING_EPILOGUE_ARCS:
+        saved_progress["pending_epilogue"] = None
     return normalize_story_progress(saved_progress)
 
 
@@ -222,6 +237,40 @@ def normalize_story_progress(progress):
         progress["story_intro_act"] = global_constants.STORY_ACT_DONE
         save_progress(progress)
     return progress
+
+
+def get_pending_epilogue(progress=None):
+    progress = progress or load_progress()
+    epilogue = progress.get("pending_epilogue")
+    if epilogue in PENDING_EPILOGUE_ARCS:
+        return epilogue
+    return None
+
+
+def has_pending_epilogue(progress=None):
+    return get_pending_epilogue(progress) is not None
+
+
+def load_epilogue_screen(pending_epilogue):
+    if pending_epilogue == "oakwood_meadows":
+        from scenarios.oakwood_meadows.epilogue.screens.arc_complete_screen import (
+            OakwoodMeadowsArcCompleteScreen,
+        )
+
+        return OakwoodMeadowsArcCompleteScreen
+    if pending_epilogue == "signal_town":
+        from scenarios.signal_town.epilogue.screens.arc_complete_screen import (
+            SignalTownArcCompleteScreen,
+        )
+
+        return SignalTownArcCompleteScreen
+    if pending_epilogue == "gold_rush_city":
+        from scenarios.gold_rush_city.epilogue.screens.arc_complete_screen import (
+            GoldRushCityArcCompleteScreen,
+        )
+
+        return GoldRushCityArcCompleteScreen
+    raise ValueError(f"Unknown pending epilogue: {pending_epilogue}")
 
 
 def is_story_intro_pending(progress=None):
@@ -311,6 +360,8 @@ def calculate_meow_coins(active_challenge_id):
 
 
 def is_campaign_complete(active_challenge_id):
+    if has_pending_epilogue():
+        return False
     if is_story_intro_pending():
         return False
     return int(active_challenge_id) > global_constants.TOTAL_CHALLENGES

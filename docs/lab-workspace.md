@@ -26,7 +26,40 @@ yellow-olive-lab/
 
 ### progress.json
 
-Tracks player name, active challenge, music preference, and Signal Town intro state. Created on first save. Deleting the lab folder resets the campaign (`reset_progress()` also removes it).
+Tracks player name, active challenge, music preference, story intro state, and optional epilogue resume. Created on first save. Deleting the lab folder resets the campaign (`reset_progress()` also removes it).
+
+| Field | Purpose |
+|-------|---------|
+| `player_name` | Trainer name shown in dialogue |
+| `active_challenge_id` | Current challenge (string) |
+| `challenge_background_music` | `true` / `false` / `null` before first choice |
+| `story_intro_act` | Prologue sequence between arcs (`1`–`7`, or `"done"`) |
+| `pending_epilogue` | Optional arc epilogue to show on Resume (`null` by default) |
+
+#### Testing epilogues via `pending_epilogue`
+
+Set `pending_epilogue` to jump straight to an arc victory screen on **Resume → continue**. Preflight and cluster startup still run so the next prologue or challenge works when you press Enter. Use `active_challenge_id` one past the arc end so Meow Coins match completed missions.
+
+| Epilogue | `pending_epilogue` | `active_challenge_id` |
+|----------|-------------------|------------------------|
+| Oakwood Meadows | `"oakwood_meadows"` | `"8"` |
+| Signal Town | `"signal_town"` | `"14"` |
+| Gold Rush City | `"gold_rush_city"` | `"20"` |
+
+Example:
+
+```json
+{
+  "version": 1,
+  "player_name": "Trainer",
+  "active_challenge_id": "8",
+  "challenge_background_music": false,
+  "story_intro_act": null,
+  "pending_epilogue": "oakwood_meadows"
+}
+```
+
+Older saves without `pending_epilogue` default to `null` on load. Invalid values are ignored. If both `pending_epilogue` and `story_intro_act` are set, the epilogue takes precedence on resume.
 
 ### Scenario manifests
 

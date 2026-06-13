@@ -55,5 +55,6 @@ class GoldRushCityArcCompleteScreen(RichLog):
             general_utils.update_progress(
                 active_challenge_id="20",
                 story_intro_act=global_constants.STORY_ACT_DONE,
+                pending_epilogue=None,
             )
             await self.remove()
