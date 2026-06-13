@@ -353,10 +353,20 @@ def start_core_infra(wait=False):
     threading.Thread(target=_start_core_infra_v1_background, daemon=True).start()
 
 
+def teardown_core_infra_background() -> None:
+    """Delete the lab minikube profile without blocking app shutdown."""
+    subprocess.Popen(
+        ["minikube", "delete", "-p", LAB_MINIKUBE_PROFILE, "--purge"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+
+
 def teardown_core_infra():
     """Delete the lab minikube profile and its docker container."""
     subprocess.run(
-        ["minikube", "delete", "-p", "project-yellow-olive", "--purge"],
+        ["minikube", "delete", "-p", LAB_MINIKUBE_PROFILE, "--purge"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         check=False,
