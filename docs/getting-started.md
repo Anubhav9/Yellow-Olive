@@ -43,7 +43,7 @@ pip install yellow-olive
 yellow-olive start
 ```
 
-On first mission start, the game creates a Minikube cluster. This can take up to 60 seconds.
+On first mission start, the game creates a Minikube cluster. This can take a few minutes, especially on first run while images download.
 
 ## Install from source
 

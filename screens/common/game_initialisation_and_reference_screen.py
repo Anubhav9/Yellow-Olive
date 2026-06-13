@@ -90,7 +90,6 @@ class GameInitialisationScreen(Static):
         if player_response == "yes":
             player_input = self.query_one("#player-response", Input)
             player_input.disabled = True
-            log.write(screen_prompts.CLUSTER_BOOTSTRAP_MESSAGE)
 
             try:
                 await self._bootstrap_oakwood_meadows_infra()
@@ -145,7 +144,7 @@ class GameInitialisationScreen(Static):
         chains the namespace apply onto it, so the namespace is created as
         soon as the cluster is ready. Runs in a Textual worker so the UI keeps
         rendering the game reference text while this happens."""
-        await asyncio.to_thread(general_utils.start_core_infra, True)
+        await general_utils.wait_for_cluster_bootstrap(self.query_one("#game-reference"))
         await asyncio.to_thread(
             resource_manager.apply_prologue_resources, "oakwood_meadows"
         )

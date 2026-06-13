@@ -27,7 +27,7 @@ flowchart TD
 - `main()` - ensures lab workspace, then runs the app
 - `cli()` - `yellow-olive start` entry point registered in `pyproject.toml`
 
-On quit, `on_exit()` calls `general_utils.teardown_core_infra()` to delete the Minikube profile.
+On quit, `on_unmount()` calls `general_utils.teardown_core_infra()` to delete the Minikube profile.
 
 ## Challenge loading
 

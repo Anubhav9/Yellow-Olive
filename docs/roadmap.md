@@ -12,7 +12,7 @@ High-level plan for Project Yellow Olive. Status reflects the scenario-based ref
 | Signal Town arc (in progress) | Challenges 8-13, Services and networking topics |
 | Scenario-based codebase | `scenarios/<name>/challenge_<N>/` layout, per-challenge validators |
 | Lab workspace mirror | Editable manifests under `yellow-olive-lab/scenarios/` |
-| Cluster lifecycle | Minikube profile with 60s health wait, teardown on quit |
+| Cluster lifecycle | Minikube profile with 300s startup budget, teardown on quit |
 | Technical documentation | This site |
 
 ## In active development

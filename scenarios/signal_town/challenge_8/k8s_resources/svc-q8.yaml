@@ -4,7 +4,7 @@ metadata:
   name: bulba-baby-service
   namespace: signal-town
 spec:
-  type: ClosterIPP
+  type: ClosterIP
   selector:
     app: bulba-baby-wrong
   ports:

@@ -21,7 +21,7 @@ minikube start --nodes 1 -p project-yellow-olive
 
 Then restart the game.
 
-## Cluster not ready within 60 seconds
+## Cluster not ready within 5 minutes
 
 **Symptoms:** Bootstrap message stays visible, then failure notification.
 

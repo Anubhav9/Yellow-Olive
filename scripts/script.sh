@@ -1,10 +1,12 @@
+# Legacy bootstrap script kept for reference. The game uses start_core_infra_v1()
+# in utils/general_utils.py (Python subprocess) instead of invoking this file.
 if ! which minikube &> /dev/null; then
     echo "Minikube not found."
     exit 1
 fi
 
 PROFILE="project-yellow-olive"
-TIMEOUT_SECONDS=60
+TIMEOUT_SECONDS=300
 ELAPSED=0
 
 minikube start --nodes 1 -p "$PROFILE"
