@@ -5,6 +5,14 @@ READY_PROMPT = (
     "So, young engineer, are you ready to step into Yellow Olive?\n"
     "Type `yes` when you are ready to begin.[/]"
 )
+CHECKING_REQUIREMENTS_PROMPT = (
+    f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]"
+    "Professor Bald is inspecting your lab equipment...[/]"
+)
+REQUIREMENTS_FAILED_PROMPT = (
+    f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]"
+    "Professor Bald cannot open the lab yet.[/]"
+)
 TITLE_PROFESSOR_BALD_ADVICE = "Professor Bald's Advice"
 ACTION_OPEN_SEPARATE_TERMINAL = (
     "[bold red]Open a separate Command Chamber (terminal tab) to speak to "
