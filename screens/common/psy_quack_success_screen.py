@@ -36,9 +36,18 @@ class PsyQuackSuccessScreen(RichLog):
         next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
         if self.challenge_id == "7" and general_utils.is_story_intro_pending():
             self.write(
-                "[bold #D4AF37]Electromon's pod training is complete.[/]"
+                "[bold #D4AF37]Oakwood Meadows training is complete.[/]"
             )
-            self.write("The road beyond the laboratory leads to Signal Town.")
+            self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
+        elif self.challenge_id == "13" and general_utils.is_story_intro_pending():
+            self.write(
+                "[bold #D4AF37]Signal Town's paths are restored.[/]"
+            )
+            self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
+        elif self.challenge_id == "19" and general_utils.is_story_intro_pending():
+            self.write(
+                "[bold #D4AF37]Gold Rush City's vault is secure.[/]"
+            )
             self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
         elif next_challenge_id is None:
             self.write("[bold #D4AF37]Every mission in the lab is complete. Professor Bald would be proud.[/]")
@@ -57,9 +66,25 @@ class PsyQuackSuccessScreen(RichLog):
             await self.remove()
             next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
             if self.challenge_id == "7" and general_utils.is_story_intro_pending():
-                from scenarios.signal_town.prologue.screens.signal_town_intro_screen import SignalTownIntroScreen
+                from scenarios.oakwood_meadows.epilogue.screens.arc_complete_screen import (
+                    OakwoodMeadowsArcCompleteScreen,
+                )
 
-                await container.mount(SignalTownIntroScreen())
+                await container.mount(OakwoodMeadowsArcCompleteScreen())
+                return
+            if self.challenge_id == "13" and general_utils.is_story_intro_pending():
+                from scenarios.signal_town.epilogue.screens.arc_complete_screen import (
+                    SignalTownArcCompleteScreen,
+                )
+
+                await container.mount(SignalTownArcCompleteScreen())
+                return
+            if self.challenge_id == "19" and general_utils.is_story_intro_pending():
+                from scenarios.gold_rush_city.epilogue.screens.arc_complete_screen import (
+                    GoldRushCityArcCompleteScreen,
+                )
+
+                await container.mount(GoldRushCityArcCompleteScreen())
                 return
             if next_challenge_id is None:
                 return

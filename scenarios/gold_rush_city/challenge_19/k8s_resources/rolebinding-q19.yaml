@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: forged-vault-path
+  namespace: gold-rush-city
+subjects:
+  - kind: ServiceAccount
+    name: team-evil-prospector-sa
+    namespace: gold-rush-city
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vault-reader

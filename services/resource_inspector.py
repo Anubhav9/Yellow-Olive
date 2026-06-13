@@ -44,6 +44,23 @@ def _fetch_resource(kind, name, namespace, timeout=DEFAULT_TIMEOUT_SECONDS):
         return False, f"Could not parse {kind} '{name}' as JSON."
 
 
+def _fetch_cluster_resource(kind, name, timeout=DEFAULT_TIMEOUT_SECONDS):
+    """Fetch a single cluster-scoped resource. Returns (ok, dict_or_error_message)."""
+    returncode, stdout, stderr, timed_out = _run_kubectl(
+        ["get", kind, name, "-o", "json"], timeout=timeout
+    )
+    if timed_out:
+        return False, f"Cluster connection timed out while fetching {kind} '{name}'."
+    if returncode != 0:
+        if "not found" in (stderr or "").lower():
+            return False, f"{kind.capitalize()} '{name}' not found."
+        return False, (stderr or "").strip() or f"Unable to fetch {kind} '{name}'."
+    try:
+        return True, json.loads(stdout)
+    except json.JSONDecodeError:
+        return False, f"Could not parse {kind} '{name}' as JSON."
+
+
 def _list_resources(kind, namespace, label_selector=None, timeout=DEFAULT_TIMEOUT_SECONDS):
     """List resources of ``kind`` in ``namespace``. Returns (ok, list_or_error_message)."""
     args = ["get", kind, "-n", namespace, "-o", "json"]
@@ -69,6 +86,10 @@ def get_pods(namespace, label_selector=None):
     return _list_resources("pods", namespace, label_selector=label_selector)
 
 
+def get_service_account(name, namespace):
+    return _fetch_resource("serviceaccount", name, namespace)
+
+
 def get_service(name, namespace):
     return _fetch_resource("service", name, namespace)
 
@@ -88,6 +109,50 @@ def get_ingress(name, namespace):
 
 def get_ingresses(namespace):
     return _list_resources("ingresses", namespace)
+
+
+def get_role(name, namespace):
+    return _fetch_resource("role", name, namespace)
+
+
+def get_role_binding(name, namespace):
+    return _fetch_resource("rolebinding", name, namespace)
+
+
+def get_cluster_role(name):
+    return _fetch_cluster_resource("clusterrole", name)
+
+
+def get_cluster_role_binding(name):
+    return _fetch_cluster_resource("clusterrolebinding", name)
+
+
+def can_i(
+    verb,
+    resource,
+    namespace,
+    service_account,
+    resource_name=None,
+    service_account_namespace=None,
+):
+    """Return whether a ServiceAccount can perform an action via kubectl auth can-i."""
+    service_account_namespace = service_account_namespace or namespace
+    resource_arg = f"{resource}/{resource_name}" if resource_name else resource
+    args = ["auth", "can-i", verb, resource_arg]
+    args.extend([
+        "-n",
+        namespace,
+        f"--as=system:serviceaccount:{service_account_namespace}:{service_account}",
+    ])
+    returncode, stdout, stderr, timed_out = _run_kubectl(args)
+    if timed_out:
+        return False, "Cluster connection timed out while checking access."
+    if returncode != 0:
+        return False, (stderr or "").strip() or "Unable to check access."
+    answer = stdout.strip().lower()
+    if answer not in {"yes", "no"}:
+        return False, f"Unexpected access check response: {stdout.strip()}"
+    return True, answer == "yes"
 
 
 def exec_in_pod(pod_name, namespace, command, timeout=EXEC_TIMEOUT_SECONDS):

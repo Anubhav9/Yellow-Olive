@@ -23,11 +23,18 @@ class ResumeGameScreen(Static):
         challenge_id = progress.get("active_challenge_id", "1")
         meow_coins = general_utils.calculate_meow_coins(challenge_id)
         story_act = progress.get("story_intro_act")
-        if general_utils.is_story_intro_pending(progress):
+        pending_epilogue = general_utils.get_pending_epilogue(progress)
+        if pending_epilogue:
+            mission_text = general_utils.PENDING_EPILOGUE_LABELS[pending_epilogue]
+        elif general_utils.is_story_intro_pending(progress):
             story_labels = {
                 global_constants.STORY_ACT_SIGNAL_TOWN: "Arrival at Signal Town",
                 global_constants.STORY_ACT_COOL_TURTLE: "Cool Turtle at the tower",
                 global_constants.STORY_ACT_TEAM_EVIL: "Team Evil's trail",
+                global_constants.STORY_ACT_GOLD_RUSH_CITY: "Arrival at Gold Rush City",
+                global_constants.STORY_ACT_GOLD_RUSH_VAULT: "The city Vault",
+                global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL: "Team Evil's licence",
+                global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE: "Gold Rush City victory",
             }
             mission_text = story_labels.get(story_act, "Signal Town journey")
         elif general_utils.is_campaign_complete(challenge_id):
@@ -119,11 +126,16 @@ class ResumeGameScreen(Static):
             if general_utils.is_campaign_complete(progress["active_challenge_id"]):
                 log.write("[yellow]Every mission is already complete. Type `start fresh` to begin again.[/]")
                 return
+            pending_epilogue = general_utils.get_pending_epilogue(progress)
             try:
                 await general_utils.wait_for_cluster_bootstrap(log)
             except Exception:
                 general_utils.notify_cluster_startup_failure(self)
                 log.write(f"[red]{general_utils.CLUSTER_STARTUP_FAILURE_MESSAGE}[/]")
+                return
+            if pending_epilogue:
+                epilogue_screen = general_utils.load_epilogue_screen(pending_epilogue)
+                await self._replace_self_with(epilogue_screen())
                 return
             if general_utils.is_story_intro_pending(progress):
                 story_screen = general_utils.load_story_intro_screen(

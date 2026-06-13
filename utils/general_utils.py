@@ -27,6 +27,12 @@ CHALLENGE_SCENARIO_MAP = {
     "11": "signal_town",
     "12": "signal_town",
     "13": "signal_town",
+    "14": "gold_rush_city",
+    "15": "gold_rush_city",
+    "16": "gold_rush_city",
+    "17": "gold_rush_city",
+    "18": "gold_rush_city",
+    "19": "gold_rush_city",
 }
 
 async def simulate_dialogue(dialogue, color):
@@ -171,6 +177,17 @@ def get_progress_file():
     return ensure_lab_workspace() / "progress.json"
 
 
+PENDING_EPILOGUE_ARCS = frozenset(
+    {"oakwood_meadows", "signal_town", "gold_rush_city"}
+)
+
+PENDING_EPILOGUE_LABELS = {
+    "oakwood_meadows": "Oakwood Meadows victory",
+    "signal_town": "Signal Town victory",
+    "gold_rush_city": "Gold Rush City victory",
+}
+
+
 def default_progress():
     return {
         "version": 1,
@@ -178,6 +195,7 @@ def default_progress():
         "active_challenge_id": "1",
         "challenge_background_music": None,
         "story_intro_act": None,
+        "pending_epilogue": None,
     }
 
 
@@ -202,13 +220,17 @@ def load_progress():
     music = saved_progress.get("challenge_background_music")
     if not isinstance(music, bool):
         saved_progress["challenge_background_music"] = None
+    epilogue = saved_progress.get("pending_epilogue")
+    if epilogue not in PENDING_EPILOGUE_ARCS:
+        saved_progress["pending_epilogue"] = None
     return normalize_story_progress(saved_progress)
 
 
 def normalize_story_progress(progress):
-    """Treat legacy saves on challenge 8+ as having finished the story intro."""
+    """Treat legacy saves on challenges 8-13 as having finished the story intro."""
+    challenge_id = int(progress["active_challenge_id"])
     if (
-        int(progress["active_challenge_id"]) >= 8
+        8 <= challenge_id <= 13
         and progress.get("story_intro_act") is None
     ):
         progress = dict(progress)
@@ -217,12 +239,50 @@ def normalize_story_progress(progress):
     return progress
 
 
+def get_pending_epilogue(progress=None):
+    progress = progress or load_progress()
+    epilogue = progress.get("pending_epilogue")
+    if epilogue in PENDING_EPILOGUE_ARCS:
+        return epilogue
+    return None
+
+
+def has_pending_epilogue(progress=None):
+    return get_pending_epilogue(progress) is not None
+
+
+def load_epilogue_screen(pending_epilogue):
+    if pending_epilogue == "oakwood_meadows":
+        from scenarios.oakwood_meadows.epilogue.screens.arc_complete_screen import (
+            OakwoodMeadowsArcCompleteScreen,
+        )
+
+        return OakwoodMeadowsArcCompleteScreen
+    if pending_epilogue == "signal_town":
+        from scenarios.signal_town.epilogue.screens.arc_complete_screen import (
+            SignalTownArcCompleteScreen,
+        )
+
+        return SignalTownArcCompleteScreen
+    if pending_epilogue == "gold_rush_city":
+        from scenarios.gold_rush_city.epilogue.screens.arc_complete_screen import (
+            GoldRushCityArcCompleteScreen,
+        )
+
+        return GoldRushCityArcCompleteScreen
+    raise ValueError(f"Unknown pending epilogue: {pending_epilogue}")
+
+
 def is_story_intro_pending(progress=None):
     progress = progress or load_progress()
     return progress.get("story_intro_act") in (
         global_constants.STORY_ACT_SIGNAL_TOWN,
         global_constants.STORY_ACT_COOL_TURTLE,
         global_constants.STORY_ACT_TEAM_EVIL,
+        global_constants.STORY_ACT_GOLD_RUSH_CITY,
+        global_constants.STORY_ACT_GOLD_RUSH_VAULT,
+        global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL,
+        global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE,
     )
 
 
@@ -239,6 +299,22 @@ def load_story_intro_screen(story_intro_act):
         from scenarios.signal_town.prologue.screens.team_evil_intro_screen import TeamEvilIntroScreen
 
         return TeamEvilIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_CITY:
+        from scenarios.gold_rush_city.prologue.screens.gold_rush_city_intro_screen import GoldRushCityIntroScreen
+
+        return GoldRushCityIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_VAULT:
+        from scenarios.gold_rush_city.prologue.screens.mayor_vault_intro_screen import MayorVaultIntroScreen
+
+        return MayorVaultIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL:
+        from scenarios.gold_rush_city.prologue.screens.team_evil_license_intro_screen import TeamEvilLicenseIntroScreen
+
+        return TeamEvilLicenseIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE:
+        from scenarios.gold_rush_city.epilogue.screens.arc_complete_screen import GoldRushCityArcCompleteScreen
+
+        return GoldRushCityArcCompleteScreen
     raise ValueError(f"Unknown story intro act: {story_intro_act}")
 
 
@@ -284,6 +360,8 @@ def calculate_meow_coins(active_challenge_id):
 
 
 def is_campaign_complete(active_challenge_id):
+    if has_pending_epilogue():
+        return False
     if is_story_intro_pending():
         return False
     return int(active_challenge_id) > global_constants.TOTAL_CHALLENGES

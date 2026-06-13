@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vault-access
+  namespace: gold-rush-city
+subjects:
+  - kind: ServiceAccount
+    name: claim-inspector-sa
+    namespace: gold-rush-city
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vault-reader
