@@ -1,19 +1,51 @@
 from pathlib import Path
 import subprocess
+import textwrap
 import global_constants
 from utils import general_utils
 
+MANIFEST_WARNING_LINE_WIDTH = 52
+
 
 def _kubectl_apply_error_message(resource_path: Path, detail: str) -> str:
-    summary = f"{resource_path.name} needs a fix before it can be applied."
+    filename = resource_path.name
+    header = f"{filename} is waiting for your fix in the lab workspace."
+
     if not detail:
-        return summary
+        return header
 
-    reason_lines = [line.strip() for line in detail.splitlines() if line.strip()]
-    if not reason_lines:
-        return summary
+    detail_lower = detail.lower()
+    if "unsupported value" in detail_lower and "spec.type" in detail_lower:
+        return f"{header}\nInvalid Service type in spec.type."
 
-    return f"{summary}\n{reason_lines[-1]}"
+    if "unsupported value" in detail_lower:
+        return f"{header}\nManifest has an unsupported value."
+
+    reason = detail.splitlines()[-1].strip()
+    if len(reason) > MANIFEST_WARNING_LINE_WIDTH:
+        return f"{header}\nkubectl rejected the manifest until you correct it."
+
+    return f"{header}\n{reason}"
+
+
+def format_manifest_warning_lines(message: str) -> list[str]:
+    lines = []
+    for paragraph in message.splitlines():
+        paragraph = paragraph.strip()
+        if not paragraph:
+            continue
+        if len(paragraph) <= MANIFEST_WARNING_LINE_WIDTH:
+            lines.append(paragraph)
+            continue
+        lines.extend(
+            textwrap.wrap(
+                paragraph,
+                width=MANIFEST_WARNING_LINE_WIDTH,
+                break_long_words=False,
+                break_on_hyphens=False,
+            )
+        )
+    return lines
 
 
 def _kubectl_apply(resource_path: Path) -> None:

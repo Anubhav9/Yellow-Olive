@@ -65,10 +65,13 @@ class BaseChallengeScreen(Static):
                         "[yellow]Some lab manifests could not be applied yet.[/]"
                     )
                     log.write(
-                        "[yellow]Edit them in yellow-olive-lab, then apply from your Command Chamber.[/]"
+                        "[yellow]Edit them in yellow-olive-lab, then apply[/]"
                     )
+                    log.write("[yellow]from your Command Chamber.[/]")
                     for warning in warnings:
-                        for line in warning.splitlines():
+                        for line in resource_manager.format_manifest_warning_lines(
+                            warning
+                        ):
                             log.write(f"[yellow]{line}[/]")
         except Exception as error:
             log.write("[red]Failed to apply challenge resources.[/red]")
