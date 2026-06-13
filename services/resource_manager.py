@@ -4,6 +4,22 @@ import global_constants
 from utils import general_utils
 
 
+def _kubectl_apply(resource_path: Path) -> None:
+    result = subprocess.run(
+        ["kubectl", "apply", "-f", str(resource_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=str(global_constants.PROJECT_ROOT),
+    )
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout or "").strip()
+        lines = [f"Could not apply {resource_path.name}."]
+        if detail:
+            lines.extend(detail.splitlines())
+        raise RuntimeError("\n".join(lines))
+
+
 def iterate_resources(challenge_scenario, challenge_id):
     """Return the player's editable manifests for this challenge.
 
@@ -24,28 +40,28 @@ def iterate_resources(challenge_scenario, challenge_id):
     if not path.exists():
         return []
 
-    return [
+    return sorted(
         file
         for file in path.iterdir()
         if file.is_file() and file.suffix in [".yaml", ".yml"]
-    ]
+    )
 
 
-def apply_manifest(challenge_scenario, challenge_id,mode="all",file_name=None):
-    if mode=="all":
+def apply_manifest(challenge_scenario, challenge_id, mode="all", file_name=None):
+    apply_prologue_resources(challenge_scenario)
+
+    if mode == "all":
         resources = iterate_resources(challenge_scenario, challenge_id)
-        for resource in resources:
-            subprocess.run(
-                ["kubectl", "apply", "-f", str(resource)],
-                check=True,
-                cwd=str(global_constants.PROJECT_ROOT),
+        if not resources:
+            raise RuntimeError(
+                f"No challenge manifests found for challenge {challenge_id}."
             )
-    if mode=="individual":
-        subprocess.run(
-            ["kubectl", "apply", "-f", file_name+".yaml"],
-            check=True,
-            cwd=str(global_constants.PROJECT_ROOT),
-        )
+        for resource in resources:
+            _kubectl_apply(resource)
+        return
+
+    if mode == "individual":
+        _kubectl_apply(Path(f"{file_name}.yaml"))
 
 
 def iterate_prologue_resources(challenge_scenario):
@@ -76,8 +92,4 @@ def apply_prologue_resources(challenge_scenario):
     scenario's prologue is responsible for putting in place before any of its
     challenges run. Callers are expected to ensure the cluster is up first."""
     for resource in iterate_prologue_resources(challenge_scenario):
-        subprocess.run(
-            ["kubectl", "apply", "-f", str(resource)],
-            check=True,
-            cwd=str(global_constants.PROJECT_ROOT),
-        )
+        _kubectl_apply(resource)

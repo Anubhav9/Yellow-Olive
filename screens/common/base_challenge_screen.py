@@ -5,6 +5,7 @@ from media import background_music_utility
 from rich.panel import Panel
 from rich.text import Text
 from screens.common.screen_prompts.challenge_screen import ChallengeScreenPrompts
+from services import resource_manager
 from textual import events, on
 from textual.app import ComposeResult
 from textual.widgets import Input, Label, RichLog, Static
@@ -47,15 +48,26 @@ class BaseChallengeScreen(Static):
         self.render_challenge_panel()
         self.create_resources_for_challenge()
 
-    def create_resources_for_challenge(self) -> None:
-        """Apply the kubernetes resources required for this challenge.
+    def apply_challenge_manifests(self, *challenge_ids: str) -> None:
+        scenario = getattr(self, "challenge_scenario", None)
+        if not scenario:
+            raise NotImplementedError(
+                f"Challenge {self.challenge_id} screen must set `challenge_scenario`."
+            )
 
-        Concrete challenge screens override this to apply their per-challenge
-        manifests via ``services.resource_manager.apply_manifest``."""
-        raise NotImplementedError(
-            f"Challenge {self.challenge_id} screen must implement "
-            "create_resources_for_challenge()."
-        )
+        try:
+            for challenge_id in challenge_ids:
+                resource_manager.apply_manifest(scenario, challenge_id)
+        except Exception as error:
+            log = self.query_one(f"#{self.challenge_log_id}", RichLog)
+            log.write("[red]Failed to apply challenge resources.[/red]")
+            log.write("")
+            for line in str(error).splitlines():
+                log.write(f"[red]{line}[/red]")
+
+    def create_resources_for_challenge(self) -> None:
+        """Apply the kubernetes resources required for this challenge."""
+        self.apply_challenge_manifests(self.challenge_id)
 
     def render_challenge_panel(self) -> None:
         challenge_screen_prompts = ChallengeScreenPrompts(self.challenge_id)
