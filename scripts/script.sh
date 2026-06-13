@@ -1,3 +1,5 @@
+# Legacy bootstrap script kept for reference. The game uses start_core_infra_v1()
+# in utils/general_utils.py (Python subprocess) instead of invoking this file.
 if ! which minikube &> /dev/null; then
     echo "Minikube not found."
     exit 1

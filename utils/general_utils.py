@@ -3,6 +3,8 @@ import importlib
 import json
 import shutil
 import subprocess
+import threading
+import time
 from pathlib import Path
 import ascii_magic
 from PIL import Image, ImageOps, ImageEnhance
@@ -78,6 +80,9 @@ CLUSTER_STARTUP_FAILURE_MESSAGE = (
     "Something went wrong starting the lab cluster. "
     "Please contact the developer for now."
 )
+LAB_MINIKUBE_PROFILE = "project-yellow-olive"
+LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS = 60
+LAB_CLUSTER_READY_POLL_SECONDS = 2
 
 
 def show_invalid_command(widget, message="PsyQuack tilts its head... please check that command."):
@@ -283,29 +288,69 @@ def is_campaign_complete(active_challenge_id):
     return int(active_challenge_id) > global_constants.TOTAL_CHALLENGES
 
 
-def start_core_infra(wait=False):
-    command = ["sh", str(global_constants.PROJECT_ROOT / "scripts" / "script.sh")]
-    if wait:
-        result = subprocess.run(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=str(global_constants.PROJECT_ROOT),
-            check=False,
-            text=True,
-        )
-        if result.returncode != 0:
-            detail = (result.stderr or result.stdout or "").strip()
-            raise RuntimeError(detail or CLUSTER_STARTUP_FAILURE_MESSAGE)
+def start_core_infra_v1() -> None:
+    """Start the lab Minikube cluster and select its kubectl context.
+
+    Portable replacement for ``scripts/script.sh`` (POSIX subprocess, no shell).
+    """
+    if shutil.which("minikube") is None:
+        raise RuntimeError("Minikube not found.")
+
+    profile = LAB_MINIKUBE_PROFILE
+    start_result = subprocess.run(
+        ["minikube", "start", "--nodes", "1", "-p", profile],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if start_result.returncode != 0:
+        detail = (start_result.stderr or start_result.stdout or "").strip()
+        raise RuntimeError(detail or CLUSTER_STARTUP_FAILURE_MESSAGE)
+
+    elapsed = 0
+    while not _minikube_cluster_is_ready(profile):
+        if elapsed >= LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS:
+            raise RuntimeError(
+                f"Cluster failed to become ready within "
+                f"{LAB_CLUSTER_STARTUP_TIMEOUT_SECONDS}s."
+            )
+        time.sleep(LAB_CLUSTER_READY_POLL_SECONDS)
+        elapsed += LAB_CLUSTER_READY_POLL_SECONDS
+
+    context_result = subprocess.run(
+        ["kubectl", "config", "use-context", profile],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if context_result.returncode != 0:
+        detail = (context_result.stderr or context_result.stdout or "").strip()
+        raise RuntimeError(detail or CLUSTER_STARTUP_FAILURE_MESSAGE)
+
+
+def _minikube_cluster_is_ready(profile: str) -> bool:
+    result = subprocess.run(
+        ["minikube", "status", "-p", profile],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.returncode == 0
+
+
+def _start_core_infra_v1_background() -> None:
+    try:
+        start_core_infra_v1()
+    except RuntimeError:
         return
 
-    subprocess.Popen(
-        command,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        start_new_session=True,
-        cwd=str(global_constants.PROJECT_ROOT),
-    )
+
+def start_core_infra(wait=False):
+    if wait:
+        start_core_infra_v1()
+        return
+
+    threading.Thread(target=_start_core_infra_v1_background, daemon=True).start()
 
 
 def teardown_core_infra():
