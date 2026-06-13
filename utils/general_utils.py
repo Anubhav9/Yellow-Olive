@@ -366,6 +366,7 @@ async def wait_for_cluster_bootstrap(log) -> None:
             timeout=LAB_CLUSTER_BOOTSTRAP_REMINDER_SECONDS,
         )
     except asyncio.TimeoutError:
+        log.write("")
         log.write(screen_prompts.CLUSTER_BOOTSTRAP_STILL_WORKING_MESSAGE)
     await bootstrap_task
 
