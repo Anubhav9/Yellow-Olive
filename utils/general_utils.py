@@ -212,9 +212,10 @@ def load_progress():
 
 
 def normalize_story_progress(progress):
-    """Treat legacy saves on challenge 8+ as having finished the story intro."""
+    """Treat legacy saves on challenges 8-13 as having finished the story intro."""
+    challenge_id = int(progress["active_challenge_id"])
     if (
-        int(progress["active_challenge_id"]) >= 8
+        8 <= challenge_id <= 13
         and progress.get("story_intro_act") is None
     ):
         progress = dict(progress)
