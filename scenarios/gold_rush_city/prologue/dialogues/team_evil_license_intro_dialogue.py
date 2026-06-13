@@ -1,12 +1,8 @@
 TEAM_EVIL_LICENSE_INTRO_DIALOGUES = """The Mayor pulls the ledger closer.
 The strange name has a licence number beside it.
-
 He checks the number against a box of old mining permits.
-
 One paper is missing.
-
 Electromon growls.
-
 Under the table, half hidden in the dust, you see a torn piece of paper.
 The Mayor picks it up.
 
@@ -16,13 +12,11 @@ The stamp is real.
 The name is not.
 
 On the back, someone has drawn a small crooked mark.
-
 The Mayor's face changes.
 
 "Team Evil."
 
 Electromon sparks at the name.
-
 The Mayor looks at the Vault door again.
 
 "They did not need to break the lock."

@@ -2,17 +2,16 @@ GOLD_RUSH_CITY_INTRO_DIALOGUES = """The road west leads you into dry open land.
 Old mine tracks run beside the path.
 Small wooden signs point toward Gold Rush City.
 
-{user_name}, you have heard stories about this place.
+You have heard stories about this place.
 
 Busy streets.
 Gold carts.
 Trainers rushing from one claim to another.
 
 Electromon walks beside you, curious and alert.
-He can hear the town before you can see it.
+You can hear the town before you can see it.
 
 But as you reach the gate...
-
 ...there is no sound.
 
 No carts.
@@ -37,11 +36,9 @@ He looks back at the town hall.
 Then back at you.
 
 "We need help."
-
 "Gold has gone missing from the city Vault."
 
 The people nearby fall silent.
-
 The Mayor lowers his voice.
 
 "And the strange part is..."

@@ -1,8 +1,6 @@
 MAYOR_VAULT_INTRO_DIALOGUES = """The Mayor leads you into the town hall.
 Nobody follows.
-
 The noise from the street fades behind you.
-
 Downstairs, under the building, the city Vault waits in a cold stone room.
 The iron door is shut.
 The lock is still in place.
@@ -19,14 +17,12 @@ Electromon walks up to the door and sniffs it.
 Then he looks back at you.
 
 Something is wrong.
-
 The Mayor opens a small book chained to the wall.
 Names fill every page.
 Some names have stamps beside them.
 Some do not.
 
 "This is the access ledger."
-
 "Everyone who can enter the Vault is written here."
 
 He turns the pages slowly.
