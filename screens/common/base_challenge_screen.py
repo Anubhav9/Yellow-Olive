@@ -55,11 +55,19 @@ class BaseChallengeScreen(Static):
                 f"Challenge {self.challenge_id} screen must set `challenge_scenario`."
             )
 
+        log = self.query_one(f"#{self.challenge_log_id}", RichLog)
         try:
             for challenge_id in challenge_ids:
-                resource_manager.apply_manifest(scenario, challenge_id)
+                warnings = resource_manager.apply_manifest(scenario, challenge_id)
+                if warnings:
+                    log.write("")
+                    log.write(
+                        "[yellow]Some lab manifests need your fix before they can be applied.[/]"
+                    )
+                    for warning in warnings:
+                        for line in warning.splitlines():
+                            log.write(f"[yellow]{line}[/]")
         except Exception as error:
-            log = self.query_one(f"#{self.challenge_log_id}", RichLog)
             log.write("[red]Failed to apply challenge resources.[/red]")
             log.write("")
             for line in str(error).splitlines():

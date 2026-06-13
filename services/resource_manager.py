@@ -47,7 +47,8 @@ def iterate_resources(challenge_scenario, challenge_id):
     )
 
 
-def apply_manifest(challenge_scenario, challenge_id, mode="all", file_name=None):
+def apply_manifest(challenge_scenario, challenge_id, mode="all", file_name=None) -> list[str]:
+    """Apply challenge manifests. Returns warnings for manifests kubectl rejected."""
     apply_prologue_resources(challenge_scenario)
 
     if mode == "all":
@@ -56,12 +57,21 @@ def apply_manifest(challenge_scenario, challenge_id, mode="all", file_name=None)
             raise RuntimeError(
                 f"No challenge manifests found for challenge {challenge_id}."
             )
+
+        warnings = []
         for resource in resources:
-            _kubectl_apply(resource)
-        return
+            try:
+                _kubectl_apply(resource)
+            except RuntimeError as exc:
+                warnings.append(str(exc))
+
+        if len(warnings) == len(resources):
+            raise RuntimeError("\n".join(warnings))
+        return warnings
 
     if mode == "individual":
         _kubectl_apply(Path(f"{file_name}.yaml"))
+        return []
 
 
 def iterate_prologue_resources(challenge_scenario):
