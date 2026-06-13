@@ -62,7 +62,10 @@ class BaseChallengeScreen(Static):
                 if warnings:
                     log.write("")
                     log.write(
-                        "[yellow]Some lab manifests need your fix before they can be applied.[/]"
+                        "[yellow]Some lab manifests could not be applied yet.[/]"
+                    )
+                    log.write(
+                        "[yellow]Edit them in yellow-olive-lab, then apply from your Command Chamber.[/]"
                     )
                     for warning in warnings:
                         for line in warning.splitlines():

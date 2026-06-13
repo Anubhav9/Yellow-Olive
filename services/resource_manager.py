@@ -4,6 +4,18 @@ import global_constants
 from utils import general_utils
 
 
+def _kubectl_apply_error_message(resource_path: Path, detail: str) -> str:
+    summary = f"{resource_path.name} needs a fix before it can be applied."
+    if not detail:
+        return summary
+
+    reason_lines = [line.strip() for line in detail.splitlines() if line.strip()]
+    if not reason_lines:
+        return summary
+
+    return f"{summary}\n{reason_lines[-1]}"
+
+
 def _kubectl_apply(resource_path: Path) -> None:
     result = subprocess.run(
         ["kubectl", "apply", "-f", str(resource_path)],
@@ -14,10 +26,7 @@ def _kubectl_apply(resource_path: Path) -> None:
     )
     if result.returncode != 0:
         detail = (result.stderr or result.stdout or "").strip()
-        lines = [f"Could not apply {resource_path.name}."]
-        if detail:
-            lines.extend(detail.splitlines())
-        raise RuntimeError("\n".join(lines))
+        raise RuntimeError(_kubectl_apply_error_message(resource_path, detail))
 
 
 def iterate_resources(challenge_scenario, challenge_id):
