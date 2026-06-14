@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "docs/badges/**"
   schedule:
     # Re-check PyPI installs weekly (dependency wheels can change).
     - cron: "0 6 * * 1"
@@ -86,17 +88,20 @@ jobs:
 
       - name: Build shields.io endpoint JSON
         run: |
-          mkdir -p badge-output
-          python scripts/build_python_badge.py results > badge-output/python-install.json
-          cat badge-output/python-install.json
+          mkdir -p docs/badges
+          python scripts/build_python_badge.py results > docs/badges/python-install.json
+          cat docs/badges/python-install.json
 
-      - name: Publish badge to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: badge-output
-          destination_dir: badges
-          keep_files: true
-          user_name: github-actions[bot]
-          user_email: 41898282+github-actions[bot]@users.noreply.github.com
-          commit_message: "Update Python pip install badge"
+      - name: Commit and deploy badge
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/badges/python-install.json
+          if git diff --staged --quiet; then
+            echo "Badge unchanged; skipping commit."
+          else
+            git commit -m "Update Python pip install badge"
+            git push
+          fi
+          pip install mkdocs-material
+          mkdocs gh-deploy --force
