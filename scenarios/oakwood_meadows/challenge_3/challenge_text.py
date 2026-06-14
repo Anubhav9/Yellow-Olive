@@ -14,6 +14,7 @@ unless their trainer gives the right command.
 Can you convince Electromon to demonstrate his shocking capability?
 
 Objective:
+Namespace: oakwood-meadows
 Configure the container command so that it prints
 Electromon show your power
 """
