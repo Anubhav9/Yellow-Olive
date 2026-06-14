@@ -14,9 +14,25 @@ from media import background_music_utility
 from utils import general_utils
 
 
+def _css_path() -> str:
+    """Resolve app.tcss for source runs and PyPI installs."""
+    beside_app = Path(__file__).resolve().with_name("app.tcss")
+    if beside_app.is_file():
+        return str(beside_app)
+    try:
+        from importlib.metadata import files
+
+        for entry in files("yellow-olive"):
+            if entry.name == "app.tcss":
+                return str(entry.locate().resolve())
+    except Exception:
+        pass
+    return str(beside_app)
+
+
 class ProjectOlive(App):
     TITLE = ("Welcome to Professor Bald's Laboratory")
-    CSS_PATH = str(Path(__file__).resolve().with_name("app.tcss"))
+    CSS_PATH = _css_path()
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal():
