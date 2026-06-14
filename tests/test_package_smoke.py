@@ -1,4 +1,4 @@
-"""Smoke tests against an installed yellow-olive wheel (CI installs dist/*.whl first)."""
+"""Smoke tests against an installed yellow-olive package (CI installs from PyPI or a wheel)."""
 
 from __future__ import annotations
 

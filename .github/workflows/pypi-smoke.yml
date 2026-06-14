@@ -1,0 +1,102 @@
+name: PyPI install smoke test
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # Re-check PyPI installs weekly (dependency wheels can change).
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pypi-smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    env:
+      SDL_AUDIODRIVER: dummy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install yellow-olive from PyPI
+        run: |
+          python -m venv .ci-venv
+          .ci-venv/bin/pip install --upgrade pip
+          .ci-venv/bin/pip install yellow-olive
+          .ci-venv/bin/pip install pytest pytest-asyncio
+          .ci-venv/bin/pip show yellow-olive
+
+      - name: Run installed-package smoke tests
+        id: smoke
+        run: .ci-venv/bin/pytest tests/test_package_smoke.py -v -o asyncio_mode=auto
+
+      - name: Record matrix result
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          import os
+
+          ok = os.environ["JOB_STATUS"] == "success"
+          payload = {
+              "version": os.environ["PYTHON_VERSION"],
+              "ok": ok,
+          }
+          with open(f"result-{os.environ['PYTHON_VERSION']}.json", "w", encoding="utf-8") as fh:
+              json.dump(payload, fh)
+          PY
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          JOB_STATUS: ${{ job.status }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pypi-result-${{ matrix.python-version }}
+          path: result-${{ matrix.python-version }}.json
+          retention-days: 7
+
+  update-python-badge:
+    needs: pypi-smoke
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pypi-result-*
+          merge-multiple: true
+          path: results
+
+      - name: Build shields.io endpoint JSON
+        run: |
+          mkdir -p badge-output
+          python scripts/build_python_badge.py results > badge-output/python-install.json
+          cat badge-output/python-install.json
+
+      - name: Publish badge to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: badge-output
+          destination_dir: badges
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_message: "Update Python pip install badge"
