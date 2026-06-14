@@ -16,6 +16,7 @@ class Challenge1(BaseChallengeScreen):
         self.challenge_text = (
             f"{challenge_text.CHALLENGE_1_TEXT}\n"
             "\nObjective:\n"
+            "Namespace: oakwood-meadows\n"
             f"Inspect the manifest at {manifest_path}\n"
             "Fix the issue, then delete and recreate the pod using that file."
         )
