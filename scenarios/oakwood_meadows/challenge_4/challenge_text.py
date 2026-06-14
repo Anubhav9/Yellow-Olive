@@ -11,6 +11,7 @@ Mark Electromon's Posepod so that the cluster knows he is electric
 and that he is your best buddy.
 
 Objective:
+Namespace: oakwood-meadows
 type = electric
 relationship = best-buddy
 """
