@@ -10,6 +10,7 @@ Place the correct instruction inside Electromon's Pokepod
 so he is ready to fight.
 
 Objective:
+Namespace: oakwood-meadows
 Configure env variable
 BATTLE_MODE=ON
 """
