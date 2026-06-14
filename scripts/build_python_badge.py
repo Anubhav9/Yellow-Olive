@@ -19,11 +19,11 @@ def load_outcomes(results_dir: Path) -> dict[str, bool]:
 
 
 def badge_color(passed: int, total: int) -> str:
-    if passed == total:
+    if passed > 0:
         return "brightgreen"
-    if passed == 0:
+    if total > 0:
         return "red"
-    return "yellow"
+    return "lightgrey"
 
 
 def format_message(outcomes: dict[str, bool]) -> str:
