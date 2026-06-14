@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "label": "pip install",
-  "message": "3.10+ 3.11+ 3.12+ 3.13+ 3.14-",
+  "label": "python",
+  "message": "3.10 | 3.11 | 3.12 | 3.13",
   "color": "yellow"
 }
