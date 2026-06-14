@@ -6,7 +6,7 @@ A terminal-native retro adventure designed to make infrastructure learning feel 
 
 [![GitHub stars](https://img.shields.io/github/stars/Anubhav9/Yellow-Olive?style=social)](https://github.com/Anubhav9/Yellow-Olive)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python pip install](https://img.shields.io/endpoint?url=https://anubhav9.github.io/Yellow-Olive/badges/python-install.json)](https://github.com/Anubhav9/Yellow-Olive/actions/workflows/pypi-smoke.yml)
+[![Python pip install](https://img.shields.io/endpoint?url=https%3A%2F%2Fanubhav9.github.io%2FYellow-Olive%2Fbadges%2Fpython-install.json)](https://github.com/Anubhav9/Yellow-Olive/actions/workflows/pypi-smoke.yml)
 [![PyPI downloads](https://static.pepy.tech/badge/yellow-olive)](https://pepy.tech/project/yellow-olive)
 [![Status: Active Development](https://img.shields.io/badge/status-active%20development%20in%20progress-brightgreen?style=flat)](https://github.com/Anubhav9/Yellow-Olive)
 [![Made with ❤️ in Bengaluru 🇮🇳](https://img.shields.io/badge/Made%20with%20❤️%20in-Bengaluru%20🇮🇳-%23D4AF37?style=flat)](https://github.com/Anubhav9/Yellow-Olive)

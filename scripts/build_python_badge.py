@@ -33,11 +33,11 @@ def main() -> None:
     parts: list[str] = []
     for version in PYTHON_VERSIONS:
         if outcomes.get(version):
-            parts.append(f"{version} ✓")
+            parts.append(f"{version}+")
         elif version in outcomes:
-            parts.append(f"{version} ✗")
+            parts.append(f"{version}-")
         else:
-            parts.append(f"{version} ?")
+            parts.append(f"{version}?")
 
     passed = sum(1 for version in PYTHON_VERSIONS if outcomes.get(version))
     payload = {
