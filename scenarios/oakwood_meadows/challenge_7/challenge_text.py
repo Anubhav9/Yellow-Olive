@@ -10,6 +10,7 @@ Configure the Pokepod so that
 Electromon automatically returns to battle if he ever collapses.
 
 Objective:
+Namespace: oakwood-meadows
 Required restart policy:
 Always
 """

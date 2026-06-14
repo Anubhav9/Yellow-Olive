@@ -62,6 +62,7 @@ namespaces = true
 [tool.setuptools.package-data]
 challenge_files = ["*.yaml"]
 media = ["resources/**/*"]
+scenarios = ["**/*.yaml", "**/*.yml"]
 
 [tool.setuptools.data-files]
 "." = ["app.tcss"]

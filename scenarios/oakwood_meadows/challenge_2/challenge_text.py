@@ -10,5 +10,6 @@ Only when he is truly ready should he step outside the Pokepod.
 Can you make sure Electromon is ready?
 
 Objective:
+Namespace: oakwood-meadows
 Configure a livenessProbe on port 80 at path /
 """
