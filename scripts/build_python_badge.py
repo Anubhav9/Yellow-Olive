@@ -26,24 +26,24 @@ def badge_color(passed: int, total: int) -> str:
     return "yellow"
 
 
+def format_message(outcomes: dict[str, bool]) -> str:
+    passing = [version for version in PYTHON_VERSIONS if outcomes.get(version)]
+    if passing:
+        return " | ".join(passing)
+    if outcomes:
+        return "unsupported"
+    return "unknown"
+
+
 def main() -> None:
     results_dir = Path(sys.argv[1] if len(sys.argv) > 1 else "results")
     outcomes = load_outcomes(results_dir)
 
-    parts: list[str] = []
-    for version in PYTHON_VERSIONS:
-        if outcomes.get(version):
-            parts.append(f"{version}+")
-        elif version in outcomes:
-            parts.append(f"{version}-")
-        else:
-            parts.append(f"{version}?")
-
     passed = sum(1 for version in PYTHON_VERSIONS if outcomes.get(version))
     payload = {
         "schemaVersion": 1,
-        "label": "pip install",
-        "message": " ".join(parts),
+        "label": "python",
+        "message": format_message(outcomes),
         "color": badge_color(passed, len(PYTHON_VERSIONS)),
     }
     print(json.dumps(payload, indent=2))
