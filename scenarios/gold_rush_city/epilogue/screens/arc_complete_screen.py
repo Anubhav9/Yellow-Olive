@@ -44,17 +44,22 @@ class GoldRushCityArcCompleteScreen(RichLog):
         )
 
         self.write(
-            "\n[bold #D4AF37]Every mission in the lab is complete. "
-            "Professor Bald would be proud.[/]"
+            "\n[bold #D4AF37]The road east leads to Sakura Harbour.[/]"
         )
-        self.write("\n[reverse] Press Enter to Return to the Lab [/]")
+        self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
 
     async def on_key(self, event: events.Key) -> None:
         if event.key == "enter":
             background_music_utility.stop_background_music()
             general_utils.update_progress(
                 active_challenge_id="20",
-                story_intro_act=global_constants.STORY_ACT_DONE,
+                story_intro_act=global_constants.STORY_ACT_SAKURA_HARBOUR,
                 pending_epilogue=None,
             )
+            container = self.parent
             await self.remove()
+            from scenarios.sakura_harbour.prologue.screens.sakura_harbour_intro_screen import (
+                SakuraHarbourIntroScreen,
+            )
+
+            await container.mount(SakuraHarbourIntroScreen())

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ferry-guide
+  namespace: sakura-harbour
+  labels:
+    app: ferry-guide
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ferry-guide
+  template:
+    metadata:
+      labels:
+        app: ferry-guide-wrong
+    spec:
+      containers:
+        - name: ferry-guide
+          image: nginx:1.25
+          ports:
+            - containerPort: 80

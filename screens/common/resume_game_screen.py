@@ -35,6 +35,9 @@ class ResumeGameScreen(Static):
                 global_constants.STORY_ACT_GOLD_RUSH_VAULT: "The city Vault",
                 global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL: "Team Evil's licence",
                 global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE: "Gold Rush City victory",
+                global_constants.STORY_ACT_SAKURA_HARBOUR: "Arrival at Sakura Harbour",
+                global_constants.STORY_ACT_SAKURA_HANA: "Master Hana's briefing",
+                global_constants.STORY_ACT_SAKURA_GATE: "Gate Three queue",
             }
             mission_text = story_labels.get(story_act, "Signal Town journey")
         elif general_utils.is_campaign_complete(challenge_id):

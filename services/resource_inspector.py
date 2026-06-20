@@ -78,6 +78,14 @@ def _list_resources(kind, namespace, label_selector=None, timeout=DEFAULT_TIMEOU
     return True, parsed.get("items", [])
 
 
+def get_deployments(namespace, label_selector=None):
+    return _list_resources("deployments", namespace, label_selector=label_selector)
+
+
+def get_deployment(name, namespace):
+    return _fetch_resource("deployment", name, namespace)
+
+
 def get_pod(name, namespace):
     return _fetch_resource("pod", name, namespace)
 

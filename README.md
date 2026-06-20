@@ -144,6 +144,19 @@ visibility, the quiet plumbing that makes a cluster feel like one system.
 Wherever infrastructure should connect, Team Evil has probably been there first.
 ```
 
+### Master Hana
+
+<p align="center">
+  <img width="120" src="media/resources/image_files/hana.png" alt="Master Hana" />
+</p>
+
+```
+Harbour Master of Sakura Blossom Village during hanami festival week.
+
+She keeps the gates, piers, and customs lanes staffed when trainers arrive from every region.
+Calm, kind, and tired only when the roster says one PokePod and the line says a hundred.
+```
+
 ---
 
 ## From Yellow Olive to Kubernetes
@@ -154,6 +167,7 @@ Every character, keyword, and challenge maps directly to a real Kubernetes conce
 | -------------------- | --------------------- | -------------------------------------------------- |
 | Posemon              | Container             | A single runnable unit inside a workload           |
 | Pokepod              | Pod                   | The smallest deployable unit - houses Posemons     |
+| Harbour Roster       | Deployment            | Keeps the right number of PokePods on duty at a post |
 | Region / Town        | Namespace             | A bounded district in the cluster - separate scope for resources |
 
 (And many more - every mechanic is built to teach something real.)
@@ -184,7 +198,16 @@ Open an issue with your idea, then follow the [contributing guide](https://anubh
 
 ## Roadmap
 
-Save/load progress and PyPI packaging are live. The Signal Town arc (Services, DNS, Ingress) is in active development.
+Save/load progress and PyPI packaging are live.
+
+| Arc | Region | Kubernetes focus |
+| --- | ------ | ---------------- |
+| Oakwood Meadows | Challenges 1–7 | Pods |
+| Signal Town | Challenges 8–13 | Services, DNS, Ingress |
+| Gold Rush City | Challenges 14–19 | RBAC |
+| Sakura Harbour | Challenges 20–24 | Deployments (scale, rollouts, canary) |
+
+
 
 Full roadmap → [documentation](https://anubhav9.github.io/Yellow-Olive/roadmap/)
 
@@ -207,6 +230,9 @@ Music is sourced from [OpenGameArt](https://opengameart.org/). Licenses vary by 
 | `team_evil_intro_music.mp3` | Boneyard | [Preston Peak](https://opengameart.org/users/ppeak) | CC0 |
 | `gold_rush_city_intro_music.ogg` | Dacoit ~ Desert Theme | [Spring](https://opengameart.org/users/spring) | CC-BY 3.0 |
 | `walk_to_vault.ogg` | Lasso Lady | [congusbongus](https://opengameart.org/users/congusbongus) | CC0 |
+| `sakura_harbour_intro.mp3` | Enchanted Festival | [Matthew Pablo](https://opengameart.org/users/matthewpablo) | CC-BY 3.0 ([attribution](https://www.matthewpablo.com/services)) |
+| `hana_intro.wav` | Town Theme 3 | [LarsG](https://opengameart.org/users/larsg) | CC-BY 3.0 |
+| `sakura_harbour_prologue_end.ogg` | Flowerbed Fields [Loop] | [Zane Little Music](https://opengameart.org/users/zane-little-music) | CC-BY 3.0 |
 
 ---
 
