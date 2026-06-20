@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customs-canary
+  namespace: sakura-harbour
+  labels:
+    app: customs-lane
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customs-lane
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: customs-lane
+        track: canary
+    spec:
+      containers:
+        - name: customs-canary
+          image: nginx:canary-broken
+          ports:
+            - containerPort: 80

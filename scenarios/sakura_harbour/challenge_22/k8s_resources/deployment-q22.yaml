@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: luggage-scanner
+  namespace: sakura-harbour
+  labels:
+    app: luggage-scanner
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: luggage-scanner
+  template:
+    metadata:
+      labels:
+        app: luggage-scanner
+    spec:
+      containers:
+        - name: luggage-scanner
+          image: nginx:does-not-exist
+          ports:
+            - containerPort: 80

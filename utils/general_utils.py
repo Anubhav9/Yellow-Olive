@@ -33,6 +33,11 @@ CHALLENGE_SCENARIO_MAP = {
     "17": "gold_rush_city",
     "18": "gold_rush_city",
     "19": "gold_rush_city",
+    "20": "sakura_harbour",
+    "21": "sakura_harbour",
+    "22": "sakura_harbour",
+    "23": "sakura_harbour",
+    "24": "sakura_harbour",
 }
 
 async def simulate_dialogue(dialogue, color):
@@ -170,6 +175,19 @@ def get_lab_service_file(challenge_scenario, challenge_id):
     )
 
 
+def get_lab_deployment_file(challenge_scenario, challenge_id, file_name=None):
+    lab_root = ensure_lab_workspace()
+    filename = file_name or f"deployment-q{challenge_id}.yaml"
+    return (
+        lab_root
+        / "scenarios"
+        / f"{challenge_scenario}"
+        / f"challenge_{challenge_id}"
+        / "k8s_resources"
+        / filename
+    )
+
+
 
 
 
@@ -283,6 +301,9 @@ def is_story_intro_pending(progress=None):
         global_constants.STORY_ACT_GOLD_RUSH_VAULT,
         global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL,
         global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE,
+        global_constants.STORY_ACT_SAKURA_HARBOUR,
+        global_constants.STORY_ACT_SAKURA_HANA,
+        global_constants.STORY_ACT_SAKURA_GATE,
     )
 
 
@@ -315,6 +336,24 @@ def load_story_intro_screen(story_intro_act):
         from scenarios.gold_rush_city.epilogue.screens.arc_complete_screen import GoldRushCityArcCompleteScreen
 
         return GoldRushCityArcCompleteScreen
+    if story_intro_act == global_constants.STORY_ACT_SAKURA_HARBOUR:
+        from scenarios.sakura_harbour.prologue.screens.sakura_harbour_intro_screen import (
+            SakuraHarbourIntroScreen,
+        )
+
+        return SakuraHarbourIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_SAKURA_HANA:
+        from scenarios.sakura_harbour.prologue.screens.master_hana_intro_screen import (
+            MasterHanaIntroScreen,
+        )
+
+        return MasterHanaIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_SAKURA_GATE:
+        from scenarios.sakura_harbour.prologue.screens.gate_three_intro_screen import (
+            GateThreeIntroScreen,
+        )
+
+        return GateThreeIntroScreen
     raise ValueError(f"Unknown story intro act: {story_intro_act}")
 
 

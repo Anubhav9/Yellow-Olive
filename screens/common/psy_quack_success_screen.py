@@ -49,6 +49,12 @@ class PsyQuackSuccessScreen(RichLog):
                 "[bold #D4AF37]Gold Rush City's vault is secure.[/]"
             )
             self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
+        elif self.challenge_id == "24" and next_challenge_id is None:
+            self.write(
+                "[bold #D4AF37]Sakura Harbour holds for now. "
+                "More festival work lies ahead.[/]"
+            )
+            self.write("\n[reverse] Press Enter to Return to the Lab [/]")
         elif next_challenge_id is None:
             self.write("[bold #D4AF37]Every mission in the lab is complete. Professor Bald would be proud.[/]")
             self.write("\n[reverse] Press Enter to Return to the Lab [/]")

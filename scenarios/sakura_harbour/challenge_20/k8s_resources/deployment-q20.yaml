@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-checker
+  namespace: sakura-harbour
+  labels:
+    app: ticket-checker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticket-checker
+  template:
+    metadata:
+      labels:
+        app: ticket-checker
+    spec:
+      containers:
+        - name: ticket-checker
+          image: nginx:1.25
+          ports:
+            - containerPort: 80

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boarding-gate
+  namespace: sakura-harbour
+  labels:
+    app: boarding-gate
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: boarding-gate
+  template:
+    metadata:
+      labels:
+        app: boarding-gate
+    spec:
+      containers:
+        - name: boarding-gate
+          image: nginx:broken-rollout
+          ports:
+            - containerPort: 80
