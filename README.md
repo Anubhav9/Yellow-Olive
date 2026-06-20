@@ -207,7 +207,7 @@ Save/load progress and PyPI packaging are live.
 | Gold Rush City | Challenges 14–19 | RBAC |
 | Sakura Harbour | Challenges 20–24 | Deployments (scale, rollouts, canary) |
 
-Sakura Harbour is the newest arc - a hanami festival harbour where you staff gates and lanes with Deployment rosters. Challenge 25 (blue-green / rollback) is still to come.
+
 
 Full roadmap → [documentation](https://anubhav9.github.io/Yellow-Olive/roadmap/)
 
