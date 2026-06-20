@@ -24,7 +24,7 @@ class MasterHanaIntroScreen(RichLog):
 
     async def render_master_hana_intro(self, color: str) -> None:
         background_music_utility.start_background_music(
-            f"{global_constants.MUSIC_MEDIA_PATH}/town_theme_3.wav"
+            f"{global_constants.MUSIC_MEDIA_PATH}/hana_intro.wav"
         )
         progress = general_utils.load_progress()
         dialogues = master_hana_intro_dialogue.MASTER_HANA_INTRO_DIALOGUES

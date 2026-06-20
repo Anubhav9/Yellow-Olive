@@ -23,7 +23,7 @@ class GateThreeIntroScreen(RichLog):
 
     async def render_gate_three_intro(self, color: str) -> None:
         background_music_utility.start_background_music(
-            f"{global_constants.MUSIC_MEDIA_PATH}/flowerbed_fields.ogg"
+            f"{global_constants.MUSIC_MEDIA_PATH}/sakura_harbour_prologue_end.ogg"
         )
         dialogues = gate_three_intro_dialogue.GATE_THREE_INTRO_DIALOGUES
 

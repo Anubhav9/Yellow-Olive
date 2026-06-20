@@ -30,7 +30,7 @@ class SakuraHarbourIntroScreen(RichLog):
 
     async def render_sakura_harbour_intro(self, color: str) -> None:
         background_music_utility.start_background_music(
-            f"{global_constants.MUSIC_MEDIA_PATH}/enchanted_festival.mp3"
+            f"{global_constants.MUSIC_MEDIA_PATH}/sakura_harbour_intro.mp3"
         )
         progress = general_utils.load_progress()
         player_name = progress.get("player_name") or "Trainer"
