@@ -90,6 +90,8 @@ def render_challenge_resources(challenge_dir: Path, context: dict) -> list[tuple
             continue
         if resource_file.suffix not in {".yaml", ".yml", ".j2"}:
             continue
+        if resource_file.name in {"validation.yaml", "validation.yml"}:
+            continue
 
         template_source = resource_file.read_text()
         if resource_file.suffix == ".j2" or "{{" in template_source:
