@@ -29,16 +29,18 @@ hosted_labs/
 
 ## Web UI (POC)
 
+1. Copy `hosted_labs/.env.example` to `hosted_labs/.env` and fill in your GitHub OAuth credentials.
+2. Register the callback URL in your GitHub OAuth App, e.g. `http://127.0.0.1:8000/auth/github/callback`.
+3. Install and run:
+
 ```bash
 pip install -r hosted_labs/requirements.txt
 uvicorn hosted_labs.api.main:app --reload
 ```
 
-Open [http://127.0.0.1:8000/challenges/challenge_1](http://127.0.0.1:8000/challenges/challenge_1)
+Open [http://127.0.0.1:8000/login](http://127.0.0.1:8000/login)
 
-The challenge page shows briefing text and a **kubectl terminal**. Commands are sent over a
-FastAPI WebSocket to `core/terminal.py`, which runs `kubectl` on the server (namespace is forced;
-per-user kubeconfig is used when present under `hosted_labs/sessions/<github_id>/kubeconfig`).
+Challenge text and the kubectl terminal are only available **after GitHub login** and when a lab seat is free (default max: 7).
 
 ## CLI bootstrap
 

@@ -40,17 +40,14 @@
 
       <div class="menu-row">
         <form method="post" action="/challenges/{{ challenge_slug }}/bootstrap">
-          <input type="hidden" name="github_id" value="{{ poc_github_id }}" />
-          <input type="hidden" name="session_id" value="{{ poc_session_id }}" />
           <button type="submit" class="btn btn-start">▶ Start session</button>
         </form>
         <form method="post" action="/challenges/{{ challenge_slug }}/validate">
-          <input type="hidden" name="github_id" value="{{ poc_github_id }}" />
           <button type="submit" class="btn">✓ Check challenge</button>
         </form>
       </div>
 
-      <p class="hint">ns: {{ poc_github_id }} · session: {{ poc_session_id }}</p>
+      <p class="hint">{{ github_login }} · ns: {{ namespace }} · session: {{ lab_session_id }}</p>
 
       {% if bootstrap_message %}
       <section class="toast" aria-label="Bootstrap result">
@@ -64,7 +61,7 @@
       </section>
       {% endif %}
 
-      <p class="footer-link"><a href="/challenges">← other challenges</a></p>
+      <p class="footer-link"><a href="/challenges">← other challenges</a> · <a href="/logout">sign out</a></p>
     </div>
 
     <script>
