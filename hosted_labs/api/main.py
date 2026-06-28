@@ -3,6 +3,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Form, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -30,6 +31,8 @@ app = FastAPI(
     title="Yellow Olive Hosted Labs",
     description="Public Kubernetes challenges (POC — not part of the PyPI game package).",
 )
+
+app.mount("/static", StaticFiles(directory=str(API_DIR / "static")), name="static")
 
 
 def _challenge_context(
