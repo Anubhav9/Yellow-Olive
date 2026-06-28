@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ challenge_title }} · Hosted Labs</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #1a1a2e;
+        --panel: #16213e;
+        --text: #eaeaea;
+        --accent: #f4d35e;
+        --muted: #9aa5b1;
+        --border: #2d3a4f;
+        --success: #7ecf8e;
+        --error: #ff8b8b;
+        --terminal-bg: #0d1117;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Georgia, "Times New Roman", serif;
+        background: radial-gradient(circle at top, #243b55 0%, var(--bg) 55%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 56rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 3rem;
+      }
+
+      .eyebrow {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 0.5rem;
+      }
+
+      h1 {
+        margin: 0 0 1.5rem;
+        font-size: 2rem;
+        font-weight: 600;
+      }
+
+      h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .panel {
+        background: color-mix(in srgb, var(--panel) 92%, black);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      }
+
+      .panel + .panel {
+        margin-top: 1rem;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .terminal-panel {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #terminal-output {
+        min-height: 16rem;
+        max-height: 24rem;
+        overflow-y: auto;
+        background: var(--terminal-bg);
+        color: #c9d1d9;
+        padding: 1rem 1rem 0.5rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .terminal-input-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--terminal-bg);
+        border-top: 1px solid var(--border);
+        padding: 0.75rem 1rem 1rem;
+      }
+
+      #terminal-prompt {
+        color: var(--accent);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+
+      #terminal-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #c9d1d9;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1.25rem 0;
+      }
+
+      button {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 0.65rem 1rem;
+        cursor: pointer;
+        background: color-mix(in srgb, var(--panel) 80%, white 5%);
+        color: var(--text);
+      }
+
+      button.primary {
+        border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+        color: var(--accent);
+      }
+
+      .status {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.92rem;
+        line-height: 1.5;
+      }
+
+      .status.success {
+        color: var(--success);
+      }
+
+      .status.error {
+        color: var(--error);
+      }
+
+      .meta {
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .footer {
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      a {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Yellow Olive · Hosted Labs</p>
+      <h1>{{ challenge_title }}</h1>
+
+      <section class="panel" aria-label="Challenge briefing">
+        <pre>{{ challenge_text }}</pre>
+      </section>
+
+      <section class="panel terminal-panel" aria-label="kubectl terminal">
+        <h2 style="padding: 1rem 1.5rem 0">Terminal</h2>
+        <div id="terminal-output" aria-live="polite"></div>
+        <form id="terminal-form" class="terminal-input-row">
+          <label id="terminal-prompt" for="terminal-input">{{ poc_github_id }}>&nbsp;</label>
+          <input
+            id="terminal-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="kubectl command input"
+          />
+        </form>
+      </section>
+
+      <div class="actions">
+        <form method="post" action="/challenges/{{ challenge_slug }}/bootstrap">
+          <input type="hidden" name="github_id" value="{{ poc_github_id }}" />
+          <input type="hidden" name="session_id" value="{{ poc_session_id }}" />
+          <button type="submit" class="primary">Start session</button>
+        </form>
+
+        <form method="post" action="/challenges/{{ challenge_slug }}/validate">
+          <input type="hidden" name="github_id" value="{{ poc_github_id }}" />
+          <button type="submit">Validate challenge</button>
+        </form>
+      </div>
+
+      <p class="meta">
+        POC namespace: {{ poc_github_id }} · session: {{ poc_session_id }}
+      </p>
+
+      {% if bootstrap_message %}
+      <section class="panel status" aria-label="Bootstrap result">
+        <pre>{{ bootstrap_message }}</pre>
+      </section>
+      {% endif %}
+
+      {% if validation_message %}
+      <section class="panel status {{ 'success' if validation_passed else 'error' }}" aria-label="Validation result">
+        <pre>{{ validation_message }}</pre>
+      </section>
+      {% endif %}
+
+      <p class="footer">
+        <a href="/challenges">All challenges</a>
+      </p>
+    </main>
+
+    <script>
+      (function () {
+        const challengeSlug = {{ challenge_slug | tojson }};
+        const output = document.getElementById("terminal-output");
+        const form = document.getElementById("terminal-form");
+        const input = document.getElementById("terminal-input");
+
+        function appendText(text) {
+          output.textContent += text;
+          output.scrollTop = output.scrollHeight;
+        }
+
+        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const socket = new WebSocket(
+          `${protocol}//${window.location.host}/challenges/${challengeSlug}/terminal/ws`
+        );
+
+        socket.addEventListener("message", (event) => {
+          const message = JSON.parse(event.data);
+          if (message.type === "welcome" || message.type === "output" || message.type === "prompt") {
+            appendText(message.text);
+          }
+        });
+
+        socket.addEventListener("open", () => {
+          input.focus();
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const command = input.value.trim();
+          if (!command || socket.readyState !== WebSocket.OPEN) {
+            return;
+          }
+          socket.send(JSON.stringify({ type: "command", text: command }));
+          input.value = "";
+        });
+      })();
+    </script>
+  </body>
+</html>

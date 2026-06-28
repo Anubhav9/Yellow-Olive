@@ -1,0 +1,9 @@
+resources:
+  - kind: Pod
+    name: electromon-pod
+    ready: true
+    messages:
+      missing: "Pokepod not found. Is Electromon deployed in your namespace?"
+      pending: "Electromon's Pokepod has no container status yet. Give it a moment, then try again."
+      not_ready: "Electromon's Pokepod is not ready yet. Inspect the manifest and fix the issue."
+      success: "Electromon is out of the Pokepod and ready for adventure."
