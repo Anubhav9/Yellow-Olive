@@ -86,10 +86,14 @@ def run_kubectl_command(
     if not argv:
         return ""
 
-    env = os.environ.copy()
     kubeconfig_path = get_user_kubeconfig_path(formatted_github_user_id)
-    if kubeconfig_path is not None:
-        env["KUBECONFIG"] = str(kubeconfig_path)
+    if kubeconfig_path is None:
+        raise TerminalError(
+            "Session not bootstrapped. Click Start session before using the terminal."
+        )
+
+    env = os.environ.copy()
+    env["KUBECONFIG"] = str(kubeconfig_path)
 
     result = subprocess.run(
         argv,

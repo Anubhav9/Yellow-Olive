@@ -6,9 +6,9 @@ metadata:
   labels:
     session: "{{ session_id }}"
 subjects:
-  - kind: User
-    name: "{{ formatted_github_user_id }}"
-    apiGroup: rbac.authorization.k8s.io
+  - kind: ServiceAccount
+    name: player
+    namespace: {{ formatted_github_user_id }}
 roleRef:
   kind: Role
   name: restricted-user

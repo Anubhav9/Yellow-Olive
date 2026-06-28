@@ -21,6 +21,7 @@ ABSOLUTE_POLICY_TEMPLATES = [
 
 CHALLENGE_RBAC_TEMPLATES = [
     ("role", "role_creation/v1/role_creation.yaml.j2"),
+    ("service-account", "service_account/v1/service_account.yaml.j2"),
     ("role-binding", "role_binding/v1/role_binding.yaml.j2"),
 ]
 
@@ -104,12 +105,15 @@ def render_challenge_resources(challenge_dir: Path, context: dict) -> list[tuple
 def apply_manifest(manifest_yaml: str) -> str:
     import subprocess
 
+    from hosted_labs.core.kubeconfig import admin_kubectl_env
+
     result = subprocess.run(
         ["kubectl", "apply", "-f", "-"],
         input=manifest_yaml,
         capture_output=True,
         text=True,
         check=False,
+        env=admin_kubectl_env(),
     )
     if result.returncode != 0:
         detail = (result.stderr or result.stdout or "").strip()
@@ -191,6 +195,16 @@ def bootstrap_challenge_session(
         for manifest_name, manifest_yaml in manifests:
             message = apply_manifest(manifest_yaml)
             apply_messages.append({"name": manifest_name, "message": message})
+
+        from hosted_labs.core.kubeconfig import generate_player_kubeconfig
+
+        kubeconfig_path = generate_player_kubeconfig(formatted_github_user_id)
+        apply_messages.append(
+            {
+                "name": "kubeconfig",
+                "message": f"player kubeconfig written to {kubeconfig_path}",
+            }
+        )
 
     return {
         "challenge_slug": challenge_slug,

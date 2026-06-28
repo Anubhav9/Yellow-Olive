@@ -22,10 +22,11 @@ hosted_labs/
 
 1. `core` receives `formatted_github_user_id`, `session_id`, and `challenge_slug`
 2. Apply absolute policies (namespace, quota, network)
-3. Read `delicate/rbac.yaml` and apply challenge Role + RoleBinding
+3. Read `delicate/rbac.yaml` and apply challenge Role, ServiceAccount, and RoleBinding
 4. Render and apply starter manifests from `resources/` into the player's namespace
-5. Player fixes YAML in-cluster
-6. Validate against `resources/validation.yaml`
+5. Mint a ServiceAccount token and write a limited player kubeconfig under `sessions/<namespace>/kubeconfig`
+6. Player fixes YAML in-cluster via the browser terminal (limited kubeconfig only)
+7. Validate against `resources/validation.yaml`
 
 ## Web UI (POC)
 
@@ -41,6 +42,8 @@ uvicorn hosted_labs.api.main:app --reload
 Open [http://127.0.0.1:8000/login](http://127.0.0.1:8000/login)
 
 Challenge text and the kubectl terminal are only available **after GitHub login** and when a lab seat is free (default max: 7).
+
+The API process needs **admin** cluster access for bootstrap and validation. On k3s, copy `/etc/rancher/k3s/k3s.yaml` to `~/.kube/config` for the user running uvicorn, or set `KUBECONFIG` to that file.
 
 ## CLI bootstrap
 

@@ -19,12 +19,15 @@ def load_validation_spec(challenge_slug: str) -> dict:
 
 
 def _kubectl_get_json(kind: str, name: str, namespace: str) -> tuple[bool, dict | None, str]:
+    from hosted_labs.core.kubeconfig import admin_kubectl_env
+
     resource_type = kind.lower()
     result = subprocess.run(
         ["kubectl", "get", resource_type, name, "-n", namespace, "-o", "json"],
         capture_output=True,
         text=True,
         check=False,
+        env=admin_kubectl_env(),
     )
     if result.returncode != 0:
         return False, None, (result.stderr or result.stdout or "").strip()
