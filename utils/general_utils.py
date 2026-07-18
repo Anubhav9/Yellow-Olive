@@ -369,12 +369,78 @@ def save_progress(progress):
         json.dump(progress, file, indent=2)
 
 
+def _track_story_section_completed(previous_act, new_act) -> None:
+    if previous_act == new_act:
+        return
+
+    from services.diagnostics import track
+
+    done_transitions = {
+        (global_constants.STORY_ACT_TEAM_EVIL, global_constants.STORY_ACT_DONE): (
+            "team_evil_intro",
+            "signal_town",
+        ),
+        (global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL, global_constants.STORY_ACT_DONE): (
+            "team_evil_license_intro",
+            "gold_rush_city",
+        ),
+        (global_constants.STORY_ACT_SAKURA_GATE, global_constants.STORY_ACT_DONE): (
+            "gate_three_intro",
+            "sakura_harbour",
+        ),
+    }
+    transition = done_transitions.get((previous_act, new_act))
+    if transition:
+        section, scenario = transition
+        track("section_completed", section=section, scenario=scenario)
+        return
+
+    section_by_act = {
+        global_constants.STORY_ACT_SIGNAL_TOWN: ("signal_town_intro", "signal_town"),
+        global_constants.STORY_ACT_COOL_TURTLE: ("cool_turtle_intro", "signal_town"),
+        global_constants.STORY_ACT_GOLD_RUSH_CITY: ("gold_rush_city_intro", "gold_rush_city"),
+        global_constants.STORY_ACT_GOLD_RUSH_VAULT: ("mayor_vault_intro", "gold_rush_city"),
+        global_constants.STORY_ACT_GOLD_RUSH_TEAM_EVIL: (
+            "team_evil_license_intro",
+            "gold_rush_city",
+        ),
+        global_constants.STORY_ACT_GOLD_RUSH_EPILOGUE: (
+            "gold_rush_city_epilogue",
+            "gold_rush_city",
+        ),
+        global_constants.STORY_ACT_SAKURA_HARBOUR: ("sakura_harbour_intro", "sakura_harbour"),
+        global_constants.STORY_ACT_SAKURA_HANA: ("master_hana_intro", "sakura_harbour"),
+        global_constants.STORY_ACT_SAKURA_GATE: ("gate_three_intro", "sakura_harbour"),
+    }
+    completed = section_by_act.get(previous_act)
+    if completed:
+        section, scenario = completed
+        track("section_completed", section=section, scenario=scenario)
+
+
 def update_progress(**updates):
+    from services.diagnostics import track
+
+    section_completed = updates.pop("section_completed", None)
+    section_scenario = updates.pop("section_scenario", None)
+
     progress = load_progress()
+    previous_story_act = progress.get("story_intro_act")
     progress.update(updates)
     progress["active_challenge_id"] = str(progress["active_challenge_id"])
     progress.pop("meow_coins", None)
     save_progress(progress)
+
+    if section_completed:
+        track(
+            "section_completed",
+            section=section_completed,
+            scenario=section_scenario or "unknown",
+        )
+
+    if "story_intro_act" in updates:
+        _track_story_section_completed(previous_story_act, updates["story_intro_act"])
+
     return progress
 
 
@@ -471,21 +537,41 @@ def _raise_cluster_startup_timeout() -> None:
     raise _cluster_startup_timeout_error()
 
 
+def _infra_setup_failure_reason(error: BaseException) -> str:
+    message = str(error).lower()
+    if "minikube not found" in message:
+        return "minikube_missing"
+    if "did not become ready" in message or isinstance(error, subprocess.TimeoutExpired):
+        return "cluster_startup_timeout"
+    if "kubectl" in message and ("not found" in message or "no such file" in message):
+        return "kubectl_missing"
+    if "docker" in message:
+        return "docker_unavailable"
+    return "unknown"
+
+
 async def wait_for_cluster_bootstrap(log) -> None:
     """Start the lab cluster and surface progress hints in the game log."""
     from screens.common.screen_prompts import game_initialisation as screen_prompts
+    from services.diagnostics import track
 
+    track("infra_setup_started")
     log.write(screen_prompts.CLUSTER_BOOTSTRAP_MESSAGE)
     bootstrap_task = asyncio.create_task(asyncio.to_thread(start_core_infra, True))
     try:
-        await asyncio.wait_for(
-            asyncio.shield(bootstrap_task),
-            timeout=LAB_CLUSTER_BOOTSTRAP_REMINDER_SECONDS,
-        )
-    except asyncio.TimeoutError:
-        log.write("")
-        log.write(screen_prompts.CLUSTER_BOOTSTRAP_STILL_WORKING_MESSAGE)
-    await bootstrap_task
+        try:
+            await asyncio.wait_for(
+                asyncio.shield(bootstrap_task),
+                timeout=LAB_CLUSTER_BOOTSTRAP_REMINDER_SECONDS,
+            )
+        except asyncio.TimeoutError:
+            log.write("")
+            log.write(screen_prompts.CLUSTER_BOOTSTRAP_STILL_WORKING_MESSAGE)
+        await bootstrap_task
+    except Exception as exc:
+        track("infra_setup_failed", reason=_infra_setup_failure_reason(exc))
+        raise
+    track("infra_setup_succeeded")
 
 
 def _minikube_cluster_is_ready(profile: str) -> bool:

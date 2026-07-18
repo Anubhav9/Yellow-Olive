@@ -32,6 +32,7 @@ dependencies = [
   "Pillow==12.1.1",
   "pygame==2.6.1",
   "rich==14.3.3",
+  "sentry-sdk==2.66.0",
   "textual==8.0.2",
 ]
 

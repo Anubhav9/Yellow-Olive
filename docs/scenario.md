@@ -1,13 +1,15 @@
 # Scenarios
 
-Story content is organised by **scenario** (a town / arc). Each scenario has a prologue and a set of numbered challenges. Challenges 1-7 belong to Oakwood Meadows. Challenges 8-13 belong to Signal Town.
+Story content is organised by **scenario** (a town / arc). Each scenario has a prologue and a set of numbered challenges. The full campaign runs from challenge 1 (Oakwood Meadows) through challenge 24 (Sakura Harbour).
 
 ## Scenario map
 
 | Challenge IDs | Scenario folder | Kubernetes namespace | Primary topics |
 |---------------|-----------------|----------------------|----------------|
-| 1-7 | `scenarios/oakwood_meadows/` | `oakwood-meadows` | Pods, containers, probes, resources |
-| 8-13 | `scenarios/signal_town/` | `signal-town` | Services, DNS, NodePort, Endpoints, Ingress |
+| 1–7 | `scenarios/oakwood_meadows/` | `oakwood-meadows` | Pods, containers, probes, resources |
+| 8–13 | `scenarios/signal_town/` | `signal-town` | Services, DNS, NodePort, Endpoints, Ingress |
+| 14–19 | `scenarios/gold_rush_city/` | `gold-rush-city` | RBAC, Roles, RoleBindings, ServiceAccounts |
+| 20–24 | `scenarios/sakura_harbour/` | `sakura-harbour` | Deployments, scale, rollouts, canary |
 
 ## Folder layout
 
@@ -32,8 +34,10 @@ scenarios/<scenario_name>/
 
 Prologue resources are applied automatically:
 
-- **Oakwood Meadows** - namespace applied when the player types `yes` on the game initialisation screen (after Minikube is ready)
-- **Signal Town** - namespace applied when the Signal Town intro screen mounts (cluster already running)
+- **Oakwood Meadows** — namespace applied when the player types `yes` on the game initialisation screen (after Minikube is ready)
+- **Signal Town** — namespace applied when the Signal Town intro screen mounts (cluster already running)
+- **Gold Rush City** — namespace applied when the Gold Rush City intro screen mounts
+- **Sakura Harbour** — namespace applied when the Sakura Harbour intro screen mounts
 
 Prologue YAML is read from the **installed repo / package**, not from `yellow-olive-lab/`.
 
@@ -67,6 +71,35 @@ Cool Turtle needs help restoring connectivity. Team Evil broke the paths between
 | 13 | Ingress routing |
 
 Signal Town prologue is a three-act intro (Signal Town, Cool Turtle, Team Evil) tracked via `story_intro_act` in progress.
+
+## Gold Rush City (challenges 14–19)
+
+The mayor needs help securing the city vault. Team Evil returns with licence-themed mischief. Challenges focus on Kubernetes RBAC: ServiceAccounts, Roles, RoleBindings, and least-privilege access.
+
+| Challenge | Focus (high level) |
+|-----------|-------------------|
+| 14 | ServiceAccount and pod identity |
+| 15 | Role rules for namespace access |
+| 16 | RoleBinding wiring |
+| 17 | Combining roles across resources |
+| 18 | Restricting dangerous verbs |
+| 19 | Capstone RBAC scenario before Sakura Harbour |
+
+After challenge 19, an arc epilogue plays and progress advances toward Sakura Harbour (challenge 20).
+
+## Sakura Harbour (challenges 20–24)
+
+Master Hana runs the harbour during festival week. Challenges teach Deployments: replicas, rolling updates, rollbacks, and canary-style rollouts.
+
+| Challenge | Focus (high level) |
+|-----------|-------------------|
+| 20 | Deployment basics and replica count |
+| 21 | Rolling update strategy |
+| 22 | Rollback after a bad rollout |
+| 23 | Canary / staged rollout |
+| 24 | Capstone deployment scenario |
+
+Sakura prologue is a three-act intro (Sakura Harbour, Master Hana, Gate Three) tracked via `story_intro_act`.
 
 ## Screen class conventions
 

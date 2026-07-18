@@ -6,6 +6,7 @@ from rich.panel import Panel
 from rich.text import Text
 from screens.common.screen_prompts.challenge_screen import ChallengeScreenPrompts
 from services import resource_manager
+from services.diagnostics import track
 from textual import events, on
 from textual.app import ComposeResult
 from textual.widgets import Input, Label, RichLog, Static
@@ -21,6 +22,12 @@ class BaseChallengeScreen(Static):
     @property
     def challenge_log_id(self) -> str:
         return f"challenge-{self.challenge_id}"
+
+    def _diagnostics_challenge_fields(self) -> dict[str, str]:
+        return {
+            "challenge_id": self.challenge_id,
+            "scenario": getattr(self, "challenge_scenario", "unknown"),
+        }
 
     def compose(self) -> ComposeResult:
         if general_utils.load_progress().get("challenge_background_music") is True:
@@ -45,6 +52,7 @@ class BaseChallengeScreen(Static):
             active_challenge_id=self.challenge_id,
         )
         global_constants.meow_coins = general_utils.calculate_meow_coins(self.challenge_id)
+        track("challenge_started", **self._diagnostics_challenge_fields())
         self.render_challenge_panel()
         self.create_resources_for_challenge()
 
@@ -111,6 +119,7 @@ class BaseChallengeScreen(Static):
 
         if is_correct:
             self.correct_solution = True
+            track("challenge_completed", **self._diagnostics_challenge_fields())
             log.write(challenge_screen_prompts.correct_answer_text())
             next_challenge_id = general_utils.get_next_challenge_id(self.challenge_id)
             progress_challenge_id = next_challenge_id or str(int(self.challenge_id) + 1)
@@ -151,6 +160,7 @@ class BaseChallengeScreen(Static):
                 log.write(challenge_screen_prompts.move_to_next_challenge_text())
         else:
             self.correct_solution = False
+            track("challenge_failed", **self._diagnostics_challenge_fields())
             log.write(challenge_screen_prompts.incorrect_answer_text())
             log.write(challenge_screen_prompts.review_failed_attempt_text())
         self.move_to_next_screen = True

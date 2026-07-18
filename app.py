@@ -8,9 +8,11 @@ from textual import on
 from scenarios.oakwood_meadows.prologue.dialogues import professor_bald_dialogue
 from scenarios.oakwood_meadows.prologue.screens.professor_bald_intro import ProfessorBaldIntro
 from screens.common.author_info import AuthorInfo
+from screens.common.diagnostics_consent_screen import DiagnosticsConsentScreen
 from screens.common.help_screen import HelpScreen
 from screens.common.resume_game_screen import ResumeGameScreen
 from media import background_music_utility
+from services.diagnostics import init_diagnostics, needs_consent_prompt, shutdown_diagnostics, track
 from utils import general_utils
 
 
@@ -47,17 +49,34 @@ class ProjectOlive(App):
                 yield Static("Project Yellow Olive - A Pokemon inspired Kubernetes game!",id="default-text")
                 yield Vertical(id="game-flow")
 
+    async def _mount_game_entry(self, game_area) -> None:
+        track("game_started")
+        if general_utils.has_saved_progress():
+            await game_area.mount(ResumeGameScreen())
+            return
+        professor_bald_intro = ProfessorBaldIntro()
+        await game_area.mount(professor_bald_intro)
+        self.run_worker(
+            professor_bald_intro.render_professor_bald_intro(
+                professor_bald_dialogue.PROFESSOR_BALD_DIALOGUES,
+                "#D4AF37",
+            )
+        )
+
     @on(Button.Pressed, "#start-game")
     async def button_press_start_game(self,event=Button.Pressed):
         game_area=self.query_one("#game-flow")
         for child in list(game_area.children):
             await child.remove()
-        if general_utils.has_saved_progress():
-            await game_area.mount(ResumeGameScreen())
+        if needs_consent_prompt():
+            self.query_one("#default-text", Static).display = False
+            await game_area.mount(
+                DiagnosticsConsentScreen(
+                    continue_callback=lambda: self._mount_game_entry(game_area)
+                )
+            )
             return
-        professor_bald_intro=ProfessorBaldIntro()
-        await game_area.mount(professor_bald_intro)
-        self.run_worker(professor_bald_intro.render_professor_bald_intro(professor_bald_dialogue.PROFESSOR_BALD_DIALOGUES,"#D4AF37"))
+        await self._mount_game_entry(game_area)
 
     @on(Button.Pressed, "#help")
     async def button_press_help(self, event=Button.Pressed):
@@ -78,16 +97,19 @@ class ProjectOlive(App):
 
     @on(Button.Pressed, "#quit")
     async def button_press_quit(self, event=Button.Pressed):
+        track("game_quit")
         self.exit()
 
     def on_unmount(self) -> None:
         background_music_utility.stop_background_music()
         general_utils.teardown_core_infra_background()
+        shutdown_diagnostics()
 
 
 
 def main():
     general_utils.ensure_lab_workspace()
+    init_diagnostics()
     app = ProjectOlive()
     app.run()
 

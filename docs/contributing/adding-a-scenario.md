@@ -139,7 +139,7 @@ Cross-scenario screens stay in `screens/common/`. Only put content in `scenarios
 
 Update:
 
-- [Scenarios](../scenarios.md) - add row to scenario map and challenge table
+- [Scenarios](../scenario.md) - add row to scenario map and challenge table
 - [Roadmap](../roadmap.md) - if this arc was planned work
 
 ## Testing checklist

@@ -22,8 +22,9 @@ nav:
   - What is Project Yellow Olive: what-is-project-yellow-olive.md
   - Getting Started: getting-started.md
   - Architecture: architecture.md
-  - Scenarios: scenarios.md
+  - Scenarios: scenario.md
   - Lab Workspace: lab-workspace.md
+  - Privacy and Diagnostics: privacy.md
   - Validation: validation.md
   - Cluster Lifecycle: cluster-lifecycle.md
   - Contributing:

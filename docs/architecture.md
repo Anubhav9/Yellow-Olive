@@ -6,17 +6,21 @@ Yellow Olive separates **story content** (under `scenarios/`) from **shared UI a
 
 ```mermaid
 flowchart TD
-    A[app.py - ProjectOlive] --> B[Prologue screens]
-    A --> C[Resume / Init / Help]
-    B --> D[BaseChallengeScreen]
-    C --> D
-    D --> E[resource_manager.apply_manifest]
-    D --> F[validator.validate]
-    E --> G[kubectl apply - lab manifests]
-    F --> H[resource_inspector]
-    H --> I[kubectl get / exec]
-    J[scripts/script.sh] --> K[minikube start]
-    K --> G
+    A[app.py - ProjectOlive] --> B[Diagnostics consent]
+    A --> C[Prologue screens]
+    A --> D[Resume / Init / Help]
+    B --> C
+    C --> E[BaseChallengeScreen]
+    D --> E
+    E --> F[resource_manager.apply_manifest]
+    E --> G[validator.validate]
+    E --> H[diagnostics.track]
+    F --> I[kubectl apply - lab manifests]
+    G --> J[resource_inspector]
+    J --> K[kubectl get / exec]
+    H --> L[Sentry Logs / Issues]
+    M[wait_for_cluster_bootstrap] --> N[minikube start]
+    N --> I
 ```
 
 ## Entry point
@@ -24,10 +28,12 @@ flowchart TD
 `app.py` defines:
 
 - `ProjectOlive` - Textual app with main menu (Start, Help, About, Quit)
-- `main()` - ensures lab workspace, then runs the app
+- `main()` - ensures lab workspace, calls `init_diagnostics()`, then runs the app
 - `cli()` - `yellow-olive start` entry point registered in `pyproject.toml`
 
-On quit, `on_unmount()` calls `general_utils.teardown_core_infra()` to delete the Minikube profile.
+On first **Start Game**, if diagnostics consent is still `unknown`, `DiagnosticsConsentScreen` is shown before the prologue or resume flow.
+
+On quit, `on_unmount()` stops music, tears down Minikube, and calls `shutdown_diagnostics()`.
 
 ## Challenge loading
 
@@ -37,6 +43,8 @@ On quit, `on_unmount()` calls `general_utils.teardown_core_infra()` to delete th
 CHALLENGE_SCENARIO_MAP = {
     "1".."7": "oakwood_meadows",
     "8".."13": "signal_town",
+    "14".."19": "gold_rush_city",
+    "20".."24": "sakura_harbour",
 }
 ```
 
@@ -59,10 +67,10 @@ Each challenge screen subclasses `BaseChallengeScreen` and sets:
 | Hook / method | Responsibility |
 |---------------|----------------|
 | `compose()` | Challenge label, status, input, RichLog |
-| `on_mount()` | Save progress, render panel, call `create_resources_for_challenge()` |
+| `on_mount()` | Save progress, `track("challenge_started")`, render panel, apply manifests |
 | `create_resources_for_challenge()` | **Override** - apply manifests via `resource_manager` |
 | `run_validation()` | Import and call `scenarios.<scenario>.challenge_<id>.validator.validate()` |
-| `handle_validation()` | Accept only `psyquack validate`, show pass/fail, advance progress |
+| `handle_validation()` | Accept only `psyquack validate`, `track` pass/fail, advance progress |
 
 Progress is written to `yellow-olive-lab/progress.json` on every challenge mount.
 
@@ -88,12 +96,35 @@ Read-only kubectl wrappers returning `(ok: bool, payload)`:
 
 Validators use early-return checks against these payloads.
 
+### diagnostics (opt-in telemetry)
+
+`services/diagnostics/` is the only module that talks to Sentry.
+
+| API | Purpose |
+|-----|---------|
+| `init_diagnostics()` | New `session_id`; init Sentry if opted in |
+| `track(event, **data)` | Gameplay events → Sentry Logs |
+| `track_exception(exc, **data)` | Errors → Sentry Issues |
+| `shutdown_diagnostics()` | Flush before exit |
+| `grant_consent()` / `decline_consent()` | Consent screen wiring |
+
+Hook points today:
+
+- `app.py` — `game_started`, `game_quit`, consent gate
+- `base_challenge_screen.py` — `challenge_started`, `challenge_completed`, `challenge_failed`
+- `general_utils.wait_for_cluster_bootstrap()` — `infra_setup_*`
+- `general_utils.update_progress()` — `section_completed` on story transitions
+- `challenge_music_preference_screen.py` — `music_preference_set`
+
+See [Privacy and Diagnostics](privacy.md) for the full event list and data policy.
+
 ## Screens organisation
 
 ```
 screens/
 ├── common/                 # Cross-scenario UI
 │   ├── base_challenge_screen.py
+│   ├── diagnostics_consent_screen.py
 │   ├── game_initialisation_and_reference_screen.py
 │   ├── resume_game_screen.py
 │   ├── challenge_music_preference_screen.py
@@ -107,7 +138,7 @@ scenarios/<scenario>/prologue/
 └── dialogues/              # Scenario-specific dialogue text
 ```
 
-Prologue screens for Oakwood Meadows live under `scenarios/oakwood_meadows/prologue/`. Signal Town intros (Signal Town, Cool Turtle, Team Evil) live under `scenarios/signal_town/prologue/`.
+Each scenario owns its prologue screens under `scenarios/<scenario>/prologue/screens/`.
 
 ## Progress and save game
 
@@ -115,21 +146,26 @@ Prologue screens for Oakwood Meadows live under `scenarios/oakwood_meadows/prolo
 
 | Field | Purpose |
 |-------|---------|
-| `player_name` | Shown in Signal Town dialogue |
+| `player_name` | Shown in dialogue |
 | `active_challenge_id` | Resume point |
 | `challenge_background_music` | `true`, `false`, or unset before first choice |
-| `story_intro_act` | Tracks Signal Town intro sequence between challenges 7 and 8 |
+| `story_intro_act` | Next story intro to play between arcs (integer acts 1–10, or `"done"`) |
+| `pending_epilogue` | Optional arc victory screen on resume (`oakwood_meadows`, `signal_town`, `gold_rush_city`) |
 
-`ResumeGameScreen` reloads the appropriate challenge or story intro based on saved progress.
+`settings.json` (separate file) stores diagnostics consent — see [Lab Workspace](lab-workspace.md).
+
+`ResumeGameScreen` reloads the appropriate challenge, story intro, or epilogue based on saved progress.
 
 ## Constants
 
-`challenge_files/challenge_constants.py` holds pod names, service names, namespaces, and ports referenced by validators. This file is shared across all 13 challenges today. A future refactor may move constants closer to each scenario.
+`challenge_files/challenge_constants.py` holds pod names, service names, namespaces, and ports referenced by validators. This file is shared across challenges. A future refactor may move constants closer to each scenario.
 
 Namespaces:
 
-- `oakwood-meadows` - challenges 1-7
-- `signal-town` - challenges 8-13 (plus cross-namespace cases in later challenges)
+- `oakwood-meadows` — challenges 1–7
+- `signal-town` — challenges 8–13
+- `gold-rush-city` — challenges 14–19
+- `sakura-harbour` — challenges 20–24
 
 ## Media
 
@@ -137,6 +173,7 @@ Namespaces:
 
 ## Related pages
 
-- [Scenarios](scenarios.md) - per-arc folder conventions
+- [Scenarios](scenario.md) - per-arc folder conventions
+- [Privacy and Diagnostics](privacy.md) - consent and telemetry
 - [Validation](validation.md) - how validators are structured
 - [Cluster Lifecycle](cluster-lifecycle.md) - when Minikube and namespaces start
