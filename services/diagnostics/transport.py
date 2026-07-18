@@ -104,7 +104,8 @@ def init_sentry(installation_id: str, app_version: str) -> None:
         except TypeError:
             sentry_sdk.init(**init_kwargs)
 
-        sentry_sdk.set_user({"id": installation_id})
+        if installation_id:
+            sentry_sdk.set_user({"id": installation_id})
     except Exception:
         logger.exception("failed to initialize Sentry; diagnostics will stay local")
         return
@@ -159,22 +160,27 @@ def send_exception(payload: dict[str, Any], exc: BaseException) -> None:
 
 def send_anonymous_consent_event(payload: dict[str, Any]) -> None:
     endpoint = _get_consent_endpoint()
-    if not endpoint:
-        logger.info("anonymous consent event: %s", json.dumps(payload, sort_keys=True))
-        return
-
-    body = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
-        endpoint,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=5):
+    if endpoint:
+        body = json.dumps(payload).encode("utf-8")
+        request = urllib.request.Request(
+            endpoint,
+            data=body,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=5):
+                return
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            logger.debug("failed to send anonymous consent event: %s", exc)
             return
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
-        logger.debug("failed to send anonymous consent event: %s", exc)
+
+    # No custom endpoint: record an anonymous opt-out ping in Sentry Logs
+    # (no installation_id) so maintainers can measure consent rates.
+    app_version = str(payload.get("app_version") or "unknown")
+    init_sentry(installation_id="", app_version=app_version)
+    send_opt_in_event(payload)
+    flush()
 
 
 def flush() -> None:
