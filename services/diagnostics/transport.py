@@ -15,7 +15,9 @@ _sentry_initialized = False
 
 # Public client DSN from Sentry → Project Settings → Client Keys (DSN).
 # Safe to ship in the app; opt-in consent still gates what is sent.
-DEFAULT_SENTRY_DSN = ""
+DEFAULT_SENTRY_DSN = (
+    "https://814309becb3b1f6d465d8a73508997a8@o4508902758809600.ingest.us.sentry.io/4511756583436288"
+)
 
 
 def _get_sentry_dsn() -> str:
