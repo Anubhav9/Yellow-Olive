@@ -61,7 +61,7 @@ If you decline:
 
 - No Sentry session is created
 - No gameplay events are sent
-- A single anonymous `consent_declined` ping may be recorded (no `installation_id`) if a consent endpoint is configured — used only to measure opt-in rates
+- A single anonymous `consent_declined` ping is recorded in Sentry Logs (no `installation_id`) so maintainers can measure opt-in rates — no gameplay data is sent after you decline
 
 ## Where data goes
 
