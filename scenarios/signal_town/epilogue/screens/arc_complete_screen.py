@@ -51,7 +51,11 @@ class SignalTownArcCompleteScreen(RichLog):
     async def on_key(self, event: events.Key) -> None:
         if event.key == "enter":
             background_music_utility.stop_background_music()
-            general_utils.update_progress(pending_epilogue=None)
+            general_utils.update_progress(
+                section_completed="signal_town_epilogue",
+                section_scenario="signal_town",
+                pending_epilogue=None,
+            )
             container = self.parent
             await self.remove()
             from scenarios.gold_rush_city.prologue.screens.gold_rush_city_intro_screen import (

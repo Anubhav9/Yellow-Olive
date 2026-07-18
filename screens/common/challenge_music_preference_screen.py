@@ -5,6 +5,7 @@ from textual.app import ComposeResult
 from textual.widgets import Input, Label, RichLog, Static
 
 import global_constants
+from services.diagnostics import track
 from utils import general_utils
 
 
@@ -39,10 +40,12 @@ class ChallengeMusicPreferenceScreen(Static):
         log = self.query_one("#music-pref-log", RichLog)
         if answer == "yes":
             general_utils.update_progress(challenge_background_music=True)
+            track("music_preference_set", enabled=True)
             await self._continue_to_challenge()
             return
         if answer == "no":
             general_utils.update_progress(challenge_background_music=False)
+            track("music_preference_set", enabled=False)
             await self._continue_to_challenge()
             return
         general_utils.show_invalid_command(
