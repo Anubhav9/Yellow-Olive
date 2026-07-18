@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import platform
+import re
 import sys
 import uuid
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 _session_id = str(uuid.uuid4())
@@ -22,13 +24,41 @@ def get_session_id() -> str:
     return _session_id
 
 
+def _project_pyproject_path() -> Path | None:
+    """pyproject.toml at repo root (services/diagnostics/ → ../../)."""
+    candidate = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    return candidate if candidate.is_file() else None
+
+
+def _read_version_from_pyproject(path: Path) -> str | None:
+    text = path.read_text(encoding="utf-8")
+    try:
+        import tomllib
+
+        version = tomllib.loads(text).get("project", {}).get("version")
+        return str(version) if version else None
+    except ImportError:
+        match = re.search(r'^\s*version\s*=\s*"([^"]+)"\s*$', text, re.MULTILINE)
+        return match.group(1) if match else None
+    except Exception:
+        return None
+
+
 def get_app_version() -> str:
     try:
         from importlib.metadata import version
 
         return version("yellow-olive")
     except Exception:
-        return "unknown"
+        pass
+
+    pyproject = _project_pyproject_path()
+    if pyproject is not None:
+        from_pyproject = _read_version_from_pyproject(pyproject)
+        if from_pyproject:
+            return from_pyproject
+
+    return "unknown"
 
 
 def get_python_version() -> str:
