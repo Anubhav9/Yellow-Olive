@@ -15,6 +15,7 @@ The path is always relative to where you run `yellow-olive start` or `python app
 ```
 yellow-olive-lab/
 ├── progress.json
+├── settings.json             # diagnostics consent (opt-in telemetry)
 ├── challenge_files/          # legacy mirror (harmless, may be empty)
 └── scenarios/
     └── <scenario>/
@@ -33,8 +34,21 @@ Tracks player name, active challenge, music preference, story intro state, and o
 | `player_name` | Trainer name shown in dialogue |
 | `active_challenge_id` | Current challenge (string) |
 | `challenge_background_music` | `true` / `false` / `null` before first choice |
-| `story_intro_act` | Prologue sequence between arcs (`1`–`7`, or `"done"`) |
+| `story_intro_act` | Next story intro between arcs (`1`–`10`, or `"done"`) |
 | `pending_epilogue` | Optional arc epilogue to show on Resume (`null` by default) |
+
+### settings.json
+
+Stores diagnostics consent (separate from save-game progress). Created when the player answers the first-run consent screen.
+
+| Field | Purpose |
+|-------|---------|
+| `diagnostics.consent` | `unknown`, `granted`, or `declined` |
+| `diagnostics.installation_id` | Random UUID assigned on opt-in (not player identity) |
+| `diagnostics.consent_prompted_at` | First time the consent screen was shown |
+| `diagnostics.consent_updated_at` | Last consent change |
+
+See [Privacy and Diagnostics](privacy.md) for what is sent when opted in.
 
 #### Testing epilogues via `pending_epilogue`
 
@@ -133,4 +147,5 @@ In both cases, gameplay edits land in `yellow-olive-lab/` only.
 
 - [Getting Started](getting-started.md) - two-terminal workflow
 - [Contributing: Adding a Challenge](contributing/adding-a-challenge.md) - where to place new YAML
+- [Privacy and Diagnostics](privacy.md) - consent and telemetry
 - [Validation](validation.md) - validators inspect live cluster state, not lab files directly

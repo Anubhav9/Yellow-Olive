@@ -1,47 +1,50 @@
 # Roadmap
 
-High-level plan for Project Yellow Olive. Status reflects the scenario-based refactor branch as of May 2026.
+High-level plan for Project Yellow Olive. Status reflects the campaign and diagnostics work as of July 2026.
 
 ## Shipped
 
 | Feature | Notes |
 |---------|-------|
 | Save / load progress | `yellow-olive-lab/progress.json`, resume from main menu |
-| PyPI packaging | `pip install yellow-olive`, `yellow-olive start` |
-| Oakwood Meadows arc | Challenges 1-7, `oakwood-meadows` namespace |
-| Signal Town arc (in progress) | Challenges 8-13, Services and networking topics |
+| PyPI packaging | `pip install yellow-olive`, `yellow-olive start` (0.6.x) |
+| Oakwood Meadows arc | Challenges 1–7, `oakwood-meadows` namespace |
+| Signal Town arc | Challenges 8–13, Services and networking |
+| Gold Rush City arc | Challenges 14–19, RBAC |
+| Sakura Harbour arc | Challenges 20–24, Deployments, rollouts, canary |
 | Scenario-based codebase | `scenarios/<name>/challenge_<N>/` layout, per-challenge validators |
 | Lab workspace mirror | Editable manifests under `yellow-olive-lab/scenarios/` |
-| Cluster lifecycle | Minikube profile with 300s startup budget, teardown on quit |
+| Cluster lifecycle | Minikube profile with startup budget, teardown on quit |
+| Opt-in diagnostics | Consent screen, Sentry Logs for gameplay, Issues for errors |
 | Technical documentation | This site |
 
 ## In active development
 
-| Feature | Target | Notes |
-|---------|--------|-------|
-| Signal Town polish | May 2026 | Intro sequence, music, challenge copy |
-| `psyquack hint` command | TBD | Listed in README, not wired in game yet |
-| Resume + namespace bootstrap | TBD | Ensure namespace exists when skipping prologue |
-| Move `challenge_constants.py` | TBD | Closer to scenarios or shared `_shared/constants.py` |
-| Remove legacy `challenge_files/` mirror | TBD | Lab workspace cleanup |
+| Feature | Notes |
+|---------|--------|
+| `psyquack hint` command | Listed in README, not wired in game yet |
+| Help screen privacy controls | Revoke or change diagnostics consent from Help |
+| Docs CI polish | Keep scenario and architecture pages in sync with new arcs |
 
 ## Planned
 
 | Feature | Why it matters |
 |---------|----------------|
-| More scenarios / regions | Teach Deployments, ConfigMaps, RBAC, etc. |
-| GitHub Pages CI for docs | Auto-deploy on push to main |
+| More scenarios / regions | Teach additional workload patterns |
 | Hint system | Professor Bald nudges without full spoilers |
 | Challenge difficulty tags | Help players pick practice topics |
 | Contributor templates | Issue and PR templates for new challenges |
+| Hosted lab mode | Browser-based challenges (separate from PyPI game) |
 
-## Phase history (original roadmap)
+## Phase history
 
 | Stage | Feature | Status |
 |-------|---------|--------|
 | Phase 1 | Save/load and jump to challenges | Released (April 2026) |
-| Phase 2 | Service-focused challenges (Signal Town) | In progress |
+| Phase 2 | Service-focused challenges (Signal Town) | Released |
 | Phase 3 | PyPI publish | Released (April 2026) |
+| Phase 4 | Gold Rush City + Sakura Harbour | Released (2026) |
+| Phase 5 | Opt-in diagnostics | Released on `feature/sentry-logging` |
 
 ## How to influence the roadmap
 
@@ -51,5 +54,6 @@ High-level plan for Project Yellow Olive. Status reflects the scenario-based ref
 
 ## Related pages
 
+- [Scenarios](scenario.md) — current challenge list by arc
+- [Privacy and Diagnostics](privacy.md) — what telemetry collects
 - [Contributing](contributing/adding-a-challenge.md)
-- [Scenarios](scenarios.md) - current challenge list

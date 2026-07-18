@@ -106,4 +106,4 @@ minikube delete -p project-yellow-olive --purge
 
 - [Getting Started](getting-started.md) - first run expectations
 - [Troubleshooting](troubleshooting.md) - when startup hangs or fails
-- [Scenarios](scenarios.md) - prologue resource locations
+- [Scenarios](scenario.md) - prologue resource locations

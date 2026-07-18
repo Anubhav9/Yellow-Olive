@@ -10,8 +10,9 @@ This site is for contributors, maintainers, and anyone who wants to understand h
 |------|---------|
 | [Getting Started](getting-started.md) | Full install, PyPI vs source, two-terminal workflow |
 | [Architecture](architecture.md) | How the app boots, loads challenges, and talks to kubectl |
-| [Scenarios](scenarios.md) | Oakwood Meadows and Signal Town arcs, folder layout |
-| [Lab Workspace](lab-workspace.md) | The `yellow-olive-lab/` mirror and what players edit |
+| [Scenarios](scenario.md) | All four arcs (Oakwood Meadows through Sakura Harbour) |
+| [Lab Workspace](lab-workspace.md) | The `yellow-olive-lab/` mirror, progress, and settings |
+| [Privacy and Diagnostics](privacy.md) | Opt-in telemetry, what is sent, and what is not |
 | [Validation](validation.md) | `resource_inspector` helpers and per-challenge validators |
 | [Cluster Lifecycle](cluster-lifecycle.md) | Minikube bootstrap, namespaces, teardown on quit |
 | [Contributing](contributing/adding-a-challenge.md) | How to add challenges and new scenarios |
@@ -25,7 +26,8 @@ Yellow-Olive/
 ├── app.py                    # Textual app entry point + `yellow-olive` CLI
 ├── scenarios/                # Story arcs, challenges, prologues, k8s manifests
 ├── screens/common/           # Shared UI (base challenge screen, init, resume, help)
-├── services/                 # kubectl apply (write) and inspect (read)
+├── services/                 # kubectl apply (write), inspect (read), diagnostics
+│   └── diagnostics/          # Opt-in telemetry (Sentry Logs)
 ├── utils/general_utils.py    # Progress, lab workspace, challenge loading
 ├── scripts/script.sh         # Minikube start + health wait
 └── challenge_files/          # Shared constants used by validators
