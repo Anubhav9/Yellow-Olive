@@ -31,6 +31,26 @@ def _get_consent_endpoint() -> str:
     return os.getenv("YELLOW_OLIVE_CONSENT_ENDPOINT", "").strip()
 
 
+def _payload_log_attributes(payload: dict[str, Any]) -> dict[str, str]:
+    attributes: dict[str, str] = {
+        "app_version": str(payload.get("app_version", "")),
+        "python_version": str(payload.get("python_version", "")),
+        "platform": str(payload.get("platform", "")),
+        "session_id": str(payload.get("session_id", "")),
+        "timestamp": str(payload.get("timestamp", "")),
+    }
+    installation_id = payload.get("installation_id")
+    if installation_id:
+        attributes["installation_id"] = str(installation_id)
+
+    data = payload.get("data") or {}
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if value is not None:
+                attributes[str(key)] = str(value)
+    return attributes
+
+
 def init_sentry(installation_id: str, app_version: str) -> None:
     global _sentry_initialized
     if _sentry_initialized:
@@ -49,12 +69,46 @@ def init_sentry(installation_id: str, app_version: str) -> None:
     def before_send(event: dict[str, Any], hint: dict[str, Any]) -> dict[str, Any] | None:
         return event
 
-    sentry_sdk.init(
-        dsn=dsn,
-        release=f"yellow-olive@{app_version}",
-        before_send=before_send,
-    )
-    sentry_sdk.set_user({"id": installation_id})
+    try:
+        from sentry_sdk.integrations.logging import LoggingIntegration
+
+        try:
+            # Gameplay telemetry should land in Sentry Logs, not Issues (SDK 2.19+).
+            logging_integration = LoggingIntegration(
+                level=None,
+                event_level=logging.CRITICAL,
+                sentry_logs_level=logging.INFO,
+            )
+        except TypeError:
+            logging_integration = LoggingIntegration(
+                level=logging.CRITICAL,
+                event_level=logging.CRITICAL,
+            )
+    except ImportError:
+        logging_integration = None
+
+    try:
+        # Yellow Olive only sends manual gameplay events — skip boto3/Django/etc.
+        # integrations that can break in minimal or mixed Python environments.
+        init_kwargs: dict[str, Any] = {
+            "dsn": dsn,
+            "release": f"yellow-olive@{app_version}",
+            "before_send": before_send,
+            "default_integrations": False,
+        }
+        if logging_integration is not None:
+            init_kwargs["integrations"] = [logging_integration]
+
+        try:
+            sentry_sdk.init(enable_logs=True, **init_kwargs)
+        except TypeError:
+            sentry_sdk.init(**init_kwargs)
+
+        sentry_sdk.set_user({"id": installation_id})
+    except Exception:
+        logger.exception("failed to initialize Sentry; diagnostics will stay local")
+        return
+
     _sentry_initialized = True
 
 
@@ -65,20 +119,24 @@ def send_opt_in_event(payload: dict[str, Any]) -> None:
         logger.info("diagnostics event: %s", json.dumps(payload, sort_keys=True))
         return
 
-    if not _get_sentry_dsn():
+    if not _get_sentry_dsn() or not _sentry_initialized:
         logger.info("diagnostics event: %s", json.dumps(payload, sort_keys=True))
         return
 
-    sentry_sdk.set_tag("session_id", payload.get("session_id"))
-    for key, value in payload.get("data", {}).items():
-        if value is not None:
-            sentry_sdk.set_tag(key, value)
+    try:
+        attributes = _payload_log_attributes(payload)
+        event_name = str(payload["event"])
 
-    sentry_sdk.capture_message(
-        payload["event"],
-        level="info",
-        extras={"diagnostics": payload},
-    )
+        if hasattr(sentry_sdk, "logger"):
+            sentry_sdk.logger.info(event_name, attributes=attributes)
+            return
+
+        telemetry_logger = logging.getLogger("yellow_olive.diagnostics")
+        if telemetry_logger.level == logging.NOTSET:
+            telemetry_logger.setLevel(logging.INFO)
+        telemetry_logger.info("%s | %s", event_name, json.dumps(attributes, sort_keys=True))
+    except Exception:
+        logger.exception("failed to send diagnostics event: %s", payload.get("event"))
 
 
 def send_exception(payload: dict[str, Any], exc: BaseException) -> None:
@@ -88,12 +146,15 @@ def send_exception(payload: dict[str, Any], exc: BaseException) -> None:
         logger.exception("diagnostics exception for %s", payload.get("event"), exc_info=exc)
         return
 
-    if not _get_sentry_dsn():
+    if not _get_sentry_dsn() or not _sentry_initialized:
         logger.exception("diagnostics exception for %s", payload.get("event"), exc_info=exc)
         return
 
-    sentry_sdk.set_context("diagnostics", payload)
-    sentry_sdk.capture_exception(exc)
+    try:
+        sentry_sdk.set_context("diagnostics", payload)
+        sentry_sdk.capture_exception(exc)
+    except Exception:
+        logger.exception("failed to send diagnostics exception: %s", payload.get("event"))
 
 
 def send_anonymous_consent_event(payload: dict[str, Any]) -> None:

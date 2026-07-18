@@ -69,6 +69,7 @@ class ProjectOlive(App):
         for child in list(game_area.children):
             await child.remove()
         if needs_consent_prompt():
+            self.query_one("#default-text", Static).display = False
             await game_area.mount(
                 DiagnosticsConsentScreen(
                     continue_callback=lambda: self._mount_game_entry(game_area)

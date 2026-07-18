@@ -32,10 +32,13 @@ def init_diagnostics() -> None:
     if current.installation_id is None:
         return
 
-    transport.init_sentry(
-        installation_id=current.installation_id,
-        app_version=context.get_app_version(),
-    )
+    try:
+        transport.init_sentry(
+            installation_id=current.installation_id,
+            app_version=context.get_app_version(),
+        )
+    except Exception:
+        logger.exception("failed to start diagnostics session")
 
 
 def _build_payload(event: str, data: dict[str, Any]) -> dict[str, Any]:

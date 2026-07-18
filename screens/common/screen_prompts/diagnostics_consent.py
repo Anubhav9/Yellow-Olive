@@ -1,14 +1,16 @@
 import global_constants
 
-CONSENT_BODY = (
-    "[bold]Optional diagnostics[/]\n"
-    "Help improve Yellow Olive with anonymous gameplay and error reports.\n"
-    "No cluster data, secrets, or personal info."
+CONSENT_TITLE = (
+    f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]Welcome to Yellow Olive![/]"
 )
-CONSENT_PROMPT = (
-    f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]"
-    "Type `yes` to opt in, or `no` to skip.[/]"
+CONSENT_LEAD = "Before your adventure begins, a quick question:"
+CONSENT_BODY_LINES = (
+    "Share anonymous gameplay and error reports with us.",
+    "They help fix bugs and smooth out tough challenges.",
 )
-INVALID_ANSWER_HINT = (
-    "[yellow]Try `yes` (opt in) or `no` (skip).[/]"
+CONSENT_FOOTNOTE_LINES = (
+    "We never send cluster data, secrets, or personal information.",
+    "You can change this later from the Help menu.",
 )
+CONSENT_YES_LABEL = "Yes, opt in"
+CONSENT_NO_LABEL = "No thanks, skip"
