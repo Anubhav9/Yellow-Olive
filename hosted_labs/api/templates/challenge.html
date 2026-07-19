@@ -45,9 +45,25 @@
         <form method="post" action="/challenges/{{ challenge_slug }}/validate">
           <button type="submit" class="btn">✓ Check challenge</button>
         </form>
+        {% if validation_passed %}
+        <form method="post" action="/challenges/{{ challenge_slug }}/finish">
+          <button type="submit" class="btn btn-start">★ Finish session</button>
+        </form>
+        {% endif %}
       </div>
 
-      <p class="hint">{{ github_login }} · ns: {{ namespace }} · session: {{ lab_session_id }}</p>
+      <p class="hint" id="timer-status">
+        {{ github_login }} · ns: {{ namespace }} · session: {{ lab_session_id }}
+        {% if session_status and session_status.challenge_started %}
+        · idle reset: {{ session_status.idle_timeout_minutes }}m
+        {% if session_status.challenge_seconds_remaining is not none %}
+        · challenge: <span id="challenge-timer">--:--</span>
+        {% endif %}
+        · idle: <span id="idle-timer">--:--</span>
+        {% else %}
+        · timers start after Start session
+        {% endif %}
+      </p>
 
       {% if bootstrap_message %}
       <section class="toast" aria-label="Bootstrap result">
@@ -61,6 +77,12 @@
       </section>
       {% endif %}
 
+      {% if finish_message %}
+      <section class="toast ok" aria-label="Finish result">
+        <pre>{{ finish_message }}</pre>
+      </section>
+      {% endif %}
+
       <p class="footer-link"><a href="/challenges">← other challenges</a> · <a href="/logout">sign out</a></p>
     </div>
 
@@ -70,10 +92,30 @@
         const output = document.getElementById("terminal-output");
         const form = document.getElementById("terminal-form");
         const input = document.getElementById("terminal-input");
+        const challengeTimer = document.getElementById("challenge-timer");
+        const idleTimer = document.getElementById("idle-timer");
 
         function appendText(text) {
           output.textContent += text;
           output.scrollTop = output.scrollHeight;
+        }
+
+        function formatSeconds(totalSeconds) {
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        }
+
+        function updateTimers(status) {
+          if (!status) {
+            return;
+          }
+          if (idleTimer && status.idle_seconds_remaining !== undefined) {
+            idleTimer.textContent = formatSeconds(status.idle_seconds_remaining);
+          }
+          if (challengeTimer && status.challenge_seconds_remaining !== undefined && status.challenge_seconds_remaining !== null) {
+            challengeTimer.textContent = formatSeconds(status.challenge_seconds_remaining);
+          }
         }
 
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -86,10 +128,25 @@
           if (message.type === "welcome" || message.type === "output" || message.type === "prompt") {
             appendText(message.text);
           }
+          if (message.type === "status") {
+            updateTimers(message);
+          }
+          if (message.type === "session_ended") {
+            const suffix = message.challenge_failed ? "Challenge failed." : "Session ended.";
+            appendText(`\r\n${suffix}\r\n`);
+            window.setTimeout(() => {
+              window.location.href = message.redirect_url || "/login";
+            }, 1200);
+          }
         });
 
         socket.addEventListener("open", () => {
           input.focus();
+          window.setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) {
+              socket.send(JSON.stringify({ type: "ping" }));
+            }
+          }, 30000);
         });
 
         form.addEventListener("submit", (event) => {

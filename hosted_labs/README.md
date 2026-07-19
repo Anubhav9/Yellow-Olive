@@ -45,6 +45,81 @@ Challenge text and the kubectl terminal are only available **after GitHub login*
 
 The API process needs **admin** cluster access for bootstrap and validation. On k3s, copy `/etc/rancher/k3s/k3s.yaml` to `~/.kube/config` for the user running uvicorn, or set `KUBECONFIG` to that file.
 
+## Session audit logs
+
+Each lab visit writes **one JSON file** with `meta` (who/when) and `activity` (what they did — auth, bootstrap, kubectl, policy violations).
+
+Default path (gitignored in dev):
+
+```
+hosted_labs/logs/audit/YYYY-MM-DD/yo-sess-<id>.json
+```
+
+Override on homelab:
+
+```bash
+export HOSTED_LABS_AUDIT_DIR=/var/log/yellow-olive/audit
+mkdir -p /var/log/yellow-olive/audit
+```
+
+Example:
+
+```bash
+jq '.activity[] | select(.category=="policy_violation")' \
+  /var/log/yellow-olive/audit/2026-07-19/yo-sess-a1b2c3d4.json
+```
+
+One-off incidents (login failure, labs full, unauthenticated terminal) are stored as single files in the same date folder (`incident-*.json`).
+
+## Session lifecycle
+
+Each visit follows these rules after **Start session** (bootstrap succeeds):
+
+| Rule | Default (challenge 1) | Result |
+|------|----------------------|--------|
+| Idle timeout | 4 minutes | Kicked out — **not** marked as challenge failed |
+| Challenge time limit | 15 minutes | Session ends — **challenge failed** |
+
+Per-challenge limits live in `challenges/<slug>/challenge_config.yaml`.
+
+On end (logout, idle kick, timeout, or **Finish session** after pass):
+
+- Lab seat is released
+- Audit file is closed with a `reason` (`logout`, `idle_timeout`, `challenge_timeout`, `challenge_completed`)
+- Kubernetes namespaces and `hosted_labs/sessions/<namespace>/` files are **left in place** for later review
+
+## Challenge completions
+
+Successful validations are appended to a single JSON array file (separate from audit logs):
+
+```
+hosted_labs/logs/completions.json
+```
+
+Example:
+
+```json
+[
+  {
+    "github_login": "anubhav9",
+    "github_user_id": 12345,
+    "challenge_slug": "challenge_1",
+    "lab_session_id": "yo-sess-a1b2c3d4",
+    "completed_at": "2026-07-19T04:12:00+00:00",
+    "duration_seconds": 523,
+    "duration_display": "8m 43s"
+  }
+]
+```
+
+Override on homelab:
+
+```bash
+export HOSTED_LABS_COMPLETIONS_FILE=/var/log/yellow-olive/completions.json
+```
+
+`duration_seconds` is measured from **Start session** (bootstrap succeeded) to validation pass.
+
 ## CLI bootstrap
 
 ```bash
