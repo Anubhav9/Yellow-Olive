@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ challenge_title }} · Yellow Olive</title>
+    <link rel="stylesheet" href="/static/labs.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="cartridge">
+        <strong>YELLOW OLIVE</strong>
+        <span>hosted lab</span>
+      </header>
+
+      <h1>{{ challenge_title }}</h1>
+
+      <section class="quest-box" aria-label="Challenge briefing">
+        <span class="quest-label">TRAINER BRIEFING</span>
+        <pre>{{ challenge_text }}</pre>
+      </section>
+
+      <p class="section-label">COMMAND CHAMBER</p>
+      <section class="game-screen" aria-label="kubectl terminal">
+        <div id="terminal-output" aria-live="polite"></div>
+        <form id="terminal-form" class="terminal-input-row">
+          <label id="terminal-prompt" for="terminal-input">▶</label>
+          <input
+            id="terminal-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="kubectl get pods"
+            aria-label="kubectl command input"
+          />
+        </form>
+      </section>
+
+      <div class="menu-row">
+        <form method="post" action="/challenges/{{ challenge_slug }}/bootstrap">
+          <button type="submit" class="btn btn-start">▶ Start session</button>
+        </form>
+        <form method="post" action="/challenges/{{ challenge_slug }}/validate">
+          <button type="submit" class="btn">✓ Check challenge</button>
+        </form>
+        {% if validation_passed %}
+        <form method="post" action="/challenges/{{ challenge_slug }}/finish">
+          <button type="submit" class="btn btn-start">★ Finish session</button>
+        </form>
+        {% endif %}
+      </div>
+
+      <p class="hint" id="timer-status">
+        {{ github_login }} · ns: {{ namespace }} · session: {{ lab_session_id }}
+        {% if session_status and session_status.challenge_started %}
+        · idle reset: {{ session_status.idle_timeout_minutes }}m
+        {% if session_status.challenge_seconds_remaining is not none %}
+        · challenge: <span id="challenge-timer">--:--</span>
+        {% endif %}
+        · idle: <span id="idle-timer">--:--</span>
+        {% else %}
+        · timers start after Start session
+        {% endif %}
+      </p>
+
+      {% if bootstrap_message %}
+      <section class="toast" aria-label="Bootstrap result">
+        <pre>{{ bootstrap_message }}</pre>
+      </section>
+      {% endif %}
+
+      {% if validation_message %}
+      <section class="toast {{ 'ok' if validation_passed else 'bad' }}" aria-label="Validation result">
+        <pre>{{ validation_message }}</pre>
+      </section>
+      {% endif %}
+
+      {% if finish_message %}
+      <section class="toast ok" aria-label="Finish result">
+        <pre>{{ finish_message }}</pre>
+      </section>
+      {% endif %}
+
+      <p class="footer-link"><a href="/challenges">← other challenges</a> · <a href="/logout">sign out</a></p>
+    </div>
+
+    <script>
+      (function () {
+        const challengeSlug = {{ challenge_slug | tojson }};
+        const output = document.getElementById("terminal-output");
+        const form = document.getElementById("terminal-form");
+        const input = document.getElementById("terminal-input");
+        const challengeTimer = document.getElementById("challenge-timer");
+        const idleTimer = document.getElementById("idle-timer");
+
+        function appendText(text) {
+          output.textContent += text;
+          output.scrollTop = output.scrollHeight;
+        }
+
+        function formatSeconds(totalSeconds) {
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        }
+
+        function updateTimers(status) {
+          if (!status) {
+            return;
+          }
+          if (idleTimer && status.idle_seconds_remaining !== undefined) {
+            idleTimer.textContent = formatSeconds(status.idle_seconds_remaining);
+          }
+          if (challengeTimer && status.challenge_seconds_remaining !== undefined && status.challenge_seconds_remaining !== null) {
+            challengeTimer.textContent = formatSeconds(status.challenge_seconds_remaining);
+          }
+        }
+
+        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const socket = new WebSocket(
+          `${protocol}//${window.location.host}/challenges/${challengeSlug}/terminal/ws`
+        );
+
+        socket.addEventListener("message", (event) => {
+          const message = JSON.parse(event.data);
+          if (message.type === "welcome" || message.type === "output" || message.type === "prompt") {
+            appendText(message.text);
+          }
+          if (message.type === "status") {
+            updateTimers(message);
+          }
+          if (message.type === "session_ended") {
+            const suffix = message.challenge_failed ? "Challenge failed." : "Session ended.";
+            appendText(`\r\n${suffix}\r\n`);
+            window.setTimeout(() => {
+              window.location.href = message.redirect_url || "/login";
+            }, 1200);
+          }
+        });
+
+        socket.addEventListener("open", () => {
+          input.focus();
+          window.setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) {
+              socket.send(JSON.stringify({ type: "ping" }));
+            }
+          }, 30000);
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const command = input.value.trim();
+          if (!command || socket.readyState !== WebSocket.OPEN) {
+            return;
+          }
+          socket.send(JSON.stringify({ type: "command", text: command }));
+          input.value = "";
+        });
+      })();
+    </script>
+  </body>
+</html>

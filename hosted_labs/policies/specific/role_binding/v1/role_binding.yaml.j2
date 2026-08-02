@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: restricted-user-role-binding-{{ formatted_github_user_id }}
+  namespace: {{ formatted_github_user_id }}
+  labels:
+    session: "{{ session_id }}"
+subjects:
+  - kind: ServiceAccount
+    name: player
+    namespace: {{ formatted_github_user_id }}
+roleRef:
+  kind: Role
+  name: restricted-user
+  apiGroup: rbac.authorization.k8s.io

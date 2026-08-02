@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: resource-quota-{{ formatted_github_user_id }}
+  namespace: {{ formatted_github_user_id }}
+  labels:
+    session: {{ session_id }}
+spec:
+  hard:
+    requests.cpu: {{ cpu_requested }}
+    requests.memory: {{ memory_requested }}
+    limits.cpu: {{ cpu_limit }}
+    limits.memory: {{ memory_limit }}
+    pods: {{ number_pods }}
+    services: {{ number_services }}
+    configmaps: {{ number_configmaps }}
+    secrets: {{ number_secrets }}
+    count/deployments: {{ number_deployments }}
+    count/replicasets: {{ number_replicasets }}
+    count/jobs.batch: {{ number_jobs }}
+    count/cronjobs.batch: {{ number_cronjobs }}

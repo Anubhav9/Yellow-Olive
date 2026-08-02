@@ -1,0 +1,11 @@
+core_allowed_resources:
+  - pods
+apps_allowed_resources: []
+allowed_verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete

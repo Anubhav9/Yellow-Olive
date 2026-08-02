@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Challenges · Yellow Olive</title>
+    <link rel="stylesheet" href="/static/labs.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="cartridge">
+        <strong>YELLOW OLIVE</strong>
+        <span>hosted lab</span>
+      </header>
+
+      <h1>Pick a challenge</h1>
+
+      <ul class="challenge-links">
+        {% for challenge in challenges %}
+        <li><a href="/challenges/{{ challenge.slug }}">{{ challenge.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+jinja2==3.1.6
+pyyaml==6.0.2
+python-multipart==0.0.20
+authlib==1.4.1
+httpx==0.28.1
+python-dotenv==1.1.0
+itsdangerous==2.2.0

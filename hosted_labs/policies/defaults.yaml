@@ -1,0 +1,15 @@
+quota:
+  cpu_requested: "300m"
+  memory_requested: "512Mi"
+  cpu_limit: "1000m"
+  memory_limit: "1000Mi"
+  number_pods: 2
+  number_services: 2
+  number_configmaps: 1
+  number_secrets: 1
+  number_deployments: 1
+  number_replicasets: 2
+  number_jobs: 1
+  number_cronjobs: 1
+
+

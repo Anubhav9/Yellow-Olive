@@ -25,3 +25,8 @@ htmlcov/
 
 # Yellow Olive generated workspace
 yellow-olive-lab/
+
+# Hosted labs local secrets and per-user kubeconfigs
+hosted_labs/.env
+hosted_labs/sessions/
+hosted_labs/logs/
