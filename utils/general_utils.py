@@ -38,6 +38,12 @@ CHALLENGE_SCENARIO_MAP = {
     "22": "sakura_harbour",
     "23": "sakura_harbour",
     "24": "sakura_harbour",
+    "25": "yumoto_springs",
+    "26": "yumoto_springs",
+    "27": "yumoto_springs",
+    "28": "yumoto_springs",
+    "29": "yumoto_springs",
+    "30": "yumoto_springs",
 }
 
 async def simulate_dialogue(dialogue, color):
@@ -216,13 +222,14 @@ def get_progress_file():
 
 
 PENDING_EPILOGUE_ARCS = frozenset(
-    {"oakwood_meadows", "signal_town", "gold_rush_city"}
+    {"oakwood_meadows", "signal_town", "gold_rush_city", "sakura_harbour"}
 )
 
 PENDING_EPILOGUE_LABELS = {
     "oakwood_meadows": "Oakwood Meadows victory",
     "signal_town": "Signal Town victory",
     "gold_rush_city": "Gold Rush City victory",
+    "sakura_harbour": "Sakura Harbour victory",
 }
 
 
@@ -308,6 +315,12 @@ def load_epilogue_screen(pending_epilogue):
         )
 
         return GoldRushCityArcCompleteScreen
+    if pending_epilogue == "sakura_harbour":
+        from scenarios.sakura_harbour.epilogue.screens.arc_complete_screen import (
+            SakuraHarbourArcCompleteScreen,
+        )
+
+        return SakuraHarbourArcCompleteScreen
     raise ValueError(f"Unknown pending epilogue: {pending_epilogue}")
 
 
@@ -324,6 +337,10 @@ def is_story_intro_pending(progress=None):
         global_constants.STORY_ACT_SAKURA_HARBOUR,
         global_constants.STORY_ACT_SAKURA_HANA,
         global_constants.STORY_ACT_SAKURA_GATE,
+        global_constants.STORY_ACT_SAKURA_EPILOGUE,
+        global_constants.STORY_ACT_YUMOTO_SPRINGS,
+        global_constants.STORY_ACT_YUMOTO_KEEPER,
+        global_constants.STORY_ACT_YUMOTO_LEDGER,
     )
 
 
@@ -374,6 +391,30 @@ def load_story_intro_screen(story_intro_act):
         )
 
         return GateThreeIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_SAKURA_EPILOGUE:
+        from scenarios.sakura_harbour.epilogue.screens.arc_complete_screen import (
+            SakuraHarbourArcCompleteScreen,
+        )
+
+        return SakuraHarbourArcCompleteScreen
+    if story_intro_act == global_constants.STORY_ACT_YUMOTO_SPRINGS:
+        from scenarios.yumoto_springs.prologue.screens.yumoto_springs_intro_screen import (
+            YumotoSpringsIntroScreen,
+        )
+
+        return YumotoSpringsIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_YUMOTO_KEEPER:
+        from scenarios.yumoto_springs.prologue.screens.keeper_intro_screen import (
+            KeeperIntroScreen,
+        )
+
+        return KeeperIntroScreen
+    if story_intro_act == global_constants.STORY_ACT_YUMOTO_LEDGER:
+        from scenarios.yumoto_springs.prologue.screens.empty_ledger_intro_screen import (
+            EmptyLedgerIntroScreen,
+        )
+
+        return EmptyLedgerIntroScreen
     raise ValueError(f"Unknown story intro act: {story_intro_act}")
 
 
@@ -408,6 +449,10 @@ def _track_story_section_completed(previous_act, new_act) -> None:
             "gate_three_intro",
             "sakura_harbour",
         ),
+        (global_constants.STORY_ACT_YUMOTO_LEDGER, global_constants.STORY_ACT_DONE): (
+            "empty_ledger_intro",
+            "yumoto_springs",
+        ),
     }
     transition = done_transitions.get((previous_act, new_act))
     if transition:
@@ -431,6 +476,19 @@ def _track_story_section_completed(previous_act, new_act) -> None:
         global_constants.STORY_ACT_SAKURA_HARBOUR: ("sakura_harbour_intro", "sakura_harbour"),
         global_constants.STORY_ACT_SAKURA_HANA: ("master_hana_intro", "sakura_harbour"),
         global_constants.STORY_ACT_SAKURA_GATE: ("gate_three_intro", "sakura_harbour"),
+        global_constants.STORY_ACT_SAKURA_EPILOGUE: (
+            "sakura_harbour_epilogue",
+            "sakura_harbour",
+        ),
+        global_constants.STORY_ACT_YUMOTO_SPRINGS: (
+            "yumoto_springs_intro",
+            "yumoto_springs",
+        ),
+        global_constants.STORY_ACT_YUMOTO_KEEPER: ("keeper_intro", "yumoto_springs"),
+        global_constants.STORY_ACT_YUMOTO_LEDGER: (
+            "empty_ledger_intro",
+            "yumoto_springs",
+        ),
     }
     completed = section_by_act.get(previous_act)
     if completed:

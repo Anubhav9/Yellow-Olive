@@ -49,12 +49,11 @@ class PsyQuackSuccessScreen(RichLog):
                 "[bold #D4AF37]Gold Rush City's vault is secure.[/]"
             )
             self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
-        elif self.challenge_id == "24" and next_challenge_id is None:
+        elif self.challenge_id == "24" and general_utils.is_story_intro_pending():
             self.write(
-                "[bold #D4AF37]Sakura Harbour holds for now. "
-                "More festival work lies ahead.[/]"
+                "[bold #D4AF37]Sakura Harbour holds. The festival can begin.[/]"
             )
-            self.write("\n[reverse] Press Enter to Return to the Lab [/]")
+            self.write(global_constants.PRESS_ENTER_TO_CONTINUE_ACTION_TEXT)
         elif next_challenge_id is None:
             self.write("[bold #D4AF37]Every mission in the lab is complete. Professor Bald would be proud.[/]")
             self.write("\n[reverse] Press Enter to Return to the Lab [/]")
@@ -91,6 +90,13 @@ class PsyQuackSuccessScreen(RichLog):
                 )
 
                 await container.mount(GoldRushCityArcCompleteScreen())
+                return
+            if self.challenge_id == "24" and general_utils.is_story_intro_pending():
+                from scenarios.sakura_harbour.epilogue.screens.arc_complete_screen import (
+                    SakuraHarbourArcCompleteScreen,
+                )
+
+                await container.mount(SakuraHarbourArcCompleteScreen())
                 return
             if next_challenge_id is None:
                 return
