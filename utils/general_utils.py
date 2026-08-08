@@ -7,7 +7,7 @@ import threading
 import time
 from pathlib import Path
 import ascii_magic
-from PIL import Image, ImageOps, ImageEnhance
+from PIL import Image, ImageOps, ImageEnhance, ImageFilter
 from PIL.DdsImagePlugin import module
 from rich.text import Text
 import global_constants
@@ -47,8 +47,7 @@ async def simulate_dialogue(dialogue, color):
         line=line+"\n"
         yield line
 
-def convert_to_ascii(image_path):
-    target_rows=20
+def convert_to_ascii(image_path, target_rows=global_constants.PORTRAIT_TARGET_ROWS):
     img = Image.open(image_path).convert("RGB")
 
     # Center-crop to square, biased slightly upward for face framing
@@ -59,15 +58,36 @@ def convert_to_ascii(image_path):
         centering=(0.5, 0.35),
     )
 
-    # Slight punch so eyes/edges survive downscaling
-    img = ImageEnhance.Contrast(img).enhance(1.25)
-    img = ImageEnhance.Color(img).enhance(1.10)
-
     # We will encode TWO image rows per ONE terminal row using '▀'
     # So resize image height to target_rows * 2
     aspect = img.width / img.height
     cols = max(20, int(target_rows * aspect * 2.1))  # tweak 2.0–2.4 if needed
-    img = img.resize((cols, target_rows * 2), Image.Resampling.LANCZOS)
+
+    # Area-average to a small multiple of the target first. Going straight to
+    # final size with a sharp filter rings against the hard outlines in the
+    # portraits and leaves grey halos around hair and edges.
+    img = img.resize(
+        (
+            cols * global_constants.PORTRAIT_PREFILTER_SCALE,
+            target_rows * 2 * global_constants.PORTRAIT_PREFILTER_SCALE,
+        ),
+        Image.Resampling.BOX,
+    )
+
+    # Punch so eyes/edges survive downscaling
+    img = ImageEnhance.Contrast(img).enhance(1.35)
+    img = ImageEnhance.Color(img).enhance(1.25)
+
+    img = img.resize((cols, target_rows * 2), Image.Resampling.BOX)
+    img = img.filter(ImageFilter.UnsharpMask(radius=1, percent=90, threshold=0))
+
+    # Collapse the near-identical shades that averaging produces into a small
+    # flat palette, so the portrait reads as deliberate pixel art.
+    img = img.quantize(
+        colors=global_constants.PORTRAIT_COLOR_COUNT,
+        method=Image.Quantize.MEDIANCUT,
+        dither=Image.Dither.NONE,
+    ).convert("RGB")
 
     px = img.load()
     t = Text()
