@@ -56,7 +56,12 @@ All functions return `(ok: bool, payload)`:
 | `get_endpoints(name, namespace)` | Endpoints dict | Backend addresses wired |
 | `get_ingress(name, namespace)` | Ingress dict | rules, host, class |
 | `get_ingresses(namespace)` | List of ingresses | |
-| `exec_in_pod(pod, namespace, command)` | stdout string | HTTP checks from inside cluster |
+| `get_config_map(name, namespace)` | ConfigMap dict | Keys present, values expected |
+| `get_secret(name, namespace)` | Secret dict | Key present (values are base64) |
+| `get_persistent_volume_claim(name, namespace)` | PVC dict | Phase Bound, bound volumeName |
+| `get_persistent_volume(name)` | PV dict | Capacity, reclaim policy |
+| `get_storage_class(name)` | StorageClass dict | Provisioner exists |
+| `exec_in_pod(pod, namespace, command, container=None)` | stdout string | HTTP checks, reading files and env vars from inside cluster |
 
 On failure, `payload` is a short error string suitable to show or wrap.
 

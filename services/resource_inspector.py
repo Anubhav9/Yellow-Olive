@@ -119,6 +119,26 @@ def get_ingresses(namespace):
     return _list_resources("ingresses", namespace)
 
 
+def get_config_map(name, namespace):
+    return _fetch_resource("configmap", name, namespace)
+
+
+def get_secret(name, namespace):
+    return _fetch_resource("secret", name, namespace)
+
+
+def get_persistent_volume_claim(name, namespace):
+    return _fetch_resource("persistentvolumeclaim", name, namespace)
+
+
+def get_persistent_volume(name):
+    return _fetch_cluster_resource("persistentvolume", name)
+
+
+def get_storage_class(name):
+    return _fetch_cluster_resource("storageclass", name)
+
+
 def get_role(name, namespace):
     return _fetch_resource("role", name, namespace)
 
@@ -163,14 +183,20 @@ def can_i(
     return True, answer == "yes"
 
 
-def exec_in_pod(pod_name, namespace, command, timeout=EXEC_TIMEOUT_SECONDS):
+def exec_in_pod(pod_name, namespace, command, container=None, timeout=EXEC_TIMEOUT_SECONDS):
     """Run ``command`` (list of args) inside ``pod_name`` via ``kubectl exec``.
+
+    ``container`` selects one container of a multi-container Pod; without it
+    kubectl targets the default container.
 
     Returns ``(ok, stdout_or_error_message)``. ``ok`` is True iff the command
     exited with returncode 0."""
-    returncode, stdout, stderr, timed_out = _run_kubectl(
-        ["exec", pod_name, "-n", namespace, "--", *command], timeout=timeout
-    )
+    args = ["exec", pod_name, "-n", namespace]
+    if container:
+        args.extend(["-c", container])
+    args.append("--")
+    args.extend(command)
+    returncode, stdout, stderr, timed_out = _run_kubectl(args, timeout=timeout)
     if timed_out:
         return False, f"Timed out executing in pod '{pod_name}'."
     if returncode != 0:
