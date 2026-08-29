@@ -69,5 +69,12 @@ python -m http.server -d docs/academy 8000
 # then open http://localhost:8000/
 ```
 
+To drive the same local build from the TUI menu instead of the published page,
+point the academy URL at that server:
+
+```sh
+YELLOW_OLIVE_ACADEMY_URL=http://localhost:8000/ python app.py
+```
+
 Changing the lesson number, title or subtitle is enough to confirm the right
 module is loading - the title card reads them directly.

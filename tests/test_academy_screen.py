@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import importlib
+
 import pytest
 
 import global_constants
@@ -38,3 +40,15 @@ async def test_psyquack_back_removes_academy_screen(monkeypatch) -> None:
         await pilot.press("enter")
         await pilot.pause()
         assert not pilot.app.query(AcademyScreen)
+
+
+def test_academy_url_can_be_overridden_by_env(monkeypatch) -> None:
+    monkeypatch.setenv("YELLOW_OLIVE_ACADEMY_URL", "http://localhost:8000/")
+    try:
+        reloaded = importlib.reload(global_constants)
+        assert reloaded.ACADEMY_URL == "http://localhost:8000/"
+    finally:
+        monkeypatch.delenv("YELLOW_OLIVE_ACADEMY_URL")
+        importlib.reload(global_constants)
+
+    assert global_constants.ACADEMY_URL == global_constants.ACADEMY_DEFAULT_URL
