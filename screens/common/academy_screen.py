@@ -1,3 +1,6 @@
+import shutil
+import subprocess
+import sys
 import webbrowser
 
 from textual import on, work
@@ -7,6 +10,22 @@ import global_constants
 from screens.dialouges import academy_screen_dialogue
 from screens.common.screen_prompts.academy_screen import ACADEMY_PROMPT
 from utils import general_utils
+
+
+def open_url(url: str) -> bool:
+    """Open `url` in a browser, falling back to the platform opener."""
+    try:
+        if webbrowser.open(url):
+            return True
+    except Exception:
+        pass
+    opener = "open" if sys.platform == "darwin" else "xdg-open"
+    if shutil.which(opener) is None:
+        return False
+    try:
+        return subprocess.run([opener, url], capture_output=True).returncode == 0
+    except Exception:
+        return False
 
 
 class AcademyScreen(Static):
@@ -31,10 +50,15 @@ class AcademyScreen(Static):
 
     @work(thread=True)
     def open_academy_in_browser(self) -> None:
-        try:
-            webbrowser.open(global_constants.ACADEMY_URL)
-        except Exception:
-            pass
+        if not open_url(global_constants.ACADEMY_URL):
+            self.app.call_from_thread(self.report_browser_failure)
+
+    def report_browser_failure(self) -> None:
+        log = self.query_one("#academy-log", RichLog)
+        log.write(
+            f"[bold {global_constants.GLOBAL_DIALOGUE_COLOR}]"
+            "COULD NOT OPEN A BROWSER - COPY THE LINK ABOVE INSTEAD.[/]"
+        )
 
     @on(Input.Submitted, selector="#academy-input")
     async def handle_academy_input(self, event: Input.Submitted) -> None:
