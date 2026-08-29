@@ -5,7 +5,7 @@ Yellow Olive Academy is the Pyxel (WebAssembly) course published at
 
 | File | Role |
 |------|------|
-| `docs/academy/engine.py` | All machinery: palette, pop-in animation, beat state machine, header, narration panel, prompt |
+| `docs/academy/engine.py` | All machinery: palette, pop-in animation, beat state machine, sound cues, header, narration panel, prompt |
 | `docs/academy/lessons/lesson_XX_*.py` | Pure content: the narration for each beat and the boxes that appear with it |
 | `docs/academy/lessons/__init__.py` | Ordered registry of lessons |
 | `docs/academy/academy.py` | Entry point: hands the registry to the engine |
@@ -29,7 +29,7 @@ BEATS = (
 LESSON = Lesson(
     number=2,
     title="SERVICES AND DISCOVERY",
-    subtitle="HOW POKEPODS FIND EACH OTHER",
+    subtitle="HOW PODS FIND EACH OTHER",
     beats=BEATS,
     boxes=(Box(0, 20, 48, 64, 40, COLOR_POD, "POD web"),),
 )
@@ -55,6 +55,9 @@ LESSONS = (LESSON_01, LESSON_02)
 ```
 
 Lessons play in registry order and wrap back to the first one at the end.
+
+Sound is engine-owned: a blip plays on every reveal and a chord when a lesson
+ends, and `M` mutes. Lessons do not declare audio.
 
 ## 3. Run it locally
 
