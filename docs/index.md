@@ -18,6 +18,7 @@ This site is for contributors, maintainers, and anyone who wants to understand h
 | [Contributing](contributing/adding-a-challenge.md) | How to add challenges and new scenarios |
 | [Troubleshooting](troubleshooting.md) | Common Minikube and kubectl failures |
 | [Roadmap](roadmap.md) | Planned features and release status |
+| [Yellow Olive Academy](academy/index.html) | Pixel-art crash course: node, namespace, pod, container |
 
 ## Repository layout (high level)
 

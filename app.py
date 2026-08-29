@@ -7,6 +7,7 @@ from textual.containers import Horizontal,Vertical
 from textual import on
 from scenarios.oakwood_meadows.prologue.dialogues import professor_bald_dialogue
 from scenarios.oakwood_meadows.prologue.screens.professor_bald_intro import ProfessorBaldIntro
+from screens.common.academy_screen import AcademyScreen
 from screens.common.author_info import AuthorInfo
 from screens.common.diagnostics_consent_screen import DiagnosticsConsentScreen
 from screens.common.help_screen import HelpScreen
@@ -41,6 +42,7 @@ class ProjectOlive(App):
             with Vertical(id="menu-option"):
                 yield Static("Menu",id="menu-text")
                 yield Button("Start Game",id="start-game")
+                yield Button("Yellow Olive Academy",id="academy")
                 yield Button("Help",id="help")
                 yield Button("About the Author",id="about-the-author")
                 yield Button("Quit", id="quit")
@@ -77,6 +79,14 @@ class ProjectOlive(App):
             )
             return
         await self._mount_game_entry(game_area)
+
+    @on(Button.Pressed, "#academy")
+    async def button_press_academy(self, event=Button.Pressed):
+        track("academy_opened")
+        game_area = self.query_one("#game-flow")
+        for child in list(game_area.children):
+            await child.remove()
+        await game_area.mount(AcademyScreen())
 
     @on(Button.Pressed, "#help")
     async def button_press_help(self, event=Button.Pressed):
