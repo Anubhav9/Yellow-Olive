@@ -28,6 +28,10 @@ HEADER_HEIGHT = 12
 NARRATION_TOP = 180
 POP_FRAMES = 10
 
+SOUND_REVEAL = 0
+SOUND_LESSON_DONE = 1
+SOUND_CHANNEL = 0
+
 
 @dataclass(frozen=True)
 class Box:
@@ -78,11 +82,22 @@ class Academy:
         self.lesson_index = 0
         self.beat_index = -1
         self.beat_frame = 0
+        self.muted = False
 
     def run(self) -> None:
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="Yellow Olive Academy", fps=FRAME_RATE)
         pyxel.mouse(True)
+        self._define_sounds()
         pyxel.run(self.update, self.draw)
+
+    def _define_sounds(self) -> None:
+        """Two synth cues: a blip when something is revealed, a chord per lesson."""
+        pyxel.sounds[SOUND_REVEAL].set("c3e3", "p", "64", "n", 18)
+        pyxel.sounds[SOUND_LESSON_DONE].set("c3e3g3c4", "t", "6543", "f", 14)
+
+    def _play(self, sound: int) -> None:
+        if not self.muted:
+            pyxel.play(SOUND_CHANNEL, sound)
 
     @property
     def lesson(self) -> Lesson:
@@ -94,12 +109,17 @@ class Academy:
 
     def update(self) -> None:
         self.beat_frame += 1
+        if pyxel.btnp(pyxel.KEY_M):
+            self.muted = not self.muted
+            pyxel.stop()
         if not self._advance_pressed():
             return
         self.beat_index += 1
         self.beat_frame = 0
         if self.beat_index < len(self.lesson.beats):
+            self._play(SOUND_REVEAL)
             return
+        self._play(SOUND_LESSON_DONE)
         self.lesson_index = (self.lesson_index + 1) % len(self.lessons)
         self.beat_index = -1
 
@@ -128,6 +148,7 @@ class Academy:
         centered_text(78, "* YELLOW OLIVE ACADEMY *", COLOR_INK)
         centered_text(96, f"LESSON {lesson.number:02d}: {lesson.title}", COLOR_INK)
         centered_text(112, lesson.subtitle, COLOR_CONTAINER)
+        centered_text(146, "M MUTES THE SOUND" if not self.muted else "SOUND MUTED - M", COLOR_INK)
 
     def _draw_header(self) -> None:
         lesson = self.lesson
