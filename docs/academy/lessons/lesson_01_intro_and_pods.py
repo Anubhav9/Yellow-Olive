@@ -22,19 +22,19 @@ BEAT_CONTAINER = 3
 BEAT_SIDECAR = 4
 BEAT_RECAP = 5
 
-NAMESPACE_NAMES = ("kube-system", "default", "oakwood")
+NAMESPACE_NAMES = ("kube-system", "default", "payments")
 NAMESPACE_LEFTS = (20, 96, 172)
 NAMESPACE_TOP = 48
 NAMESPACE_WIDTH = 64
 NAMESPACE_HEIGHT = 116
 
-POD_NAMES = (("psyquack",), ("web", "job"), ("cache",))
+POD_NAMES = (("coredns",), ("web", "job"), ("api",))
 POD_TOPS = (64, 116)
 POD_WIDTH = 48
 POD_HEIGHT = 42
 
 CONTAINER_SIZE = 14
-SIDECAR_POD = ("oakwood", "cache")
+SIDECAR_POD = ("payments", "api")
 
 BEATS = (
     Beat(
@@ -46,44 +46,44 @@ BEATS = (
     ),
     Beat(
         (
-            "NAMESPACES ARE THE TOWNS INSIDE THE CLUSTER.",
-            "THEY SPLIT ONE CLUSTER INTO SEPARATE NEIGHBOURHOODS",
-            "SO NAMES, QUOTAS AND ACCESS DO NOT COLLIDE.",
+            "A NAMESPACE IS A VIRTUAL CLUSTER INSIDE THE CLUSTER.",
+            "IT SCOPES NAMES, QUOTAS AND ACCESS, SO TWO TEAMS CAN",
+            "BOTH RUN A POD CALLED WEB WITHOUT COLLIDING.",
         )
     ),
     Beat(
         (
-            "A POD - A POKEPOD - IS THE SMALLEST THING YOU DEPLOY.",
-            "IT IS SCHEDULED ONTO A NODE, INSIDE A NAMESPACE,",
-            "AND IT CARRIES ITS OWN IP AND LIFECYCLE.",
+            "A POD IS THE SMALLEST THING KUBERNETES DEPLOYS.",
+            "IT IS SCHEDULED ONTO ONE NODE, LIVES IN A NAMESPACE,",
+            "AND GETS ITS OWN IP AND ITS OWN LIFECYCLE.",
         )
     ),
     Beat(
         (
-            "A CONTAINER - A POSEMON - RUNS INSIDE THE POD.",
+            "A CONTAINER RUNS INSIDE THE POD.",
             "IT IS THE IMAGE, THE PORT AND THE PROCESS:",
             "THE PART THAT ACTUALLY SERVES YOUR TRAFFIC.",
         )
     ),
     Beat(
         (
-            "A POD CAN HOLD MORE THAN ONE POSEMON.",
-            "SIDECARS SHARE THE POD'S NETWORK AND VOLUMES,",
-            "SO THEY START, MOVE AND DIE TOGETHER.",
+            "A POD CAN HOLD MORE THAN ONE CONTAINER.",
+            "SIDECARS - PROXIES, LOG SHIPPERS - SHARE THE POD'S",
+            "NETWORK AND VOLUMES, AND LIVE AND DIE WITH IT.",
         )
     ),
     Beat(
         (
             "NODE > NAMESPACE > POD > CONTAINER.",
-            "EVERY CHALLENGE IN YELLOW OLIVE LIVES SOMEWHERE",
-            "ON THAT MAP. NEXT LESSON, WE MAKE PODS TALK.",
+            "THAT HIERARCHY IS WHAT KUBECTL GET SHOWS YOU,",
+            "AND EVERY LATER LESSON BUILDS ON IT.",
         )
     ),
 )
 
 
 def _boxes():
-    boxes = [Box(BEAT_NODE, 12, 30, 232, 142, COLOR_NODE, "NODE  minikube-01")]
+    boxes = [Box(BEAT_NODE, 12, 30, 232, 142, COLOR_NODE, "NODE  node-1")]
     for namespace_index, namespace in enumerate(NAMESPACE_NAMES):
         namespace_left = NAMESPACE_LEFTS[namespace_index]
         boxes.append(
