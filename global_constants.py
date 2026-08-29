@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -8,6 +9,8 @@ PORTRAIT_TARGET_ROWS=24
 PORTRAIT_COLOR_COUNT=24
 PORTRAIT_PREFILTER_SCALE=4
 GLOBAL_DIALOGUE_COLOR="#D4AF37"
+ACADEMY_DEFAULT_URL="https://anubhav9.github.io/Yellow-Olive/academy/"
+ACADEMY_URL=os.environ.get("YELLOW_OLIVE_ACADEMY_URL", ACADEMY_DEFAULT_URL)
 PRESS_ENTER_TO_CONTINUE_ACTION_TEXT="\n[reverse] Press Enter to Continue [/]"
 TOTAL_CHALLENGES=24
 STORY_ACT_SIGNAL_TOWN=1
