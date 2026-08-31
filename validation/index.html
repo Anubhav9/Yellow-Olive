@@ -1,0 +1,1207 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://anubhav9.github.io/Yellow-Olive/validation/">
+      
+      
+        <link rel="prev" href="../privacy/">
+      
+      
+        <link rel="next" href="../cluster-lifecycle/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Validation - Project Yellow Olive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#validation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Project Yellow Olive" class="md-header__button md-logo" aria-label="Project Yellow Olive" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Project Yellow Olive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Validation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Anubhav9/Yellow-Olive" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Anubhav9/Yellow-Olive
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Project Yellow Olive" class="md-nav__button md-logo" aria-label="Project Yellow Olive" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Project Yellow Olive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Anubhav9/Yellow-Olive" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Anubhav9/Yellow-Olive
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../what-is-project-yellow-olive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Project Yellow Olive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scenario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenarios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-workspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy and Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validator-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validator contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource_inspector-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resource_inspector API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-challenge-1-pod-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Challenge 1 (pod ready)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-challenge-8-service-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Challenge 8 (Service + Endpoints)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring-from-the-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring from the screen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-validators-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing validators locally
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/adding-a-challenge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a Challenge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/adding-a-scenario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a Scenario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validator-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validator contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource_inspector-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resource_inspector API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-challenge-1-pod-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Challenge 1 (pod ready)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-challenge-8-service-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Challenge 8 (Service + Endpoints)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring-from-the-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring from the screen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-validators-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing validators locally
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h1>
+<p>PsyQuack validates player fixes by inspecting the <strong>live cluster</strong> through kubectl. Validation logic lives in each challenge's <code>validator.py</code>. Shared read helpers live in <code>services/resource_inspector.py</code>.</p>
+<p>There is no central <code>challenge_validation.py</code> module anymore - each challenge owns its rules.</p>
+<h2 id="flow">Flow<a class="headerlink" href="#flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>sequenceDiagram
+    participant Player
+    participant Game as BaseChallengeScreen
+    participant V as validator.validate()
+    participant RI as resource_inspector
+    participant K as kubectl
+
+    Player-&gt;&gt;Game: psyquack validate
+    Game-&gt;&gt;V: import and call validate()
+    V-&gt;&gt;RI: get_pod / get_service / ...
+    RI-&gt;&gt;K: kubectl get ... -o json
+    K--&gt;&gt;RI: JSON or error
+    RI--&gt;&gt;V: (ok, payload)
+    V--&gt;&gt;Game: (True/False, message)
+    Game--&gt;&gt;Player: pass or fail text in RichLog
+</code></pre></div>
+<h2 id="validator-contract">Validator contract<a class="headerlink" href="#validator-contract" title="Permanent link">&para;</a></h2>
+<p>Every validator module exposes:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">validate</span><span class="p">():</span>
+    <span class="c1"># early-return checks</span>
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Success message for the player&quot;</span>
+    <span class="c1"># or</span>
+    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Actionable failure message&quot;</span>
+</code></pre></div>
+<p>Rules:</p>
+<ul>
+<li>Return player-facing strings - use Yellow Olive vocabulary (Pokepod, signal path, etc.) where it fits the challenge</li>
+<li>Use <strong>early returns</strong> - check existence first, then spec fields, then runtime state (ready, endpoints)</li>
+<li>Import constants from <code>challenge_files.challenge_constants</code> (or local constants if you add scenario-level shared files later)</li>
+<li>Do not shell out to kubectl directly - use <code>resource_inspector</code></li>
+</ul>
+<h2 id="resource_inspector-api">resource_inspector API<a class="headerlink" href="#resource_inspector-api" title="Permanent link">&para;</a></h2>
+<p>All functions return <code>(ok: bool, payload)</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Success payload</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_pod(name, namespace)</code></td>
+<td>Pod dict</td>
+<td>Container ready, status</td>
+</tr>
+<tr>
+<td><code>get_pods(namespace, label_selector=None)</code></td>
+<td>List of pods</td>
+<td>Count replicas</td>
+</tr>
+<tr>
+<td><code>get_service(name, namespace)</code></td>
+<td>Service dict</td>
+<td>type, ports, selector</td>
+</tr>
+<tr>
+<td><code>get_services(namespace)</code></td>
+<td>List of services</td>
+<td>Discover names</td>
+</tr>
+<tr>
+<td><code>get_endpoints(name, namespace)</code></td>
+<td>Endpoints dict</td>
+<td>Backend addresses wired</td>
+</tr>
+<tr>
+<td><code>get_ingress(name, namespace)</code></td>
+<td>Ingress dict</td>
+<td>rules, host, class</td>
+</tr>
+<tr>
+<td><code>get_ingresses(namespace)</code></td>
+<td>List of ingresses</td>
+<td></td>
+</tr>
+<tr>
+<td><code>get_config_map(name, namespace)</code></td>
+<td>ConfigMap dict</td>
+<td>Keys present, values expected</td>
+</tr>
+<tr>
+<td><code>get_secret(name, namespace)</code></td>
+<td>Secret dict</td>
+<td>Key present (values are base64)</td>
+</tr>
+<tr>
+<td><code>get_persistent_volume_claim(name, namespace)</code></td>
+<td>PVC dict</td>
+<td>Phase Bound, bound volumeName</td>
+</tr>
+<tr>
+<td><code>get_persistent_volume(name)</code></td>
+<td>PV dict</td>
+<td>Capacity, reclaim policy</td>
+</tr>
+<tr>
+<td><code>get_storage_class(name)</code></td>
+<td>StorageClass dict</td>
+<td>Provisioner exists</td>
+</tr>
+<tr>
+<td><code>exec_in_pod(pod, namespace, command, container=None)</code></td>
+<td>stdout string</td>
+<td>HTTP checks, reading files and env vars from inside cluster</td>
+</tr>
+</tbody>
+</table>
+<p>On failure, <code>payload</code> is a short error string suitable to show or wrap.</p>
+<p>Timeouts default to 5 seconds (15 for exec). Connection timeouts produce friendly messages instead of stack traces.</p>
+<h2 id="example-challenge-1-pod-ready">Example: Challenge 1 (pod ready)<a class="headerlink" href="#example-challenge-1-pod-ready" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">challenge_files</span> <span class="kn">import</span> <span class="n">challenge_constants</span>
+<span class="kn">from</span> <span class="nn">services</span> <span class="kn">import</span> <span class="n">resource_inspector</span>
+
+
+<span class="k">def</span> <span class="nf">validate</span><span class="p">():</span>
+    <span class="n">pod_name</span> <span class="o">=</span> <span class="n">challenge_constants</span><span class="o">.</span><span class="n">CHALLENGE_1_POD_NAME</span>
+    <span class="n">namespace</span> <span class="o">=</span> <span class="n">challenge_constants</span><span class="o">.</span><span class="n">NAMESPACE_OAKWOOD_MEADOWS</span>
+
+    <span class="n">ok</span><span class="p">,</span> <span class="n">pod</span> <span class="o">=</span> <span class="n">resource_inspector</span><span class="o">.</span><span class="n">get_pod</span><span class="p">(</span><span class="n">pod_name</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Pokepod not found. Is Electromon deployed in this namespace?&quot;</span>
+
+    <span class="n">container_statuses</span> <span class="o">=</span> <span class="n">pod</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;containerStatuses&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">container_statuses</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Electromon&#39;s Pokepod has no container status yet. Give it a moment, then try again.&quot;</span>
+
+    <span class="k">if</span> <span class="n">container_statuses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ready&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Electromon&#39;s Pokepod is not ready yet. Inspect the manifest and fix the issue.&quot;</span>
+
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Electromon is out of the Pokepod and ready for adventure.&quot;</span>
+</code></pre></div>
+<h2 id="example-challenge-8-service-endpoints">Example: Challenge 8 (Service + Endpoints)<a class="headerlink" href="#example-challenge-8-service-endpoints" title="Permanent link">&para;</a></h2>
+<p>Service challenges typically verify:</p>
+<ol>
+<li>Service exists</li>
+<li><code>spec.type</code> (for example ClusterIP)</li>
+<li><code>spec.selector</code> matches expected labels</li>
+<li>Port and targetPort</li>
+<li>Endpoints object has ready addresses</li>
+</ol>
+<p>See <code>scenarios/signal_town/challenge_8/validator.py</code> for the full pattern.</p>
+<h2 id="wiring-from-the-screen">Wiring from the screen<a class="headerlink" href="#wiring-from-the-screen" title="Permanent link">&para;</a></h2>
+<p><code>BaseChallengeScreen.run_validation()</code> resolves the scenario from <code>self.challenge_scenario</code> and imports:</p>
+<div class="highlight"><pre><span></span><code>scenarios.&lt;scenario&gt;.challenge_&lt;id&gt;.validator
+</code></pre></div>
+<p>If a screen forgets to set <code>challenge_scenario</code>, validation raises a clear runtime error.</p>
+<h2 id="constants">Constants<a class="headerlink" href="#constants" title="Permanent link">&para;</a></h2>
+<p>Shared names and namespaces live in <code>challenge_files/challenge_constants.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">NAMESPACE_OAKWOOD_MEADOWS</span> <span class="o">=</span> <span class="s2">&quot;oakwood-meadows&quot;</span>
+<span class="n">NAMESPACE_SIGNAL_TOWN</span> <span class="o">=</span> <span class="s2">&quot;signal-town&quot;</span>
+<span class="n">CHALLENGE_1_POD_NAME</span> <span class="o">=</span> <span class="s2">&quot;electromon-pod&quot;</span>
+<span class="c1"># ...</span>
+</code></pre></div>
+<p>When adding a challenge, add constants here if multiple files need the same resource name.</p>
+<h2 id="testing-validators-locally">Testing validators locally<a class="headerlink" href="#testing-validators-locally" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Start the game and enter the challenge (manifests apply automatically).</li>
+<li>Fix the cluster from your Command Chamber.</li>
+<li>Optionally run validation in a Python shell:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">scenarios.oakwood_meadows.challenge_1.validator</span> <span class="kn">import</span> <span class="n">validate</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">validate</span><span class="p">())</span>
+</code></pre></div>
+<ol>
+<li>Type <code>psyquack validate</code> in the game for the full UX path.</li>
+</ol>
+<h2 id="message-guidelines">Message guidelines<a class="headerlink" href="#message-guidelines" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Fail messages</strong> should hint at what is wrong without giving the exact YAML edit</li>
+<li><strong>Pass messages</strong> can celebrate in character</li>
+<li>Prefer one failure at a time - first check that fails wins</li>
+</ul>
+<h2 id="related-pages">Related pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../contributing/adding-a-challenge/">Contributing: Adding a Challenge</a> - step-by-step for new validators</li>
+<li><a href="../architecture/">Architecture</a> - where validation sits in the screen lifecycle</li>
+<li><a href="../lab-workspace/">Lab Workspace</a> - validators check cluster state, not lab files on disk</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
