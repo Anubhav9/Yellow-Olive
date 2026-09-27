@@ -4,4 +4,3 @@ pygame-ce==2.5.8
 rich==14.3.3
 sentry-sdk==2.66.0
 textual==8.0.2
-authlib==1.6.12

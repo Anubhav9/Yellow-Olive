@@ -23,6 +23,8 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Education",
   "Topic :: Games/Entertainment",
   "Topic :: Software Development",
@@ -34,7 +36,6 @@ dependencies = [
   "rich==14.3.3",
   "sentry-sdk==2.66.0",
   "textual==8.0.2",
-  "authlib==1.6.12"
 ]
 
 [project.urls]
