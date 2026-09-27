@@ -93,16 +93,11 @@ jobs:
           python scripts/build_python_badge.py results > docs/badges/python-install.json
           cat docs/badges/python-install.json
 
-      - name: Commit and deploy badge
+      # The badge JSON is published only to gh-pages (main is PR-protected).
+      # docs.yml pulls the live copy before redeploying so it is not overwritten.
+      - name: Deploy badge to GitHub Pages
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/badges/python-install.json
-          if git diff --staged --quiet; then
-            echo "Badge unchanged; skipping commit."
-          else
-            git commit -m "Update Python pip install badge"
-            git push
-          fi
           pip install mkdocs-material
           mkdocs gh-deploy --force
