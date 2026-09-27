@@ -27,5 +27,16 @@ jobs:
       - name: Install MkDocs Material
         run: pip install mkdocs-material
 
+      # The Python badge is maintained on gh-pages by pypi-smoke.yml, not on main.
+      - name: Preserve live Python badge
+        run: |
+          mkdir -p docs/badges
+          if curl -fsSL "https://anubhav9.github.io/Yellow-Olive/badges/python-install.json" -o /tmp/python-install.json \
+             && python -c "import json,sys; json.load(open('/tmp/python-install.json'))"; then
+            mv /tmp/python-install.json docs/badges/python-install.json
+          else
+            echo "Live badge unavailable; keeping repo copy."
+          fi
+
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
