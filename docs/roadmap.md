@@ -1,6 +1,17 @@
 # Roadmap
 
-High-level plan for Project Yellow Olive. Status reflects the campaign and diagnostics work as of July 2026.
+High-level plan for Project Yellow Olive. Status reflects the campaign and diagnostics work as of September 2026.
+
+## Latest updates
+
+**September 2026 (0.8.0) — Migration from PyGame to pygame-ce complete.** The game now
+depends on [pygame-ce](https://pyga.me/) instead of `pygame` for audio. Because pygame-ce
+ships wheels for current Python releases, Yellow Olive now officially supports **Python 3.14
+and 3.15** in addition to 3.10–3.13, and both are part of the PyPI install smoke-test matrix.
+
+!!! note "Upgrading an existing install"
+    `pygame` and `pygame-ce` install into the same `pygame` package. If you previously had
+    `pygame` installed, run `pip uninstall pygame` before upgrading `yellow-olive`.
 
 ## Shipped
 
@@ -16,6 +27,7 @@ High-level plan for Project Yellow Olive. Status reflects the campaign and diagn
 | Lab workspace mirror | Editable manifests under `yellow-olive-lab/scenarios/` |
 | Cluster lifecycle | Minikube profile with startup budget, teardown on quit |
 | Opt-in diagnostics | Consent screen, Sentry Logs for gameplay, Issues for errors |
+| pygame-ce migration | Audio via `pygame-ce`; Python 3.10–3.15 supported (0.8.0) |
 | Technical documentation | This site |
 
 ## In active development
@@ -45,6 +57,7 @@ High-level plan for Project Yellow Olive. Status reflects the campaign and diagn
 | Phase 3 | PyPI publish | Released (April 2026) |
 | Phase 4 | Gold Rush City + Sakura Harbour | Released (2026) |
 | Phase 5 | Opt-in diagnostics | Released on `feature/sentry-logging` |
+| Phase 6 | pygame-ce migration, Python 3.14 / 3.15 support | Released (September 2026, 0.8.0) |
 
 ## How to influence the roadmap
 
