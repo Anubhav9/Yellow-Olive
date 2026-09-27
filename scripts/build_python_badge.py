@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-PYTHON_VERSIONS = ("3.10", "3.11", "3.12", "3.13", "3.14")
+PYTHON_VERSIONS = ("3.10", "3.11", "3.12", "3.13", "3.14", "3.15")
 
 
 def load_outcomes(results_dir: Path) -> dict[str, bool]:
