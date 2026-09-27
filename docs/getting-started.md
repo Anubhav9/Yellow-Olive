@@ -11,7 +11,7 @@ yellow-olive start
 
 | Tool | Version | Why you need it |
 |------|---------|-----------------|
-| Python | 3.10+ | Runs the Textual game |
+| Python | 3.10 – 3.15 | Runs the Textual game |
 | Docker | Latest stable | Minikube driver |
 | Minikube | Latest stable | Local Kubernetes cluster |
 | kubectl | Latest stable | Apply and inspect cluster resources |
