@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yellow Olive Academy</title>
+    <link rel="icon" href="data:," />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #1a1a1a;
+        color: #d4af37;
+        font-family: "Courier New", monospace;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #pyxel-screen {
+        width: min(96vw, 96vh);
+        height: min(96vw, 96vh);
+      }
+      #loading {
+        letter-spacing: 0.1em;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/kitao/pyxel@v2.8.7/wasm/pyxel.js"></script>
+  </head>
+  <body>
+    <div id="pyxel-screen"><p id="loading">BOOTING YELLOW OLIVE ACADEMY...</p></div>
+    <pyxel-run name="academy.py" gamepad="enabled"></pyxel-run>
+  </body>
+</html>
