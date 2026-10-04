@@ -36,6 +36,18 @@ Running from source or need setup help? See the [documentation](https://anubhav9
 
 ---
 
+## Yellow Olive Academy 🏫
+
+Not ready to jump into the adventure? Start at the Academy.
+
+It's a pixel-art classroom where Kubernetes ideas are explained with simple pictures and short lessons, a little like a Game Boy textbook. No setup needed - it opens right in your browser.
+
+👉 **[Visit Yellow Olive Academy](https://anubhav9.github.io/Yellow-Olive/academy/)**
+
+You can also open it anytime from the game's main menu.
+
+---
+
 ## The Motivation
 
 ```
