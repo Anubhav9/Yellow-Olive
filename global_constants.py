@@ -1,6 +1,9 @@
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent
+ACADEMY_DEFAULT_URL = "http://localhost:8765/"
+ACADEMY_URL = os.environ.get("YELLOW_OLIVE_ACADEMY_URL", ACADEMY_DEFAULT_URL)
 IMAGE_MEDIA_PATH=str(PROJECT_ROOT / "media" / "resources" / "image_files")
 MUSIC_MEDIA_PATH=str(PROJECT_ROOT / "media" / "resources" / "music_files")
 LAB_AUDIO_TEST_SOUND="beep.ogg"

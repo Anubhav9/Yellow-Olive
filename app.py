@@ -7,6 +7,7 @@ from textual.containers import Horizontal,Vertical
 from textual import on
 from scenarios.oakwood_meadows.prologue.dialogues import professor_bald_dialogue
 from scenarios.oakwood_meadows.prologue.screens.professor_bald_intro import ProfessorBaldIntro
+from screens.common.academy_screen import AcademyScreen
 from screens.common.author_info import AuthorInfo
 from screens.common.diagnostics_consent_screen import DiagnosticsConsentScreen
 from screens.common.help_screen import HelpScreen
@@ -43,6 +44,7 @@ class ProjectOlive(App):
                 yield Button("Start Game",id="start-game")
                 yield Button("Help",id="help")
                 yield Button("About the Author",id="about-the-author")
+                yield Button("Yellow Olive Academy", id="academy")
                 yield Button("Quit", id="quit")
             with Vertical(id="game-area"):
 
@@ -77,6 +79,14 @@ class ProjectOlive(App):
             )
             return
         await self._mount_game_entry(game_area)
+
+    @on(Button.Pressed, "#academy")
+    async def button_press_academy(self, event=Button.Pressed):
+        track("academy_opened")
+        game_area = self.query_one("#game-flow")
+        for child in list(game_area.children):
+            await child.remove()
+        await game_area.mount(AcademyScreen())
 
     @on(Button.Pressed, "#help")
     async def button_press_help(self, event=Button.Pressed):
@@ -119,11 +129,20 @@ def cli():
     subparsers = parser.add_subparsers(dest="command")
 
     subparsers.add_parser("start", help="Start Project Yellow Olive")
+    subparsers.add_parser("academy", help="Serve Yellow Olive Academy in the browser")
 
     args = parser.parse_args()
 
     if args.command == "start":
         main()
+        return
+
+    if args.command == "academy":
+        import runpy
+        from pathlib import Path
+
+        serve_script = Path(__file__).resolve().parent / "scripts" / "serve_academy.py"
+        runpy.run_path(str(serve_script), run_name="__main__")
         return
 
     parser.print_help()
