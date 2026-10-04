@@ -44,6 +44,8 @@ It's a pixel-art classroom where Kubernetes ideas are explained with simple pict
 
 👉 **[Visit Yellow Olive Academy](https://anubhav9.github.io/Yellow-Olive/academy/)**
 
+<img src="docs/assets/academy-lesson-pods.png" width="80%" alt="Yellow Olive Academy lesson on Pods">
+
 You can also open it anytime from the game's main menu.
 
 Built with [Pyxel](https://github.com/kitao/pyxel), a retro game engine. 🎮
