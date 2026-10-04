@@ -5,5 +5,5 @@ pyyaml==6.0.2
 python-multipart==0.0.31
 authlib==1.6.12
 httpx==0.28.1
-python-dotenv==1.1.0
+python-dotenv==1.2.2
 itsdangerous==2.2.0
