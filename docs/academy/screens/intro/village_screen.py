@@ -2,7 +2,7 @@ import pyxel
 
 import global_constants
 from screens.intro import art, constants, maps, sounds
-from screens.intro.character import UP, Walker
+from screens.intro.character import RIGHT, Walker
 from screens.intro.character import HEIGHT as SPRITE_HEIGHT
 from screens.intro.character import WIDTH as SPRITE_WIDTH
 
@@ -38,7 +38,7 @@ class VillageScreen:
         sounds.init_sounds()
         self.background = maps.bake_village()
         self.player = Walker(
-            art.PLAYER, constants.VILLAGE_PLAYER_START_X, constants.VILLAGE_PLAYER_START_Y, UP,
+            art.PLAYER, constants.VILLAGE_PLAYER_START_X, constants.VILLAGE_PLAYER_START_Y, RIGHT,
         )
         self.blockers = maps.HEDGE_BLOCKERS + (maps.SIGN_RECT,) + maps.MAILBOX_RECTS
         self.notes = ((maps.SIGN_RECT, constants.SIGN_MESSAGE),) + tuple(
