@@ -2,15 +2,15 @@ import pyxel
 
 import game_state
 import global_constants
-import text_renderer
-from screens.intro import constants, maps, sounds, tiles
+from screens.intro import art, constants, maps, sounds
+from screens.intro.character import DOWN, UP, Walker
 from screens.intro.village_screen import draw_skip_hint
 
 NEXT_PAGE = "home_screen"
 
 FADE_IN = "fade_in"
 PLAYER_WALK = "player_walk"
-PROFESSOR_WALK = "professor_walk"
+NOTICE = "notice"
 INTRO = "intro"
 NAME_ENTRY = "name_entry"
 OUTRO = "outro"
@@ -34,11 +34,11 @@ def _advance_pressed():
 
 class AcademyHallScreen:
     def __init__(self):
-        tiles.init_sheets()
+        art.init_sheets()
         sounds.init_sounds()
-        self.room_image = tiles.bake_map(tiles.DUNGEON, maps.hall_floor(), maps.hall_objects())
-        self.player_y = constants.HALL_PLAYER_START_Y
-        self.professor_y = constants.HALL_PROFESSOR_START_Y
+        self.background = maps.bake_hall()
+        self.player = Walker(art.PLAYER, constants.HALL_CHARACTER_X, constants.HALL_PLAYER_START_Y, UP)
+        self.professor = Walker(art.PROFESSOR, constants.HALL_CHARACTER_X, constants.HALL_PROFESSOR_Y, DOWN)
         self.state = FADE_IN
         self.state_frame = 0
         self.script = constants.PROFESSOR_INTRO
@@ -51,21 +51,17 @@ class AcademyHallScreen:
             return NEXT_PAGE
         self.state_frame += 1
 
-        if self.state == FADE_IN:
-            self.player_y -= constants.WALK_SPEED
-            if self.state_frame >= constants.FADE_FRAMES:
+        if self.state in (FADE_IN, PLAYER_WALK):
+            self.player.y = max(constants.HALL_PLAYER_STOP_Y, self.player.y - constants.WALK_SPEED)
+            arrived = self.player.y == constants.HALL_PLAYER_STOP_Y
+            self.player.set_moving(not arrived)
+            if self.state == FADE_IN and self.state_frame >= constants.FADE_FRAMES:
                 self._set_state(PLAYER_WALK)
-        elif self.state == PLAYER_WALK:
-            self.player_y = max(constants.HALL_PLAYER_STOP_Y, self.player_y - constants.WALK_SPEED)
-            if self.player_y == constants.HALL_PLAYER_STOP_Y:
-                self._set_state(PROFESSOR_WALK)
-        elif self.state == PROFESSOR_WALK:
-            self.professor_y = min(
-                constants.HALL_PROFESSOR_STOP_Y,
-                self.professor_y + constants.PROFESSOR_WALK_SPEED,
-            )
-            if self.professor_y == constants.HALL_PROFESSOR_STOP_Y:
-                self._start_script(constants.PROFESSOR_INTRO, INTRO)
+            elif self.state == PLAYER_WALK and arrived:
+                self._set_state(NOTICE)
+                sounds.play(sounds.TEXT_BLIP)
+        elif self.state == NOTICE and self.state_frame >= constants.NOTICE_FRAMES:
+            self._start_script(constants.PROFESSOR_INTRO, INTRO)
         elif self.state in (INTRO, OUTRO):
             self._update_dialogue()
         elif self.state == NAME_ENTRY:
@@ -130,14 +126,13 @@ class AcademyHallScreen:
 
     def draw(self):
         pyxel.cls(0)
-        pyxel.blt(0, 0, self.room_image, 0, 0, global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
+        pyxel.blt(0, 0, self.background, 0, 0, global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
+        self.professor.draw()
+        self.player.draw()
 
-        professor_bob = 1 if self.state == PROFESSOR_WALK and (pyxel.frame_count // constants.BOB_FRAMES) % 2 else 0
-        tiles.draw_tile(tiles.DUNGEON, constants.PROFESSOR_TILE, constants.HALL_CHARACTER_X, self.professor_y - professor_bob)
-        player_bob = 1 if self.state in (FADE_IN, PLAYER_WALK) and (pyxel.frame_count // constants.BOB_FRAMES) % 2 else 0
-        tiles.draw_tile(tiles.DUNGEON, constants.PLAYER_TILE, constants.HALL_CHARACTER_X, self.player_y - player_bob)
-
-        if self.state in (INTRO, OUTRO):
+        if self.state == NOTICE:
+            self._draw_notice_bubble()
+        elif self.state in (INTRO, OUTRO):
             self._draw_dialogue_box(self._typed_lines(), self._line_finished())
         elif self.state == NAME_ENTRY:
             cursor = "_" if (pyxel.frame_count // 8) % 2 else " "
@@ -148,9 +143,9 @@ class AcademyHallScreen:
 
         draw_skip_hint()
         if self.state == FADE_IN:
-            tiles.draw_fade(1 - self.state_frame / constants.FADE_FRAMES)
+            art.draw_fade(1 - self.state_frame / constants.FADE_FRAMES)
         elif self.state == FADE_OUT:
-            tiles.draw_fade(self.state_frame / constants.FADE_FRAMES)
+            art.draw_fade(self.state_frame / constants.FADE_FRAMES)
 
     def _typed_lines(self):
         remaining = self.chars_shown
@@ -163,31 +158,47 @@ class AcademyHallScreen:
     def _line_finished(self):
         return self.chars_shown >= sum(len(line) for line in self._current_lines())
 
+    def _draw_notice_bubble(self):
+        art.draw_box(
+            constants.NOTICE_BUBBLE_X, constants.NOTICE_BUBBLE_Y,
+            constants.NOTICE_BUBBLE_WIDTH, constants.NOTICE_BUBBLE_HEIGHT, accent="red",
+        )
+        art.draw_text_centered(
+            constants.NOTICE_BUBBLE_X, constants.NOTICE_BUBBLE_Y + 3,
+            constants.NOTICE_BUBBLE_WIDTH, "!", color_name="red", shadow_name="red_shadow",
+        )
+
     def _draw_dialogue_box(self, lines, show_arrow):
         x, y = constants.DIALOGUE_BOX_X, constants.DIALOGUE_BOX_Y
         w, h = constants.DIALOGUE_BOX_WIDTH, constants.DIALOGUE_BOX_HEIGHT
-
-        pyxel.rect(
-            constants.NAME_TAG_X, constants.NAME_TAG_Y,
-            constants.NAME_TAG_WIDTH, constants.NAME_TAG_HEIGHT, pyxel.COLOR_YELLOW,
+        art.draw_box(x, y, w, h, accent="red")
+        art.draw_box(
+            constants.PORTRAIT_FRAME_X, constants.PORTRAIT_FRAME_Y,
+            constants.PORTRAIT_FRAME_WIDTH, constants.PORTRAIT_FRAME_HEIGHT,
+            accent="brown", fill="parchment",
         )
-        text_renderer.draw_text_centered(
-            constants.NAME_TAG_X, constants.NAME_TAG_Y,
-            constants.NAME_TAG_WIDTH, constants.NAME_TAG, pyxel.COLOR_BLACK,
+        pyxel.clip(
+            constants.PORTRAIT_FRAME_X + 3, constants.PORTRAIT_FRAME_Y + 3,
+            constants.PORTRAIT_FRAME_WIDTH - 6, constants.PORTRAIT_FRAME_HEIGHT - 6,
         )
+        art.blt(
+            None, art.PORTRAIT, 0, 0, constants.PORTRAIT_WIDTH, constants.PORTRAIT_HEIGHT,
+            constants.PORTRAIT_X, constants.PORTRAIT_Y,
+        )
+        pyxel.clip()
 
-        pyxel.rect(x, y, w, h, pyxel.COLOR_YELLOW)
-        pyxel.rect(x + 2, y + 2, w - 4, h - 4, pyxel.COLOR_WHITE)
-
-        pyxel.rect(constants.PORTRAIT_X - 1, constants.PORTRAIT_Y - 1, 34, 34, pyxel.COLOR_NAVY)
-        tiles.draw_tile(tiles.DUNGEON, constants.PROFESSOR_TILE, constants.PORTRAIT_X, constants.PORTRAIT_Y, scale=2)
-
+        art.draw_text(
+            constants.DIALOGUE_TEXT_X, constants.NAME_TAG_Y, constants.NAME_TAG,
+            color_name="red", shadow_name="red_shadow",
+        )
         for index, line in enumerate(lines):
-            text_renderer.draw_text(
+            art.draw_text(
                 constants.DIALOGUE_TEXT_X,
                 constants.DIALOGUE_TEXT_Y + index * constants.DIALOGUE_LINE_SPACING,
-                line, pyxel.COLOR_NAVY,
+                line,
             )
 
         if show_arrow and (pyxel.frame_count // 8) % 2:
-            pyxel.tri(x + w - 14, y + h - 12, x + w - 6, y + h - 12, x + w - 10, y + h - 7, pyxel.COLOR_NAVY)
+            pyxel.tri(
+                x + w - 16, y + h - 14, x + w - 8, y + h - 14, x + w - 12, y + h - 9, art.color("red"),
+            )
