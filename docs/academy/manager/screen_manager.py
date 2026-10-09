@@ -13,8 +13,16 @@ def screen_management_map():
     }
     return manager_map
 
+INTERACTIVE_PAGES = ("village_screen", "academy_hall_screen")
+
 def screen_to_class_mapping_map(page_name):
-    if(page_name=="home_screen"):
+    if(page_name=="village_screen"):
+        from screens.intro.village_screen import VillageScreen
+        return VillageScreen
+    elif(page_name=="academy_hall_screen"):
+        from screens.intro.academy_hall_screen import AcademyHallScreen
+        return AcademyHallScreen
+    elif(page_name=="home_screen"):
         from screens.home_screen.home_screen import HomeScreen
         return HomeScreen
     elif(page_name=="lessons_screen"):

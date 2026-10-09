@@ -20,7 +20,12 @@ class YellowOliveAcademy:
         text_renderer.init_fonts()
         pyxel.mouse(True)
 
-        self.current_page_name = "home_screen"
+        # Load the painted screens before the tile sheets extend the palette,
+        # so their colours stay the same.
+        screen_manager.screen_to_class_mapping_map("home_screen")
+        screen_manager.screen_to_class_mapping_map("screen_1_pods_introduction")
+
+        self.current_page_name = "village_screen"
         self.current_screen = (
             screen_manager.screen_to_class_mapping_map(
                 self.current_page_name
@@ -32,6 +37,12 @@ class YellowOliveAcademy:
     def update(self):
         if pyxel.btnp(pyxel.KEY_ESCAPE):
             pyxel.quit()
+
+        if self.current_page_name in screen_manager.INTERACTIVE_PAGES:
+            next_page_name = self.current_screen.update()
+            if next_page_name:
+                self.open_page(next_page_name)
+            return
 
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             if self.current_page_name == "home_screen":
