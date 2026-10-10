@@ -22,10 +22,15 @@ SOLIDS = [
     *[(x, y, 16, 28) for y in (86, 114, 142) for x in (56, 98, 140, 180, 222, 264)],
 ]
 
+# Face the professor from this close (in pixels) and press Z to talk.
+TALK_REACH = 6
+PROFESSOR_TALK_BOX = (130, 66, 16, 12)
+
 PROFESSOR_NAME = "PROFESSOR BALD UNCLE"
 NAME_PROMPT_INDEX = 1
 NAME_MAX_LENGTH = 10
-ADVANCE_HINT = "ENTER"
+ADVANCE_HINT = "Z"
+NAME_HINT = "ENTER"
 
 # Each entry is one dialogue box, up to two lines. {name} is the player's name.
 DIALOGUE = [

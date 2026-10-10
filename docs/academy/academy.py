@@ -101,6 +101,7 @@ class YellowOliveAcademy:
         self.player_y = town.PLAYER_START_Y
         self.facing = UP
 
+        self.talking = False
         self.dialogue_index = 0
         self.player_name = ""
 
@@ -113,11 +114,26 @@ class YellowOliveAcademy:
         self.facing = UP
 
     def in_dialogue(self):
-        return self.screen == CLASSROOM and self.dialogue_index < len(classroom.DIALOGUE)
+        return self.screen == CLASSROOM and self.talking
+
+    def facing_professor(self):
+        step = {UP: (0, -1), DOWN: (0, 1), LEFT: (-1, 0), RIGHT: (1, 0)}[self.facing]
+        x, y, w, h = feet_at(self.player_x, self.player_y)
+        reach = classroom.TALK_REACH
+        return overlaps(x + step[0] * reach, y + step[1] * reach, w, h, *classroom.PROFESSOR_TALK_BOX)
+
+    def start_talking(self):
+        self.talking = True
+        # Once he knows your name, he skips straight to the welcome.
+        self.dialogue_index = classroom.NAME_PROMPT_INDEX + 1 if self.player_name else 0
 
     def update(self):
         if self.in_dialogue():
             self.update_dialogue()
+            return
+
+        if self.screen == CLASSROOM and pyxel.btnp(pyxel.KEY_Z) and self.facing_professor():
+            self.start_talking()
             return
 
         dx, dy = 0, 0
@@ -155,8 +171,10 @@ class YellowOliveAcademy:
                 self.player_name = self.player_name[:-1]
             if enter and self.player_name:
                 self.dialogue_index += 1
-        elif enter or pyxel.btnp(pyxel.KEY_SPACE):
+        elif pyxel.btnp(pyxel.KEY_Z) or enter:
             self.dialogue_index += 1
+        if self.dialogue_index >= len(classroom.DIALOGUE):
+            self.talking = False
 
     def draw(self):
         pyxel.cls(0)
@@ -203,7 +221,7 @@ class YellowOliveAcademy:
                 x + 6, y + 2 + (row + 1) * text_renderer.LINE_HEIGHT,
                 line.format(name=self.player_name), pyxel.COLOR_WHITE,
             )
-        hint = classroom.ADVANCE_HINT
+        hint = classroom.NAME_HINT if self.dialogue_index == classroom.NAME_PROMPT_INDEX else classroom.ADVANCE_HINT
         pyxel.text(x + w - len(hint) * 4 - 4, y + h - 8, hint, pyxel.COLOR_YELLOW)
 
 
