@@ -15,6 +15,12 @@ class BaseScreen:
         self.classroom_map.load(0, 0, constants.CLASSROOM_MAP_ASSET_PATH)
         pyxel.images[global_constants.PLAYER_IMAGE_BANK].load(0, 0, constants.PLAYER_ASSET_PATH)
         pyxel.images[global_constants.PROFESSOR_IMAGE_BANK].load(0, 0, constants.PROFESSOR_ASSET_PATH)
+        self.music=pyxel.sounds[0].pcm("assets/music/tutorial_screen.wav")
+        # Set background music volume
+        pyxel.channels[0].gain = 0.5
+
+        # Play continuously
+        pyxel.play(0, 0, loop=True)
 
     def next_lesson(self):
         # The order comes from manager/screen_manager.py; after the last lesson it points back home.

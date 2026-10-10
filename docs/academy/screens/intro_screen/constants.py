@@ -1,7 +1,7 @@
 """Oakwood Meadows town map: what's on it and where the player starts."""
 
 TOWN_MAP_ASSET_PATH = "assets/town_map.png"
-TOWN_MAP_MUSIC_PATH= "assets/music/intro_screen_music.wav"
+TOWN_MAP_MUSIC_PATH= "assets/music/tutorial_screen.wav"
 
 PLAYER_START_X = 180
 PLAYER_START_Y = 140

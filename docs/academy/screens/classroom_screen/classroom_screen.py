@@ -42,6 +42,13 @@ class ClassroomScreen:
         # Set this to hand control over to the next page.
         self.next_screen = None
 
+        self.music = pyxel.sounds[0].pcm("assets/music/professor_screen.wav")
+        # Set background music volume
+        pyxel.channels[0].gain = 0.5
+
+        # Play continuously
+        pyxel.play(0, 0, loop=True)
+
     def update(self):
         if self.talking:
             self.update_dialogue()

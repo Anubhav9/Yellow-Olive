@@ -23,7 +23,7 @@ class YellowOliveAcademy:
         pyxel.colors[:] = global_constants.PALETTE
         pyxel.images[global_constants.PLAYER_IMAGE_BANK].load(0, 0, CHARACTER_ASSET_PATH)
 
-        self.music=pyxel.sounds[0].pcm(town.TOWN_MAP_MUSIC_PATH)
+        self.music=pyxel.sounds[0].pcm("assets/music/start_screen.wav")
         # Set background music volume
         pyxel.channels[0].gain = 0.5
 
