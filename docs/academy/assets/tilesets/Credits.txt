@@ -1,0 +1,7 @@
+Version 2.0
+
+This pixel pack was made by isaiah658. Everything included is licenced as Creative Commons 0 (CC0). Credit isn't required but is appreciated. I hope you enjoy them. If you use them, it would mean a lot to me if you let me know by sending me a message on open game art http://opengameart.org/users/isaiah658
+
+Version 2.0 includes a few new tiles in the tileset, such as snow covered buildings, more monsters, character sprite sheets, a few animations meant for monster attacks, battle backgrounds, user interface art, title screen art, and more. Some of the characters may look very similar with subtle differences because they were or are still a work in progress. Rather than picking which version is better, I've included all of them.
+
+A few of the tiles in the tileset were meant to be played as an animation starting with the tile on the left moving to the right. This includes the flowers and water tiles. Attack animations are 159px by 159px going from top to bottom. They are short animations meant to be played on loop for a few seconds. Some are meant to be played slow and some are meant to be played fast.
