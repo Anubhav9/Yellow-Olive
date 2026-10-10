@@ -13,7 +13,9 @@ A terminal-native retro adventure designed to make infrastructure learning feel 
 
 If Yellow Olive helps you learn or stay motivated, a [star on GitHub](https://github.com/Anubhav9/Yellow-Olive) goes a long way - it helps more people find the project.
 
-<img src="docs/assets/yellow-olive-demo.gif" width="80%" alt="Yellow Olive demo: fixing a broken Pod in the terminal game, then a peek at Yellow Olive Academy">
+<p align="center">
+  <img src="docs/assets/yellow-olive-demo.gif" width="80%" alt="Yellow Olive demo: fixing a broken Pod in the terminal game, then a peek at Yellow Olive Academy">
+</p>
 
 📖 Interested in the technicalities - architecture, contributing, troubleshooting, and local development? Find your way here → [Technical Documentation](https://anubhav9.github.io/Yellow-Olive/)
 
