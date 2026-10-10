@@ -66,3 +66,31 @@ LESSON_17_C="whether it restarts."
 DIALOGUE_17_A="Always restarts it."
 DIALOGUE_17_B="OnFailure restarts"
 DIALOGUE_17_C="only after a crash."
+# Lesson screens: the Japanese classroom with a big chalkboard in the middle.
+CLASSROOM_MAP_ASSET_PATH = "assets/japanese_classroom.png"
+PROFESSOR_ASSET_PATH = "assets/tilesets/Characters/professor_bald_uncle.png"
+PLAYER_ASSET_PATH = "assets/tilesets/Characters/character_1.png"
+PROFESSOR_NAME = "PROFESSOR BALD UNCLE"
+
+PROFESSOR_X = 2
+PLAYER_X = 304
+CHARACTERS_Y = 80
+
+CHALKBOARD_X = 22
+CHALKBOARD_Y = 24
+CHALKBOARD_WIDTH = 278
+CHALKBOARD_HEIGHT = 88
+CHALKBOARD_FRAME = 3
+CHALKBOARD_COLOR_RGB = 0x32675A
+
+LESSON_TEXT_X = 30
+LESSON_BADGE_Y = 28
+LESSON_BADGE_WIDTH = 66
+LESSON_BADGE_HEIGHT = 14
+LESSON_TITLE_Y = 46
+LESSON_EXPLAIN_Y = 62
+
+DIALOGUE_BOX_X = 8
+DIALOGUE_BOX_Y = 120
+DIALOGUE_BOX_WIDTH = 304
+DIALOGUE_BOX_HEIGHT = 56
