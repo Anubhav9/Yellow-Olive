@@ -1,6 +1,7 @@
 import pyxel
 
 import global_constants
+import text_renderer
 from global_constants import DOWN, LEFT, RIGHT, UP
 from screens.classroom_screen.classroom_screen import ClassroomScreen
 from screens.intro_screen import constants
@@ -71,6 +72,15 @@ class IntroScreen:
             global_constants.FRAME_WIDTH, global_constants.FRAME_HEIGHT,
             global_constants.KEY,
         )
+        self.draw_prompt(constants.GOAL_PROMPT)
+
+    def draw_prompt(self, prompt):
+        w = text_renderer.text_width(prompt) + 12
+        x = (global_constants.WINDOW_WIDTH - w) // 2
+        y, h = constants.PROMPT_Y, constants.PROMPT_HEIGHT
+        pyxel.rect(x, y, w, h, pyxel.COLOR_BLACK)
+        pyxel.rectb(x, y, w, h, pyxel.COLOR_YELLOW)
+        text_renderer.draw_text_centered(x, y + 2, w, prompt, pyxel.COLOR_WHITE)
 
     def draw_academy_sign(self):
         x, y, w, h = constants.ACADEMY_SIGN
