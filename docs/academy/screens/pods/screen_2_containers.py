@@ -6,6 +6,7 @@ import text_renderer
 
 
 class ContainersScreen(BaseScreen):
+    page_name = "screen_2_containers"
 
     def draw(self):
         super().draw(

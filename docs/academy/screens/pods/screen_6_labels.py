@@ -6,6 +6,7 @@ import text_renderer
 
 
 class LabelsScreen(BaseScreen):
+    page_name = "screen_6_labels"
 
     def draw(self):
         super().draw(

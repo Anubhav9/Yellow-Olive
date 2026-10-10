@@ -6,6 +6,7 @@ import text_renderer
 
 
 class RestartPolicyScreen(BaseScreen):
+    page_name = "screen_7_restart_policy"
 
     def draw(self):
         super().draw(

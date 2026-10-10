@@ -4,12 +4,8 @@ from screens.pods import constants
 from screens.pods.base_screen import BaseScreen
 import text_renderer
 
-next_page_name="screen_2_pods_pod"
-
 class PodIntroductionScreen(BaseScreen):
-
-    def update(self,next_page_name):
-        super().update(next_page_name)
+    page_name = "screen_1_pods_introduction"
 
     def draw(self):
         super().draw(
