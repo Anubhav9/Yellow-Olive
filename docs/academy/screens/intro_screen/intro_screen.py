@@ -1,7 +1,25 @@
 import pyxel
 
 import global_constants
+from global_constants import DOWN, LEFT, RIGHT, UP
 from screens.intro_screen import constants
+
+
+def overlaps(ax, ay, aw, ah, bx, by, bw, bh):
+    return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
+
+
+def feet_at(x, y):
+    return (x + constants.FEET_X, y + constants.FEET_Y, constants.FEET_WIDTH, constants.FEET_HEIGHT)
+
+
+def can_stand_at(x, y, solids):
+    if x < 0 or y < 0:
+        return False
+    if (x + global_constants.FRAME_WIDTH > global_constants.WINDOW_WIDTH
+            or y + global_constants.FRAME_HEIGHT > global_constants.WINDOW_HEIGHT):
+        return False
+    return not any(overlaps(*feet_at(x, y), *solid) for solid in solids)
 
 
 class IntroScreen:
@@ -10,14 +28,44 @@ class IntroScreen:
         self.town_map = pyxel.Image(global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
         self.town_map.load(0, 0, constants.TOWN_MAP_ASSET_PATH)
 
-    def draw(self, player_x, player_y, facing):
+        self.player_x = constants.PLAYER_START_X
+        self.player_y = constants.PLAYER_START_Y
+        self.facing = UP
+        self.reached_door = False
+
+    def update(self):
+        dx, dy = 0, 0
+        if pyxel.btnp(pyxel.KEY_UP):
+            dy = -constants.SPEED
+            self.facing = UP
+        elif pyxel.btnp(pyxel.KEY_DOWN):
+            dy = constants.SPEED
+            self.facing = DOWN
+        elif pyxel.btnp(pyxel.KEY_LEFT):
+            dx = -constants.SPEED
+            self.facing = LEFT
+        elif pyxel.btnp(pyxel.KEY_RIGHT):
+            dx = constants.SPEED
+            self.facing = RIGHT
+        new_x, new_y = self.player_x + dx, self.player_y + dy
+
+        if overlaps(*feet_at(new_x, new_y), *constants.ACADEMY_DOOR):
+            self.reached_door = True
+            return
+
+        # Only move if the new spot is free; he still turns to face the wall.
+        if can_stand_at(new_x, new_y, constants.SOLIDS):
+            self.player_x = new_x
+            self.player_y = new_y
+
+    def draw(self):
         pyxel.cls(0)
         pyxel.blt(0, 0, self.town_map, 0, 0, global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
         self.draw_academy_sign()
         pyxel.blt(
-            player_x, player_y, global_constants.PLAYER_IMAGE_BANK,
+            self.player_x, self.player_y, global_constants.PLAYER_IMAGE_BANK,
             global_constants.STANDING_FRAME * global_constants.FRAME_WIDTH,
-            facing * global_constants.FRAME_HEIGHT,
+            self.facing * global_constants.FRAME_HEIGHT,
             global_constants.FRAME_WIDTH, global_constants.FRAME_HEIGHT,
             global_constants.KEY,
         )

@@ -6,6 +6,11 @@ PROFESSOR_ASSET_PATH = "assets/tilesets/Characters/professor_bald_uncle.png"
 PLAYER_START_X = 160
 PLAYER_START_Y = 146
 
+# Walking: one step per arrow press. Only the player's feet bump into things,
+# so his head can overlap a roof edge or a desk top.
+SPEED = 3
+FEET_X, FEET_Y, FEET_WIDTH, FEET_HEIGHT = 3, 24, 10, 8
+
 PROFESSOR_X = 130
 PROFESSOR_Y = 46
 

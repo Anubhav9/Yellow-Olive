@@ -6,6 +6,11 @@ TOWN_MAP_MUSIC_PATH= "assets/music/intro_screen_music.wav"
 PLAYER_START_X = 180
 PLAYER_START_Y = 140
 
+# Walking: one step per arrow press. Only the player's feet bump into things,
+# so his head can overlap a roof edge or a desk top.
+SPEED = 3
+FEET_X, FEET_Y, FEET_WIDTH, FEET_HEIGHT = 3, 24, 10, 8
+
 # Walking into this doorway of the middle building opens the classroom.
 ACADEMY_DOOR = (176, 140, 16, 6)
 
