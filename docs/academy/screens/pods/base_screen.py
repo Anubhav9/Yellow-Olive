@@ -16,10 +16,14 @@ class BaseScreen:
         pyxel.images[global_constants.PLAYER_IMAGE_BANK].load(0, 0, constants.PLAYER_ASSET_PATH)
         pyxel.images[global_constants.PROFESSOR_IMAGE_BANK].load(0, 0, constants.PROFESSOR_ASSET_PATH)
 
-    def update(self):
-        # Z moves on to the next lesson, in the order from manager/screen_manager.py.
+    def next_lesson(self):
+        # The order comes from manager/screen_manager.py; after the last lesson it points back home.
         next_page = screen_manager.screen_management_map().get(self.page_name)
-        if pyxel.btnp(pyxel.KEY_Z) and next_page and next_page != "home_screen":
+        return None if next_page in (None, "home_screen") else next_page
+
+    def update(self):
+        next_page = self.next_lesson()
+        if pyxel.btnp(pyxel.KEY_Z) and next_page:
             self.next_screen = screen_manager.screen_to_class_mapping_map(next_page)()
 
     def draw(self, lesson_number, lesson_name, lesson_badge, lesson_header,
@@ -127,9 +131,6 @@ class BaseScreen:
         for row, line in enumerate((dialogue_text_a, dialogue_text_b, dialogue_text_c)):
             text_renderer.draw_text(x + 6, y + 2 + (row + 1) * text_renderer.LINE_HEIGHT, line, pyxel.COLOR_WHITE)
 
-        pyxel.tri(
-            x + w - 12, y + h - 9,
-            x + w - 5, y + h - 9,
-            x + w - 8, y + h - 5,
-            pyxel.COLOR_YELLOW,
-        )
+        hint = constants.NEXT_LESSON_HINT if self.next_lesson() else constants.LAST_LESSON_HINT
+        hint_x = x + w - 6 - text_renderer.text_width(hint)
+        text_renderer.draw_text(hint_x, y + 2, hint, pyxel.COLOR_YELLOW)
