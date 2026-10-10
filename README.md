@@ -118,7 +118,7 @@ When something feels off in the cluster, he's usually at the center of it. Shy, 
 ### PsyQuack
 
 <p align="center">
-  <img width="120" src="https://github.com/user-attachments/assets/bfc93cfc-f4c5-4b58-ac6a-4c430eb8b879" alt="PsyQuack" />
+  <img width="120" src="media/resources/image_files/psyquack.png" alt="PsyQuack" />
 </p>
 
 ```
