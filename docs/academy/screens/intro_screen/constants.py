@@ -6,6 +6,13 @@ TOWN_MAP_MUSIC_PATH= "assets/music/intro_screen_music.wav"
 PLAYER_START_X = 180
 PLAYER_START_Y = 140
 
+# Walking into this doorway of the middle building opens the classroom.
+ACADEMY_DOOR = (176, 140, 16, 6)
+
+# Name plate on the middle building: (x, y, width, height) and its two lines.
+ACADEMY_SIGN = (140, 111, 56, 15)
+ACADEMY_SIGN_LINES = ("YELLOW OLIVE", "ACADEMY")
+
 # Things on town_map.png the player can't walk through, as (x, y, width, height).
 SOLIDS = [
     # houses
