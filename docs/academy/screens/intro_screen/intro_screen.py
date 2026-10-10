@@ -2,6 +2,7 @@ import pyxel
 
 import global_constants
 from global_constants import DOWN, LEFT, RIGHT, UP
+from screens.classroom_screen.classroom_screen import ClassroomScreen
 from screens.intro_screen import constants
 
 
@@ -31,7 +32,8 @@ class IntroScreen:
         self.player_x = constants.PLAYER_START_X
         self.player_y = constants.PLAYER_START_Y
         self.facing = UP
-        self.reached_door = False
+        # Set this to hand control over to the next page.
+        self.next_screen = None
 
     def update(self):
         dx, dy = 0, 0
@@ -50,7 +52,7 @@ class IntroScreen:
         new_x, new_y = self.player_x + dx, self.player_y + dy
 
         if overlaps(*feet_at(new_x, new_y), *constants.ACADEMY_DOOR):
-            self.reached_door = True
+            self.next_screen = ClassroomScreen()
             return
 
         # Only move if the new spot is free; he still turns to face the wall.

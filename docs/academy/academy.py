@@ -31,18 +31,16 @@ class YellowOliveAcademy:
         pyxel.play(0, 0, loop=True)
 
         # Pages load their images when created, so create the first one after the palette is set.
-        from screens.classroom_screen.classroom_screen import ClassroomScreen
         from screens.intro_screen.intro_screen import IntroScreen
-        self.intro_screen = IntroScreen()
-        self.classroom_screen = ClassroomScreen()
-        self.current_screen = self.intro_screen
+        self.current_screen = IntroScreen()
 
         pyxel.run(self.update, self.draw)
 
     def update(self):
         self.current_screen.update()
-        if self.current_screen is self.intro_screen and self.intro_screen.reached_door:
-            self.current_screen = self.classroom_screen
+        # A page hands over control by setting its next_screen.
+        if self.current_screen.next_screen:
+            self.current_screen = self.current_screen.next_screen
 
     def draw(self):
         self.current_screen.draw()

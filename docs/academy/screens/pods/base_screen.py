@@ -2,11 +2,14 @@ import pyxel
 from screens.pods import constants
 import global_constants
 import text_renderer
+from manager import screen_manager
 
 
 class BaseScreen:
     def __init__(self):
         self.current_page_name="screen_1_pods_introduction"
+        # Set this to hand control over to the next page.
+        self.next_screen = None
         # The map is 320 wide, more than an image bank (256), so it gets its own image.
         self.classroom_map = pyxel.Image(global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
         self.classroom_map.load(0, 0, constants.CLASSROOM_MAP_ASSET_PATH)
@@ -14,7 +17,10 @@ class BaseScreen:
         pyxel.images[global_constants.PROFESSOR_IMAGE_BANK].load(0, 0, constants.PROFESSOR_ASSET_PATH)
 
     def update(self):
-        pass
+        # Z moves on to the next lesson, in the order from manager/screen_manager.py.
+        next_page = screen_manager.screen_management_map().get(self.page_name)
+        if pyxel.btnp(pyxel.KEY_Z) and next_page and next_page != "home_screen":
+            self.next_screen = screen_manager.screen_to_class_mapping_map(next_page)()
 
     def draw(self, lesson_number, lesson_name, lesson_badge, lesson_header,
              lesson_explain_text_a, lesson_explanation_text_b, lesson_explanation_text_c,

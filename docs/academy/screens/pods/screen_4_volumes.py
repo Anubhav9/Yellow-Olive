@@ -6,6 +6,7 @@ import text_renderer
 
 
 class VolumesScreen(BaseScreen):
+    page_name = "screen_4_volumes"
 
     def draw(self):
         super().draw(

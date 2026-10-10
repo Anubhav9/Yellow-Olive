@@ -6,6 +6,7 @@ import text_renderer
 
 
 class PodPhasesScreen(BaseScreen):
+    page_name = "screen_5_pods_phases"
 
     def draw(self):
         super().draw(

@@ -6,6 +6,7 @@ import text_renderer
 
 
 class SharedNetworkScreen(BaseScreen):
+    page_name = "screen_3_shared_network"
 
     def draw(self):
         super().draw(
