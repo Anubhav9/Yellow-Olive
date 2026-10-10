@@ -38,11 +38,16 @@ class ClassroomScreen:
         self.talking = False
         self.dialogue_index = 0
         self.player_name = ""
+        self.dialogue_finished=False
+        self.current_screen="classroom_scene"
 
     def update(self):
         if self.talking:
             self.update_dialogue()
             return
+        if self.dialogue_finished:
+            from screens.pods.screen_1_pods_introduction import PodsIntroductionScreen
+            self.current_screen="pod_introduction"
 
         if pyxel.btnp(pyxel.KEY_Z) and self.facing_professor():
             self.talking = True
@@ -85,6 +90,7 @@ class ClassroomScreen:
 
         if self.dialogue_index >= len(constants.DIALOGUE):
             self.talking = False
+            self.dialogue_finished=True
 
     def facing_professor(self):
         step = {UP: (0, -1), DOWN: (0, 1), LEFT: (-1, 0), RIGHT: (1, 0)}[self.facing]
@@ -99,19 +105,24 @@ class ClassroomScreen:
         return "" if self.player_name else constants.FIND_PROFESSOR_PROMPT
 
     def draw(self):
-        pyxel.cls(0)
-        pyxel.blt(0, 0, self.classroom_map, 0, 0, global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
-        # Whoever stands lower on screen is drawn last, so they appear in front.
-        people = sorted([
-            (constants.PROFESSOR_Y, global_constants.PROFESSOR_IMAGE_BANK, constants.PROFESSOR_X, DOWN),
-            (self.player_y, global_constants.PLAYER_IMAGE_BANK, self.player_x, self.facing),
-        ])
-        for y, bank, x, direction in people:
-            self.draw_character(bank, x, y, direction)
-        if self.talking:
-            self.draw_dialogue(self.dialogue_index, self.player_name)
-        else:
-            self.draw_prompt(self.talk_prompt())
+        if(self.current_screen=="pod_introduction"):
+            from screens.pods.screen_1_pods_introduction import PodIntroductionScreen
+            pod_introduction_screen=PodIntroductionScreen()
+            pod_introduction_screen.draw()
+        elif(self.current_screen=="classroom_scene"):
+            pyxel.cls(0)
+            pyxel.blt(0, 0, self.classroom_map, 0, 0, global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
+            # Whoever stands lower on screen is drawn last, so they appear in front.
+            people = sorted([
+                (constants.PROFESSOR_Y, global_constants.PROFESSOR_IMAGE_BANK, constants.PROFESSOR_X, DOWN),
+                (self.player_y, global_constants.PLAYER_IMAGE_BANK, self.player_x, self.facing),
+            ])
+            for y, bank, x, direction in people:
+                self.draw_character(bank, x, y, direction)
+            if self.talking:
+                self.draw_dialogue(self.dialogue_index, self.player_name)
+            else:
+                self.draw_prompt(self.talk_prompt())
 
     def draw_prompt(self, prompt):
         w = text_renderer.text_width(prompt) + 12
