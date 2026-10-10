@@ -96,4 +96,4 @@ DIALOGUE_BOX_WIDTH = 304
 DIALOGUE_BOX_HEIGHT = 56
 
 NEXT_LESSON_HINT = "Press Z for next lesson"
-LAST_LESSON_HINT = "Last lesson"
+LAST_LESSON_HINT = "Press Q to quit"
