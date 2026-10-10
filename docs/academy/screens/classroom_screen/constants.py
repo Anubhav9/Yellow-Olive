@@ -30,6 +30,12 @@ PROFESSOR_NAME = "PROFESSOR BALD UNCLE"
 NAME_PROMPT_INDEX = 1
 NAME_MAX_LENGTH = 10
 ADVANCE_HINT = "Z"
+
+# Hint shown at the top while the player isn't talking.
+FIND_PROFESSOR_PROMPT = "Walk up to the professor and press Z to talk"
+TALK_PROMPT = "Press Z to talk"
+PROMPT_Y = 4
+PROMPT_HEIGHT = 16
 NAME_HINT = "ENTER"
 
 # Each entry is one dialogue box, up to two lines. {name} is the player's name.

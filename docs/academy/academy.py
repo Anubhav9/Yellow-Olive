@@ -151,8 +151,14 @@ class YellowOliveAcademy:
         else:
             self.classroom_screen.draw(
                 self.player_x, self.player_y, self.facing,
-                self.in_dialogue(), self.dialogue_index, self.player_name,
+                self.in_dialogue(), self.dialogue_index, self.player_name, self.talk_prompt(),
             )
+
+    def talk_prompt(self):
+        if self.facing_professor():
+            return classroom.TALK_PROMPT
+        # Until the first chat, remind the player how to start one.
+        return "" if self.player_name else classroom.FIND_PROFESSOR_PROMPT
 
 
 YellowOliveAcademy()

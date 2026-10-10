@@ -12,7 +12,7 @@ class ClassroomScreen:
         self.classroom_map.load(0, 0, constants.CLASSROOM_MAP_ASSET_PATH)
         pyxel.images[global_constants.PROFESSOR_IMAGE_BANK].load(0, 0, constants.PROFESSOR_ASSET_PATH)
 
-    def draw(self, player_x, player_y, facing, talking, dialogue_index, player_name):
+    def draw(self, player_x, player_y, facing, talking, dialogue_index, player_name, prompt):
         pyxel.cls(0)
         pyxel.blt(0, 0, self.classroom_map, 0, 0, global_constants.WINDOW_WIDTH, global_constants.WINDOW_HEIGHT)
         # Whoever stands lower on screen is drawn last, so they appear in front.
@@ -24,6 +24,16 @@ class ClassroomScreen:
             self.draw_character(bank, x, y, direction)
         if talking:
             self.draw_dialogue(dialogue_index, player_name)
+        elif prompt:
+            self.draw_prompt(prompt)
+
+    def draw_prompt(self, prompt):
+        w = text_renderer.text_width(prompt) + 12
+        x = (global_constants.WINDOW_WIDTH - w) // 2
+        y, h = constants.PROMPT_Y, constants.PROMPT_HEIGHT
+        pyxel.rect(x, y, w, h, pyxel.COLOR_BLACK)
+        pyxel.rectb(x, y, w, h, pyxel.COLOR_YELLOW)
+        text_renderer.draw_text_centered(x, y + 2, w, prompt, pyxel.COLOR_WHITE)
 
     def draw_character(self, bank, x, y, facing):
         pyxel.blt(
