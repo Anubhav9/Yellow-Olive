@@ -43,8 +43,8 @@ class ProjectOlive(App):
                 yield Static("Menu",id="menu-text")
                 yield Button("Start Game",id="start-game")
                 yield Button("Help",id="help")
-                yield Button("About the Author",id="about-the-author")
                 yield Button("Yellow Olive Academy", id="academy")
+                yield Button("About the Author",id="about-the-author")
                 yield Button("Quit", id="quit")
             with Vertical(id="game-area"):
 
