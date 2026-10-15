@@ -64,3 +64,5 @@
 .arrow { color: var(--yo-green); font-family: 'Press Start 2P', monospace; text-align: center; align-self: center; }
 
 .mermaid-fit svg { max-width: 100% !important; max-height: 330px; height: auto; }
+
+.slidev-code, .slidev-layout code { font-variant-ligatures: none; }
