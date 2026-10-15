@@ -61,11 +61,11 @@ Let's start with the problem. If you've learned Kubernetes, or tried to teach it
 # The copy-YAML learning path
 
 <div class="grid grid-cols-5 gap-3 mt-10 items-stretch">
-<div class="panel text-center"><div class="text-3xl">📖</div><div class="font-bold mt-2">Read docs</div><div class="dim text-sm">concept pages</div></div>
-<div class="panel text-center"><div class="text-3xl">📋</div><div class="font-bold mt-2">Copy YAML</div><div class="dim text-sm">from a tutorial</div></div>
-<div class="panel text-center"><div class="text-3xl">⌨️</div><div class="font-bold mt-2">kubectl apply</div><div class="dim text-sm">"created"</div></div>
-<div class="panel text-center"><div class="text-3xl">✅</div><div class="font-bold mt-2">Move on</div><div class="dim text-sm">next page</div></div>
-<div class="panel panel-gold text-center"><div class="text-3xl">❓</div><div class="font-bold mt-2 gold">Did I learn?</div><div class="dim text-sm">no feedback</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">01</div><div class="font-bold mt-2">Read docs</div><div class="dim text-sm">concept pages</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">02</div><div class="font-bold mt-2">Copy YAML</div><div class="dim text-sm">from a tutorial</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">03</div><div class="font-bold mt-2">kubectl apply</div><div class="dim text-sm">"created"</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">04</div><div class="font-bold mt-2">Move on</div><div class="dim text-sm">next page</div></div>
+<div class="panel panel-gold text-center"><div class="pixel red text-lg">??</div><div class="font-bold mt-2 gold">Did I learn?</div><div class="dim text-sm">no feedback</div></div>
 </div>
 
 <v-click>
@@ -144,7 +144,7 @@ Not because I didn't understand the concepts, but because <span class="gold font
 
 <div class="mt-4">"This project isn't a replacement for serious exam prep. It's a <span class="green font-bold">practice ground</span>."</div>
 
-<div class="mt-6 text-lg">So I asked myself one question 👉</div>
+<div class="mt-6 text-lg">So I asked myself one question...</div>
 
 </div>
 </div>
@@ -376,12 +376,12 @@ One small detail I like: the manifests live in a folder called yellow-olive-lab 
 
 ---
 
-# Challenge 1: find the bug, fix the bug
+# Ch 1: find & fix the bug
 
 <div class="grid grid-cols-2 gap-6 mt-2">
 <div>
 
-```yaml {6}
+```yaml
 spec:
   containers:
     - name: elctromon-container
@@ -497,20 +497,18 @@ Now for the PyCon part. Let's look at how Python makes all of this work.
 
 # Stack & architecture
 
-<div class="grid grid-cols-[1fr_1.7fr] gap-6">
-<div class="text-sm">
-
-- **Textual**: screens, inputs, focus, async workers
-- **Rich**: panels, colours, half-block ASCII portraits
-- **pygame-ce**: background music and sound effects
-- **kubectl + minikube**: dedicated profile `project-yellow-olive`
-- **Sentry SDK**: opt-in diagnostics only
-- Python **3.10 → 3.15**
-
+<div class="flex flex-wrap gap-2 text-xs mono">
+<span class="panel !py-1 !px-3"><b>Textual</b> screens · inputs · async workers</span>
+<span class="panel !py-1 !px-3"><b>Rich</b> panels · half-block ASCII portraits</span>
+<span class="panel !py-1 !px-3"><b>pygame-ce</b> music &amp; sound</span>
+<span class="panel !py-1 !px-3"><b>kubectl + minikube</b> profile <code>project-yellow-olive</code></span>
+<span class="panel !py-1 !px-3"><b>Sentry</b> opt-in only</span>
+<span class="panel !py-1 !px-3"><b>Python</b> 3.10 → 3.15</span>
 </div>
-<div>
 
-```mermaid {theme: 'dark', scale: 0.62}
+<div class="mt-4 mermaid-fit w-full">
+
+```mermaid {theme: 'dark'}
 flowchart LR
   P([Player]) -->|psyquack validate| G[Textual app<br/>app.py + screens/]
   P -->|kubectl| K[(minikube<br/>project-yellow-olive)]
@@ -524,7 +522,6 @@ flowchart LR
 ```
 
 </div>
-</div>
 
 <!--
 Here's the stack. Textual handles the screens, inputs, focus and async workers. Rich does the styling, including the character portraits, which are images converted to coloured half-block characters. pygame-ce plays the music. The cluster is minikube with its own profile, so it won't touch your other clusters. Sentry is there for diagnostics, but only if the player opts in.
@@ -534,9 +531,9 @@ On the right is the architecture. The player talks to two things: the cluster, t
 
 ---
 
-# The input handler: one command, one loop
+# One handler, one loop
 
-```python {all|5-8|10-11|13-16}
+```python
 # screens/common/base_challenge_screen.py
 @on(Input.Submitted)
 async def handle_validation(self, event: Input.Submitted):
@@ -560,16 +557,16 @@ async def handle_validation(self, event: Input.Submitted):
 <!--
 Here's the heart of the game loop in Textual. It's one event handler on a shared base screen that every challenge uses.
 
-[click] First, the game accepts exactly one command. Anything else gets a friendly "invalid command" message. Keeping the game vocabulary tiny is deliberate: all the real complexity lives in kubectl.
+First, the game accepts exactly one command. Anything else gets a friendly "invalid command" message. Keeping the game vocabulary tiny is deliberate: all the real complexity lives in kubectl.
 
-[click] Then it runs the validator for the current challenge.
+Then it runs the validator for the current challenge.
 
-[click] If it passes, we save progress and show the success screen. If not, we show PsyQuack's failure screen. That's the whole loop: mission, validation, feedback, next.
+If it passes, we save progress and show the success screen. If not, we show PsyQuack's failure screen. That's the whole loop: mission, validation, feedback, next.
 -->
 
 ---
 
-# Reading the cluster: kubectl → JSON → dict
+# kubectl → JSON → dict
 
 <div class="grid grid-cols-[1.6fr_1fr] gap-5">
 <div>
@@ -621,7 +618,7 @@ Why kubectl? It's the same tool and kubeconfig the player uses, so what the game
 
 # A validator is just a function
 
-```python {all|5-7|9-12|14-17|19}
+```python
 # scenarios/oakwood_meadows/challenge_1/validator.py
 def validate():
     pod_name = challenge_constants.CHALLENGE_1_POD_NAME
@@ -649,17 +646,17 @@ def validate():
 <!--
 And here is a complete validator, the real one for Challenge 1. It's just a function that returns a boolean and a message.
 
-[click] Does the Pod exist? If not, say so.
-[click] Does it have a container status yet? If not, tell the player to wait a moment.
-[click] Is the container ready? If not, point them back at the manifest.
-[click] Otherwise, success.
+Does the Pod exist? If not, say so.
+Does it have a container status yet? If not, tell the player to wait a moment.
+Is the container ready? If not, point them back at the manifest.
+Otherwise, success.
 
 This early-return style matters for learning. Each return is a separate failure mode with its own message, so the feedback gets more specific as the player gets closer. That's how the game gives hints today: through the objective text, the mentor's dialogue, and these validator messages. A dedicated psyquack hint command is on the roadmap, but it isn't wired into the game yet.
 -->
 
 ---
 
-# Plug-in challenges, save & resume
+# Plug-ins, save & resume
 
 <div class="grid grid-cols-2 gap-6">
 <div>
@@ -667,7 +664,8 @@ This early-return style matters for learning. Each return is a separate failure 
 ```python
 # base_challenge_screen.py
 validator_module = importlib.import_module(
-    f"scenarios.{scenario}.challenge_{self.challenge_id}.validator"
+    f"scenarios.{scenario}"
+    f".challenge_{self.challenge_id}.validator"
 )
 return validator_module.validate()
 ```
@@ -711,7 +709,7 @@ Cluster startup has a five-minute budget, because minikube on a conference lapto
 
 ---
 
-# More battles: probes, limits, services
+# More battles I
 
 <div class="grid grid-cols-3 gap-4">
 <div class="panel">
@@ -742,11 +740,11 @@ resources:
 <div class="pixel text-xs red">CH 8 · BROKEN SERVICE</div>
 
 ```yaml
-type: ClosterIP          # typo
+type: ClosterIP    # typo
 selector:
-  app: bulba-baby-wrong  # matches nothing
+  app: bulba-baby-wrong
 ports:
-  - port: 8080           # wrong
+  - port: 8080       # wrong
 ```
 
 <div class="text-xs dim">Validator checks type, selector, ports <b>and that ready endpoints exist</b></div>
@@ -767,18 +765,19 @@ Challenge 8 is my favourite bug, because it's three bugs in one. ClosterIP is sp
 
 ---
 
-# More battles: RBAC & rollouts
+# More battles II
 
-<div class="grid grid-cols-2 gap-5">
+<div class="grid grid-cols-[1.25fr_1fr] gap-5">
 <div class="panel">
 <div class="pixel text-xs green">CH 19 · LOCK OUT TEAM EVIL</div>
 
 ```python
 # challenge_19/validator.py (trimmed)
-ok, evil_can_read_vault = resource_inspector.can_i(
-    "get", "secret", namespace, team_evil_sa,
-    resource_name=vault_secret,
-)  # → kubectl auth can-i get secret/<vault> --as=<sa>
+ok, evil_can_read = resource_inspector.can_i(
+    "get", "secret", namespace,
+    team_evil_sa, resource_name=vault_secret)
+# kubectl auth can-i get secret/<vault>
+#   --as=system:serviceaccount:<ns>:<sa>
 ```
 
 - Team Evil's forged identity → **must be denied**
@@ -853,7 +852,7 @@ Walkthrough:
 
 ---
 
-# Lessons from building a learning game
+# Lessons learned
 
 <div class="grid grid-cols-2 gap-5 mt-4">
 <div class="panel"><div class="gold font-bold">1 · Python is more than automation</div><div class="text-sm mt-1">Textual + Rich + subprocess turned into a whole game engine</div></div>
@@ -888,8 +887,8 @@ Six: usability is a feature. Lab checks, resume, and not destroying someone's ed
 
 - `pip install yellow-olive` → `yellow-olive start`
 - Contributions welcome: new challenges, validators, art, docs
-- ⭐ github.com/Anubhav9/Yellow-Olive
-- 📘 anubhav9.github.io/Yellow-Olive
+- github.com/Anubhav9/Yellow-Olive
+- anubhav9.github.io/Yellow-Olive
 
 <div class="panel mt-5 text-sm flex gap-4 items-center">
 <img src="/img/academy-lesson-pods.png" style="height:70px" class="shot" />

@@ -62,3 +62,5 @@
 
 .loop-node { font-family: 'Press Start 2P', monospace; font-size: .62rem; padding: .7rem .5rem; text-align: center; border: 3px solid var(--yo-gold); background: var(--yo-panel); box-shadow: 4px 4px 0 #000; }
 .arrow { color: var(--yo-green); font-family: 'Press Start 2P', monospace; text-align: center; align-self: center; }
+
+.mermaid-fit svg { max-width: 100% !important; max-height: 330px; height: auto; }
