@@ -32,14 +32,15 @@ The first export downloads Chromium: `npx playwright install chromium`.
 ## Timing (about 37 min + Q&A)
 
 | Section | Slides | Time |
-|---|---|---|
-| Press Start | 1 | 1 min |
-| Level 01: The Problem | 2–5 | 5 min |
-| Level 02: Enter Yellow Olive | 6–11 | 5 min |
-| Level 03: The Game Loop | 12–17 | 7 min |
-| Level 04: Under the Hood | 18–23 | 10 min |
-| More Battles | 24–25 | 4 min |
-| Final Boss: Demo | 26 | 5 min |
-| Save Point | 27–28 | 3 min |
+|---|---:|---:|
+| Title | 1 | 1 min |
+| Level 01: Gamification | 2–6 | 6 min |
+| Level 02: The Problem | 7–10 | 3 min |
+| Level 03: Enter Yellow Olive | 11–16 | 4 min |
+| Level 04: The Game Loop | 17–22 | 6 min |
+| Level 05: Under the Hood | 23–28 | 8 min |
+| More Battles | 29–30 | 3 min |
+| Final Boss: Demo | 31 | 4 min |
+| Save Point | 32–33 | 2 min |
 
 Before the talk, go through [CHECKLIST.md](CHECKLIST.md).

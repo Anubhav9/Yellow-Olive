@@ -13,29 +13,21 @@ transition: fade
 mdc: true
 ---
 
-<div class="grid grid-cols-[1.25fr_1fr] gap-8 h-full items-center">
-<div>
-<div class="pixel green text-xs mb-4">PYCON TAIWAN 2026 · R2 · SUN 18 OCT · 10:50</div>
-<h1 style="font-size:1.9rem">Pods, Probes, and Play</h1>
-<div class="text-2xl font-bold mb-6">Gamifying Kubernetes with Python</div>
-<div class="panel">
+<div class="h-full flex flex-col justify-center pl-4">
+<h1 style="font-size:2.2rem">Pods, Probes, and Play</h1>
+<div class="text-2xl font-bold mb-10">Gamifying Kubernetes with Python</div>
 <div class="gold font-bold text-lg">Anubhav Sanyal</div>
-<div class="dim mono text-sm">Creator of Project Yellow Olive · github.com/Anubhav9</div>
-</div>
-<div class="pixel gold text-sm mt-8 blink">▶ PRESS START</div>
-</div>
-<div class="text-center">
-<img src="/img/yellow_olive_banner.png" class="shot mx-auto" style="max-height:300px" />
-<img src="/img/psyquack.png" class="mx-auto mt-4" style="height:110px;image-rendering:pixelated" />
-</div>
+<div class="dim mono text-sm">github.com/Anubhav9</div>
 </div>
 
 <!--
-[PRESS START · ~1 min total with the next slide]
+[TITLE · ~1 min]
 
-Hi everyone, and thank you for being here on a Sunday morning. I'm Anubhav, and I build Project Yellow Olive, an open-source terminal game that teaches Kubernetes on a real cluster.
+Hi everyone, thanks for coming. I'm Anubhav.
 
-Over the next 35 minutes or so, I want to show you what happens when you treat Kubernetes learning as a game design problem rather than a documentation problem. And I want to show you how much of that game is just ordinary Python.
+Quick show of hands: who here has lost a whole evening to a game, without anyone forcing you? Now, who has lost a whole evening to Kubernetes documentation, happily?
+
+That gap is what this talk is about. Why do games keep us coming back, and can we borrow that for learning hard infrastructure? I'll start with gamification as an idea, then show you how I applied it to Kubernetes with Python.
 
 [TODO for Anubhav: add one personal line here, such as your role or where you work.]
 -->
@@ -44,6 +36,153 @@ Over the next 35 minutes or so, I want to show you what happens when you treat K
 
 <div class="level">
 <div class="tag">LEVEL 01</div>
+<div class="title">GAMIFICATION</div>
+<div class="sub">What do games know about learning?</div>
+</div>
+
+<!--
+[LEVEL 01 · GAMIFICATION · ~6 min for slides 2–6]
+
+Before any Kubernetes, let's talk about games. Games are, quietly, some of the best teaching tools we have. Nobody reads a manual for a new game. You just play, and somehow ten minutes later you know the rules.
+-->
+
+---
+
+# Gamification is not points & badges
+
+<div class="panel panel-gold mt-6 text-lg">"The use of <span class="gold font-bold">game design elements</span> in non-game contexts."<div class="dim text-sm mt-2">Deterding, Dixon, Khaled &amp; Nacke, 2011</div></div>
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+<div class="panel">
+<div class="pixel text-xs red mb-3">SHALLOW</div>
+
+- Points, badges, leaderboards bolted on
+- Rewards <b>finishing</b>, not understanding
+- Same boring task, shinier wrapper
+
+</div>
+<div class="panel">
+<div class="pixel text-xs green mb-3">DEEP</div>
+
+- A loop: try, see what happened, adjust
+- Clear goals and rising challenge
+- Failure is cheap and tells you something
+
+</div>
+</div>
+
+<!--
+The usual definition comes from a 2011 paper by Deterding and colleagues: using game design elements in non-game contexts.
+
+The trap is that people hear "game elements" and think points, badges and leaderboards. That's the shallow version. You take the same boring task and put a shinier wrapper around it. It rewards finishing, not understanding.
+
+The deep version borrows what actually makes games work: the loop, the goals, the difficulty curve, and the fact that failing is cheap. That's the part I care about today.
+-->
+
+---
+
+# What games do really well
+
+<div class="grid grid-cols-5 gap-3 mt-10">
+<div class="panel text-center"><div class="pixel gold text-lg">01</div><div class="font-bold mt-3">Tight feedback</div><div class="dim text-sm mt-2">you know within seconds if it worked</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">02</div><div class="font-bold mt-3">Clear goals</div><div class="dim text-sm mt-2">one mission at a time</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">03</div><div class="font-bold mt-3">Difficulty curve</div><div class="dim text-sm mt-2">new idea only when you're ready</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">04</div><div class="font-bold mt-3">Safe failure</div><div class="dim text-sm mt-2">retry costs nothing</div></div>
+<div class="panel text-center"><div class="pixel gold text-lg">05</div><div class="font-bold mt-3">Story</div><div class="dim text-sm mt-2">a reason to care about the next level</div></div>
+</div>
+
+<div class="mt-12 text-xl text-center">Learning tools usually have <span class="gold font-bold">the content</span>. Games add <span class="green font-bold">the loop around it</span>.</div>
+
+<!--
+If I strip games down, I keep coming back to five things.
+
+Tight feedback: you jump, you miss, you know immediately.
+Clear goals: there's one thing to do right now, not a 40-page reference.
+A difficulty curve: the game introduces one new idea, lets you practise it, then combines it with the last one.
+Safe failure: you die, you respawn, you try again, and nobody gets paged.
+And story: a reason to care about what's behind the next door.
+
+Most learning material already has great content. What it's missing is the loop around the content.
+-->
+
+---
+
+# Staying in the flow channel
+
+<div class="grid grid-cols-[1.1fr_1fr] gap-8 items-center mt-4">
+<svg viewBox="0 0 400 300" style="width:100%;max-height:330px">
+<polygon points="40,215 40,260 90,260 380,62 380,20 330,20" fill="var(--yo-gold)" opacity="0.22"/>
+<polyline points="50,250 105,222 140,214 180,172 222,160 262,118 300,104 345,58" fill="none" stroke="var(--yo-green)" stroke-width="3" stroke-dasharray="6 5"/>
+<line x1="40" y1="260" x2="385" y2="260" stroke="var(--yo-cream)" stroke-width="2"/>
+<line x1="40" y1="260" x2="40" y2="15" stroke="var(--yo-cream)" stroke-width="2"/>
+<text style="font-size:14px;font-family:JetBrains Mono;line-height:1" x="210" y="290" fill="var(--yo-cream)" text-anchor="middle">skill →</text>
+<text style="font-size:14px;font-family:JetBrains Mono;line-height:1" x="18" y="140" fill="var(--yo-cream)" text-anchor="middle" transform="rotate(-90 18 140)">challenge →</text>
+<text style="font-size:16px;font-family:'Press Start 2P';line-height:1" x="215" y="132" fill="var(--yo-gold)" text-anchor="middle" transform="rotate(-34 215 132)">FLOW</text>
+<text style="font-size:12px;font-family:'Press Start 2P';line-height:1" x="105" y="70" fill="var(--yo-red)">ANXIETY</text>
+<text style="font-size:12px;font-family:'Press Start 2P';line-height:1" x="250" y="235" fill="var(--yo-blue)">BOREDOM</text>
+</svg>
+<div>
+
+- Too hard too soon → <span class="red font-bold">anxiety</span>, people quit
+- Too easy for too long → <span class="blue font-bold">boredom</span>, people drift
+- Good games keep you in the band, one step at a time
+
+<div class="panel mt-6 text-sm">Infra docs often jump from "hello world" straight to production.</div>
+<div class="dim text-xs mt-3">Flow: Mihaly Csikszentmihalyi, 1990</div>
+</div>
+</div>
+
+<!--
+This is the idea of flow, from the psychologist Mihaly Csikszentmihalyi. When the challenge is way above your skill, you feel anxious and you quit. When it's way below, you're bored and you drift off.
+
+Good games keep you in that band in the middle. The dotted line is a well-designed level sequence: a little harder, then a little practice, then a little harder again.
+
+Infrastructure learning often does the opposite. Hello world, and then suddenly the production-grade Helm chart with forty values.
+-->
+
+---
+
+# Ways to gamify technical learning
+
+<div class="grid grid-cols-3 gap-4 mt-6">
+<div class="panel">
+<div class="pixel text-xs gold mb-3">QUIZZES &amp; BADGES</div>
+<div class="text-sm">Multiple choice, streaks, certificates.</div>
+<div class="text-sm mt-3"><span class="green">+</span> cheap to build</div>
+<div class="text-sm"><span class="red">−</span> checks recall, not skill</div>
+</div>
+<div class="panel">
+<div class="pixel text-xs gold mb-3">FOCUSED PUZZLES</div>
+<div class="text-sm">Learn Git Branching, Flexbox Froggy, Vim Adventures.</div>
+<div class="text-sm mt-3"><span class="green">+</span> safe, visual, zero setup</div>
+<div class="text-sm"><span class="red">−</span> one concept, in a browser</div>
+</div>
+<div class="panel panel-gold">
+<div class="pixel text-xs gold mb-3">REAL SYSTEMS + CHECKS</div>
+<div class="text-sm">OverTheWire Bandit, SadServers, Killercoda.</div>
+<div class="text-sm mt-3"><span class="green">+</span> skills transfer to work</div>
+<div class="text-sm"><span class="red">−</span> setup and checking are harder</div>
+</div>
+</div>
+
+<div class="mt-10 text-xl text-center">The more real the environment, the more <span class="gold font-bold">the checking</span> becomes the hard part.</div>
+
+<!--
+There are roughly three ways people gamify technical learning.
+
+Quizzes and badges. Cheap to build, and they do help memory. But passing a multiple-choice question about Pods doesn't mean you can fix a broken one.
+
+Focused puzzles: things like Learn Git Branching, Flexbox Froggy or Vim Adventures. They're brilliant for one concept, they run in a browser, and there's nothing to install.
+
+And real systems with checks: OverTheWire's Bandit, SadServers, Killercoda. You work on a real shell or a real server, so what you learn carries straight over to your job. The cost is setup, and the hard question of how you check that someone actually did it right.
+
+That last column is where I wanted to be for Kubernetes. So the rest of this talk is one worked example: what happens when you build a game around a real cluster, in Python.
+-->
+
+---
+
+<div class="level">
+<div class="tag">LEVEL 02</div>
 <div class="title">THE PROBLEM</div>
 <div class="sub">Why does Kubernetes feel hard to learn?</div>
 <div class="hp w-80 mt-10"><div style="width:22%"></div></div>
@@ -51,9 +190,9 @@ Over the next 35 minutes or so, I want to show you what happens when you treat K
 </div>
 
 <!--
-[LEVEL 01 · THE PROBLEM · ~5 min for slides 2–5]
+[LEVEL 02 · THE PROBLEM · ~3 min for slides 7–10]
 
-Let's start with the problem. If you've learned Kubernetes, or tried to teach it to someone, you probably know this feeling. The learner's HP bar drops quickly, and it isn't because the people are not smart. It's because of how the learning path is shaped.
+Now let's bring this to Kubernetes. If you've learned Kubernetes, or tried to teach it to someone, you probably know this feeling. The learner's HP bar drops quickly, and it isn't because the people are not smart. It's because of how the learning path is shaped.
 -->
 
 ---
@@ -160,13 +299,13 @@ So I wanted a practice ground: somewhere to build confidence and keep the adrena
 ---
 
 <div class="level">
-<div class="tag">LEVEL 02</div>
+<div class="tag">LEVEL 03</div>
 <div class="title">ENTER<br/>YELLOW OLIVE</div>
 <div class="sub text-2xl mt-4 max-w-3xl">What would Kubernetes learning look like<br/>if it were <span class="gold font-bold">designed like a game</span>?</div>
 </div>
 
 <!--
-[LEVEL 02 · ENTER YELLOW OLIVE · ~5 min for slides 6–11]
+[LEVEL 03 · ENTER YELLOW OLIVE · ~4 min for slides 11–16]
 
 So here's the question that the rest of this talk tries to answer: what would Kubernetes learning look like if it were designed like a game?
 
@@ -302,13 +441,13 @@ The game never types commands for you. The skills you practise in the Command Ch
 ---
 
 <div class="level">
-<div class="tag">LEVEL 03</div>
+<div class="tag">LEVEL 04</div>
 <div class="title">THE GAME LOOP</div>
 <div class="sub">One challenge, from mission to reward</div>
 </div>
 
 <!--
-[LEVEL 03 · THE GAME LOOP · ~7 min for slides 12–17]
+[LEVEL 04 · THE GAME LOOP · ~6 min for slides 17–22]
 
 Let's zoom in on the core loop, and walk through one real challenge from start to finish.
 -->
@@ -482,13 +621,13 @@ Yellow Olive checks the state of the cluster. It doesn't care how you fixed it. 
 ---
 
 <div class="level">
-<div class="tag">LEVEL 04</div>
+<div class="tag">LEVEL 05</div>
 <div class="title">UNDER THE HOOD</div>
 <div class="sub">How Python powers the game</div>
 </div>
 
 <!--
-[LEVEL 04 · UNDER THE HOOD · ~10 min for slides 18–23]
+[LEVEL 05 · UNDER THE HOOD · ~8 min for slides 23–28]
 
 Now for the PyCon part. Let's look at how Python makes all of this work.
 -->
@@ -752,7 +891,7 @@ ports:
 </div>
 
 <!--
-[LEVEL 05 · MORE BATTLES · ~5 min for slides 24–25]
+[MORE BATTLES · ~3 min for slides 29–30]
 
 Challenge 1 is just the warm-up. A few more examples, quickly.
 
@@ -836,7 +975,7 @@ The pattern is the same everywhere: check behaviour, not text.
 </div>
 
 <!--
-[FINAL BOSS · DEMO · ~5 min]
+[FINAL BOSS · DEMO · ~4 min]
 
 Time for the final boss. [Choose: run it live if minikube is already warm, otherwise play the recording.]
 
@@ -864,7 +1003,7 @@ Walkthrough:
 </div>
 
 <!--
-[SAVE POINT · ~3 min for slides 27–28]
+[SAVE POINT · ~2 min for slides 32–33]
 
 [TODO for Anubhav: these are drafted from the code. Make at least two of them personal, using stories from building it.]
 

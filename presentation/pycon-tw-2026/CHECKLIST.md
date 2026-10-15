@@ -29,3 +29,9 @@
 - [ ] Have `dist/pods-probes-and-play.pdf` on a USB stick as a backup.
 - [ ] Test the video plays on the venue projector (slide 26).
 - [ ] Check that both QR codes scan from the back of the room.
+
+## Gamification section (slides 2–6)
+
+- Sources to be comfortable quoting: Deterding, Dixon, Khaled & Nacke (2011), "From game design elements to gamefulness: defining gamification"; Csikszentmihalyi (1990), *Flow*.
+- The example sites on slide 6 were all checked as live on 2026-10-15: learngitbranching.js.org, flexboxfroggy.com, vim-adventures.com, overthewire.org/wargames/bandit, sadservers.com, killercoda.com.
+- Consider swapping in an example you have personally used, so the slide sounds like you.
