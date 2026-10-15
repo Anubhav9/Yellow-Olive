@@ -1,0 +1,16 @@
+{
+  "name": "yellow-olive-pycon-tw-2026",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev --open false",
+    "build": "slidev build --base ./",
+    "export": "slidev export --output dist/pods-probes-and-play.pdf --timeout 120000 --with-clicks false",
+    "export-notes": "slidev export-notes --output dist/speaker-notes.pdf"
+  },
+  "dependencies": {
+    "@slidev/cli": "52.19.2",
+    "@slidev/theme-default": "0.25.0",
+    "playwright-chromium": "1.55.0"
+  }
+}
