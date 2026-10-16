@@ -17,7 +17,6 @@ mdc: true
 <h1 style="font-size:2.2rem">Pods, Probes, and Play</h1>
 <div class="text-2xl font-bold mb-10">Gamifying Kubernetes with Python</div>
 <div class="gold font-bold text-lg">Anubhav Sanyal</div>
-<div class="dim mono text-sm">github.com/Anubhav9</div>
 </div>
 
 <!--
@@ -28,8 +27,36 @@ Hi everyone, thanks for coming. I'm Anubhav.
 Quick show of hands: who here has lost a whole evening to a game, without anyone forcing you? Now, who has lost a whole evening to Kubernetes documentation, happily?
 
 That gap is what this talk is about. Why do games keep us coming back, and can we borrow that for learning hard infrastructure? I'll start with gamification as an idea, then show you how I applied it to Kubernetes with Python.
+-->
 
-[TODO for Anubhav: add one personal line here, such as your role or where you work.]
+---
+
+<div class="grid grid-cols-[1.6fr_1fr] gap-10 h-full items-center">
+<div>
+<div class="pixel text-xs green mb-3">PLAYER 1</div>
+<h1 style="font-size:1.7rem">Anubhav Sanyal</h1>
+<div class="text-lg mb-6">Software engineer from India</div>
+
+- Works at **National Australia Bank**, Bangalore
+- Backend, platform engineering, DevOps, Kubernetes, cloud, CI/CD and developer tooling
+- Open source: **RedCoffee** (SonarQube reports CLI) and **Project Yellow Olive**
+- Spoken at Python Asia, PyCon Malaysia, PyCon Indonesia and PyCon JP
+
+</div>
+<div class="text-center">
+<img src="/img/qr-linkedin.svg" class="bg-white p-2 rounded mx-auto" style="width:210px" />
+<div class="caption">LinkedIn · anubhav-sanyal</div>
+</div>
+</div>
+
+<!--
+[ABOUT ME · ~1 min]
+
+A little about me. I'm a software engineer from India, and I work at National Australia Bank in Bangalore. Day to day I sit somewhere between backend, platform engineering and DevOps, so Kubernetes, cloud and CI/CD are a big part of my life.
+
+Outside work I build open-source Python tools. RedCoffee is a CLI for generating SonarQube reports, and Yellow Olive is the game you'll see today.
+
+I've spoken at Python Asia, PyCon Malaysia, PyCon Indonesia and PyCon JP, and I'm really happy to be here in Taipei. If you want to connect, the QR code goes to my LinkedIn.
 -->
 
 ---
@@ -41,7 +68,7 @@ That gap is what this talk is about. Why do games keep us coming back, and can w
 </div>
 
 <!--
-[LEVEL 01 · GAMIFICATION · ~6 min for slides 2–6]
+[LEVEL 01 · GAMIFICATION · ~5 min for slides 3–7]
 
 Before any Kubernetes, let's talk about games. Games are, quietly, some of the best teaching tools we have. Nobody reads a manual for a new game. You just play, and somehow ten minutes later you know the rules.
 -->
@@ -190,7 +217,7 @@ That last column is where I wanted to be for Kubernetes. So the rest of this tal
 </div>
 
 <!--
-[LEVEL 02 · THE PROBLEM · ~3 min for slides 7–10]
+[LEVEL 02 · THE PROBLEM · ~3 min for slides 8–11]
 
 Now let's bring this to Kubernetes. If you've learned Kubernetes, or tried to teach it to someone, you probably know this feeling. The learner's HP bar drops quickly, and it isn't because the people are not smart. It's because of how the learning path is shaped.
 -->
@@ -305,7 +332,7 @@ So I wanted a practice ground: somewhere to build confidence and keep the adrena
 </div>
 
 <!--
-[LEVEL 03 · ENTER YELLOW OLIVE · ~4 min for slides 11–16]
+[LEVEL 03 · ENTER YELLOW OLIVE · ~4 min for slides 12–17]
 
 So here's the question that the rest of this talk tries to answer: what would Kubernetes learning look like if it were designed like a game?
 
@@ -447,7 +474,7 @@ The game never types commands for you. The skills you practise in the Command Ch
 </div>
 
 <!--
-[LEVEL 04 · THE GAME LOOP · ~6 min for slides 17–22]
+[LEVEL 04 · THE GAME LOOP · ~6 min for slides 18–23]
 
 Let's zoom in on the core loop, and walk through one real challenge from start to finish.
 -->
@@ -627,7 +654,7 @@ Yellow Olive checks the state of the cluster. It doesn't care how you fixed it. 
 </div>
 
 <!--
-[LEVEL 05 · UNDER THE HOOD · ~8 min for slides 23–28]
+[LEVEL 05 · UNDER THE HOOD · ~6 min for slides 24–29]
 
 Now for the PyCon part. Let's look at how Python makes all of this work.
 -->
@@ -891,7 +918,7 @@ ports:
 </div>
 
 <!--
-[MORE BATTLES · ~3 min for slides 29–30]
+[MORE BATTLES · ~3 min for slides 30–31]
 
 Challenge 1 is just the warm-up. A few more examples, quickly.
 
@@ -951,6 +978,110 @@ In Sakura Harbour, a rollout is stuck on a broken image tag. You fix the image t
 The pattern is the same everywhere: check behaviour, not text.
 -->
 
+
+---
+
+<div class="pixel text-xs green">BONUS LEVEL · EXPERIMENTAL / WIP</div>
+
+# Pyxel: the Academy
+
+<div class="grid grid-cols-[1.1fr_1fr] gap-6 mt-2 items-start">
+<div>
+<img src="/img/academy-lesson-pods.png" class="shot" />
+<div class="caption">A Pods lesson, running in the browser</div>
+</div>
+<div>
+
+- **Pyxel**: a retro game engine for Python
+- Same Python, packed as a `.pyxapp` and run in the browser through WebAssembly, so nothing to install
+- Teaches plain Kubernetes first: 7 Pods lessons (containers, shared network, volumes, phases, labels, restart policy)
+- Walk around, face a character, press **Z** to talk
+
+```python
+# docs/academy/academy.py
+def update(self):
+    self.current_screen.update()
+    if self.current_screen.next_screen:
+        self.current_screen = self.current_screen.next_screen
+```
+
+</div>
+</div>
+
+<!--
+[BONUS LEVEL · ~3 min for slides 32–33]
+
+Two side quests before the final boss.
+
+The first one is the Academy. Some people told me the terminal game felt like jumping in at the deep end. So the Academy is the tutorial level: you learn the concept first, then you go and practise it on a real cluster in the main game.
+
+It's built with Pyxel, a retro game engine for Python. The nice part is that the same Python code gets packed into a pyxapp and runs in the browser through WebAssembly, so there's nothing to install.
+
+Right now it has seven lessons on Pods, and it uses real Kubernetes names, not game names, because at this stage clarity matters more than story.
+
+The engine bit is tiny: each page is a class with update and draw, and a page hands over to the next one by setting next_screen.
+
+It's experimental and still a work in progress.
+
+[TODO for Anubhav: if it's true, mention the Pyxel keynote at PyCon JP that inspired this.]
+-->
+
+---
+
+<div class="pixel text-xs green">BONUS LEVEL · PROOF OF CONCEPT</div>
+
+# Home Lab: play in the browser
+
+<div class="flex items-center gap-2 mt-4 text-xs mono">
+<div class="panel !p-2 text-center">Browser</div><div class="arrow">→</div>
+<div class="panel !p-2 text-center">GitHub login</div><div class="arrow">→</div>
+<div class="panel !p-2 text-center">FastAPI</div><div class="arrow">→</div>
+<div class="panel panel-gold !p-2 text-center">Player namespace<br/>on my home lab cluster</div><div class="arrow">→</div>
+<div class="panel !p-2 text-center">Browser terminal<br/>+ validate</div>
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-6 text-sm">
+<div class="panel">
+<div class="pixel text-xs gold mb-2">GUARDRAILS</div>
+
+- Namespace, quota and network policies on every session
+- Per-challenge Role and RoleBinding
+- Player gets a limited ServiceAccount kubeconfig
+
+</div>
+<div class="panel">
+<div class="pixel text-xs gold mb-2">SESSION RULES</div>
+
+- Max 7 lab seats
+- Idle 4 min → kicked out
+- 15 min challenge limit
+
+</div>
+<div class="panel">
+<div class="pixel text-xs gold mb-2">RECORDS</div>
+
+- One JSON audit file per visit
+- Policy violations logged
+- Completions with time taken
+
+</div>
+</div>
+
+<!--
+The second side quest is the home lab.
+
+Installing minikube and Docker is the biggest barrier in the whole game. So I've been building a hosted version that runs on a shared cluster in my home lab.
+
+You log in with GitHub, FastAPI creates a namespace just for you, applies the challenge's starter manifests, and gives you a terminal in the browser.
+
+The fun engineering problem here is safety, because strangers are getting kubectl on my cluster. Every session gets namespace, quota and network policies. Each challenge brings its own Role and RoleBinding. And the player only ever gets a kubeconfig for a limited ServiceAccount, never admin.
+
+There are also some game rules: seven seats at a time, an idle timeout of four minutes, and a fifteen-minute limit per challenge. Every visit writes a JSON audit file, so I can see what people tried and which policies they hit.
+
+It's a proof of concept with one challenge so far, and it lives outside the PyPI package.
+
+[TODO for Anubhav: add one line on your home lab hardware and setup, for example k3s on which machine.]
+-->
 ---
 
 <div class="grid grid-cols-[1.6fr_1fr] gap-6 h-full items-center">
@@ -1003,7 +1134,7 @@ Walkthrough:
 </div>
 
 <!--
-[SAVE POINT · ~2 min for slides 32–33]
+[SAVE POINT · ~2 min for slides 35–36]
 
 [TODO for Anubhav: these are drafted from the code. Make at least two of them personal, using stories from building it.]
 
@@ -1029,10 +1160,6 @@ Six: usability is a feature. Lab checks, resume, and not destroying someone's ed
 - github.com/Anubhav9/Yellow-Olive
 - anubhav9.github.io/Yellow-Olive
 
-<div class="panel mt-5 text-sm flex gap-4 items-center">
-<img src="/img/academy-lesson-pods.png" style="height:70px" class="shot" />
-<div><span class="pixel text-xs gold">SIDE QUEST · EXPERIMENTAL / WIP</span><br/>Yellow Olive Academy: an early browser-based lesson mode built with Pyxel.</div>
-</div>
 </div>
 <div class="grid grid-cols-2 gap-4 text-center">
 <div><img src="/img/qr-repo.svg" class="bg-white p-2 rounded" /><div class="caption">GitHub</div></div>
@@ -1045,8 +1172,6 @@ Six: usability is a feature. Lab checks, resume, and not destroying someone's ed
 Thank you! If you'd like to play, it's one pip install. The code and docs are on the QR codes.
 
 I'd love contributions, especially new challenges. As we saw, a challenge is a folder, a manifest and a validate function, so it's a great first open-source contribution.
-
-One side quest: there's an experimental, work-in-progress Academy mode built with Pyxel that runs in the browser. It's early, so treat it as a preview.
 
 Your game is saved. I'm happy to take questions.
 -->
